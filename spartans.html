@@ -1,0 +1,668 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Easts Y6 Spartans · Season 2025/26</title>
+<meta name="description" content="Season summary and player stats for Easts Y6 Spartans, Junior Cricket Wellington, Summer 2025/26.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<style>
+:root {
+  --font-anthropic-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-anthropic-serif: "Source Serif 4", Georgia, serif;
+  --color-bg: #f7f6f2; --color-panel: #ffffff; --color-fg: #1f1e1b; --color-fg-muted: #6b6860;
+  --color-border-line: #e4e1d8; --color-ok: #1e7a45; --color-warn: #a6620a; --color-bad: #b42d2d;
+  --cds-border: #c9c5b9; --cds-surface-popover: #ffffff; --cds-shadow-popover: 0 6px 20px rgba(0,0,0,.12);
+  --cds-text-secondary: #6b6860;
+  --cds-chart-axis: #c9c5b9; --cds-chart-grid: #ece9e1; --cds-chart-muted: #c8c3b6; --cds-chart-reference: #8a867b;
+  --c1: #2f6fb3; --c2: #e08a2c; --c3: #c2473d; --c4: #7a5bb5; --c5: #2a9d8f; --c6: #b5658f; --c7: #5f7d3a; --c8: #8a6d3b;
+  --cds-font-size-caption: 0.78rem; --cds-font-size-body: 0.92rem; --cds-font-size-heading: 1.02rem; --cds-font-size-title: 1.75rem;
+  --cds-font-weight-medium: 500;
+  --cds-gap-xs: 4px; --cds-gap-sm: 8px; --cds-gap-md: 14px; --cds-gap-lg: 22px; --cds-gap-xl: 36px;
+  --cds-pad-xs: 4px; --cds-pad-sm: 8px; --cds-pad-md: 12px; --cds-pad-lg: 18px;
+  --cds-radius: 10px; --cds-dur-slow: 300ms;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #161613; --color-panel: #201f1c; --color-fg: #ecebe6; --color-fg-muted: #a39f94;
+    --color-border-line: #34322d; --color-ok: #5cc48a; --color-warn: #e0a24a; --color-bad: #ef7a72;
+    --cds-border: #4a4740; --cds-surface-popover: #2a2925; --cds-shadow-popover: 0 6px 20px rgba(0,0,0,.5);
+    --cds-text-secondary: #a39f94;
+    --cds-chart-axis: #4a4740; --cds-chart-grid: #2c2b27; --cds-chart-muted: #57544c; --cds-chart-reference: #8f8b80;
+    --c1: #6ea8e6; --c2: #f0a456; --c3: #e8776c; --c4: #a68ce0; --c5: #4fc2b3; --c6: #d98fb6; --c7: #98b86a; --c8: #c4a26a;
+  }
+}
+body { margin: 0; background: var(--color-bg); color: var(--color-fg); font-family: var(--font-anthropic-sans); -webkit-font-smoothing: antialiased; }
+#dash-root { max-width: 1200px; margin: 0 auto; padding: clamp(16px, 4vw, 40px); }
+.dash-skeleton { color: transparent !important; }
+.gl-foot { margin-top: var(--cds-gap-xl); padding-top: var(--cds-gap-md); border-top: 1px solid var(--color-border-line); color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+</style>
+<script>
+/* Stand-in for the Claude dashboard runtime: serves the bundled data to the page. */
+window.GL_DATA = {"games": [{"iso": "2025-11-08", "short": "08 Nov", "opp": "KCC Y6 Kererū", "grade": "Blue", "round": "1", "venue": "Karori Park / J4", "won": false, "margin": "by 7 wickets", "for": 97, "for_overs": "20", "against": 138, "against_overs": "20", "against_wkts": 0, "bat_runs": 39, "extras_for": 58, "extras_against": 77, "wickets": 7, "catches": 1, "runouts": 1, "wides": 20, "noballs": 19, "fours": 3, "batted_first": true, "source": "https://www.playhq.com/new-zealand-cricket/org/cricket-wellington/junior-cricket-wellington-summer-202526/year-6-wellington-blue/game-centre/26d9a93e", "result": "Lost"}, {"iso": "2025-11-22", "short": "22 Nov", "opp": "PCJCC Y6 Mixed Raptors", "grade": "Blue", "round": "3", "venue": "Miramar Park / 3A", "won": false, "margin": "by 7 wickets", "for": 106, "for_overs": "20", "against": 195, "against_overs": "20", "against_wkts": 0, "bat_runs": 65, "extras_for": 41, "extras_against": 65, "wickets": 1, "catches": 0, "runouts": 0, "wides": 9, "noballs": 16, "fours": 9, "batted_first": true, "source": "https://www.playhq.com/new-zealand-cricket/org/cricket-wellington/junior-cricket-wellington-summer-202526/year-6-wellington-blue/game-centre/609fd7f8", "result": "Lost"}, {"iso": "2025-12-06", "short": "06 Dec", "opp": "BJCC Y6 Vortex", "grade": "Blue", "round": "5", "venue": "Liardet Park / 2", "won": false, "margin": "by 58 runs", "for": 83, "for_overs": "20", "against": 141, "against_overs": "20", "against_wkts": 0, "bat_runs": 36, "extras_for": 47, "extras_against": 62, "wickets": 5, "catches": 0, "runouts": 5, "wides": 21, "noballs": 3, "fours": 2, "batted_first": false, "source": "https://www.playhq.com/new-zealand-cricket/org/cricket-wellington/junior-cricket-wellington-summer-202526/year-6-wellington-blue/game-centre/3eef9449", "result": "Lost"}, {"iso": "2025-12-13", "short": "13 Dec", "opp": "Collegians Kortlangs", "grade": "Blue", "round": "6", "venue": "Ian Galloway Park / 2A", "won": false, "margin": "by 44 runs", "for": 129, "for_overs": "20", "against": 173, "against_overs": "20", "against_wkts": 0, "bat_runs": 63, "extras_for": 66, "extras_against": 65, "wickets": 7, "catches": 0, "runouts": 0, "wides": 31, "noballs": 4, "fours": 9, "batted_first": false, "source": "https://www.playhq.com/new-zealand-cricket/org/cricket-wellington/junior-cricket-wellington-summer-202526/year-6-wellington-blue/game-centre/a61e7aa3", "result": "Lost"}, {"iso": "2025-12-18", "short": "18 Dec", "opp": "Easts Y6 Trojans", "grade": "Blue", "round": "7", "venue": "Miramar Park / 3A", "won": false, "margin": "by 58 runs", "for": 109, "for_overs": "20", "against": 167, "against_overs": "20", "against_wkts": 0, "bat_runs": 59, "extras_for": 50, "extras_against": 71, "wickets": 6, "catches": 3, "runouts": 1, "wides": 17, "noballs": 11, "fours": 6, "batted_first": false, "source": "https://www.playhq.com/new-zealand-cricket/org/cricket-wellington/junior-cricket-wellington-summer-202526/year-6-wellington-blue/game-centre/c8cf1b66", "result": "Lost"}, {"iso": "2026-01-31", "short": "31 Jan", "opp": "Easts Y6 Gladiators", "grade": "Green", "round": "2", "venue": "Liardet Park / 1", "won": true, "margin": "by 36 runs", "for": 130, "for_overs": "20", "against": 94, "against_overs": "20", "against_wkts": 0, "bat_runs": 64, "extras_for": 66, "extras_against": 48, "wickets": 5, "catches": 1, "runouts": 4, "wides": 9, "noballs": 8, "fours": 7, "batted_first": true, "source": "https://www.playhq.com/new-zealand-cricket/org/cricket-wellington/junior-cricket-wellington-summer-202526/year-6-wellington-green/game-centre/9e0ba504", "result": "Won"}, {"iso": "2026-02-05", "short": "05 Feb", "opp": "Easts Y6 Trojans", "grade": "Green", "round": "3", "venue": "Miramar Park / 3A", "won": false, "margin": "by 7 wickets", "for": 86, "for_overs": "20", "against": 136, "against_overs": "20", "against_wkts": 0, "bat_runs": 52, "extras_for": 34, "extras_against": 66, "wickets": 4, "catches": 1, "runouts": 0, "wides": 18, "noballs": 11, "fours": 3, "batted_first": true, "source": "https://www.playhq.com/new-zealand-cricket/org/cricket-wellington/junior-cricket-wellington-summer-202526/year-6-wellington-green/game-centre/167630c5", "result": "Lost"}, {"iso": "2026-02-14", "short": "14 Feb", "opp": "KCC Y6 Kererū", "grade": "Green", "round": "4", "venue": "Liardet Park / 2", "won": false, "margin": "by 7 wickets", "for": 148, "for_overs": "20", "against": 160, "against_overs": "20", "against_wkts": 0, "bat_runs": 79, "extras_for": 69, "extras_against": 72, "wickets": 3, "catches": 0, "runouts": 0, "wides": 26, "noballs": 7, "fours": 7, "batted_first": true, "source": "https://www.playhq.com/new-zealand-cricket/org/cricket-wellington/junior-cricket-wellington-summer-202526/year-6-wellington-green/game-centre/1638c1f7", "result": "Lost"}, {"iso": "2026-02-21", "short": "21 Feb", "opp": "BJCC Y6 Typhoons", "grade": "Green", "round": "5", "venue": "Liardet Park / 1", "won": true, "margin": "by 8 runs", "for": 143, "for_overs": "20", "against": 135, "against_overs": "20", "against_wkts": 0, "bat_runs": 86, "extras_for": 57, "extras_against": 67, "wickets": 5, "catches": 2, "runouts": 3, "wides": 28, "noballs": 5, "fours": 8, "batted_first": true, "source": "https://www.playhq.com/new-zealand-cricket/org/cricket-wellington/junior-cricket-wellington-summer-202526/year-6-wellington-green/game-centre/794d5e64", "result": "Won"}, {"iso": "2026-02-28", "short": "28 Feb", "opp": "BJCC Y6 Vortex", "grade": "Green", "round": "6", "venue": "Liardet Park / 1", "won": true, "margin": "by 26 runs", "for": 169, "for_overs": "20", "against": 143, "against_overs": "20", "against_wkts": 0, "bat_runs": 91, "extras_for": 78, "extras_against": 76, "wickets": 7, "catches": 1, "runouts": 3, "wides": 27, "noballs": 15, "fours": 10, "batted_first": true, "source": "https://www.playhq.com/new-zealand-cricket/org/cricket-wellington/junior-cricket-wellington-summer-202526/year-6-wellington-green/game-centre/cae7deb8", "result": "Won"}, {"iso": "2026-03-21", "short": "21 Mar", "opp": "Easts Y6 Gladiators", "grade": "Green", "round": "9", "venue": "Kilbirnie Park / 4A", "won": false, "margin": "by 15 runs", "for": 122, "for_overs": "20", "against": 137, "against_overs": "20", "against_wkts": 0, "bat_runs": 68, "extras_for": 54, "extras_against": 66, "wickets": 3, "catches": 1, "runouts": 2, "wides": 22, "noballs": 11, "fours": 6, "batted_first": false, "source": "https://www.playhq.com/new-zealand-cricket/org/cricket-wellington/junior-cricket-wellington-summer-202526/year-6-wellington-green/game-centre/fa3a1b6e", "result": "Lost"}, {"iso": "2026-03-28", "short": "28 Mar", "opp": "Easts Y6 Trojans", "grade": "Green", "round": "10", "venue": "Miramar Park / 3A", "won": false, "margin": "by 7 wickets", "for": 126, "for_overs": "20", "against": 181, "against_overs": "20", "against_wkts": 0, "bat_runs": 68, "extras_for": 58, "extras_against": 73, "wickets": 6, "catches": 3, "runouts": 3, "wides": 10, "noballs": 10, "fours": 6, "batted_first": true, "source": "https://www.playhq.com/new-zealand-cricket/org/cricket-wellington/junior-cricket-wellington-summer-202526/year-6-wellington-green/game-centre/6408e309", "result": "Lost"}], "players": [{"player": "LBa", "games": 11, "runs": 119, "balls_faced": 169, "strike_rate": 70.4, "runs_per_game": 10.8, "high_score": 19, "fours": 14, "overs": "24", "balls_bowled": 144, "runs_conceded": 135, "wickets": 7, "economy": 5.62, "best_bowling": "2/6", "wides": 19, "no_balls": 6, "maidens": 0, "catches": 0, "keeper_catches": 1, "run_outs": 4, "run_out_assists": 1, "stumpings": 0}, {"player": "DGo", "games": 10, "runs": 119, "balls_faced": 143, "strike_rate": 83.2, "runs_per_game": 11.9, "high_score": 26, "fours": 15, "overs": "22", "balls_bowled": 132, "runs_conceded": 126, "wickets": 8, "economy": 5.73, "best_bowling": "2/9", "wides": 14, "no_balls": 2, "maidens": 0, "catches": 2, "keeper_catches": 0, "run_outs": 2, "run_out_assists": 1, "stumpings": 0}, {"player": "AJa", "games": 10, "runs": 117, "balls_faced": 130, "strike_rate": 90.0, "runs_per_game": 11.7, "high_score": 24, "fours": 12, "overs": "24", "balls_bowled": 144, "runs_conceded": 95, "wickets": 7, "economy": 3.96, "best_bowling": "3/5", "wides": 18, "no_balls": 7, "maidens": 2, "catches": 0, "keeper_catches": 1, "run_outs": 3, "run_out_assists": 0, "stumpings": 0}, {"player": "SRo", "games": 11, "runs": 91, "balls_faced": 159, "strike_rate": 57.2, "runs_per_game": 8.3, "high_score": 19, "fours": 9, "overs": "27", "balls_bowled": 162, "runs_conceded": 148, "wickets": 12, "economy": 5.48, "best_bowling": "2/16", "wides": 19, "no_balls": 6, "maidens": 0, "catches": 2, "keeper_catches": 1, "run_outs": 2, "run_out_assists": 0, "stumpings": 1}, {"player": "COr", "games": 12, "runs": 70, "balls_faced": 172, "strike_rate": 40.7, "runs_per_game": 5.8, "high_score": 13, "fours": 6, "overs": "27", "balls_bowled": 162, "runs_conceded": 155, "wickets": 8, "economy": 5.74, "best_bowling": "3/13", "wides": 23, "no_balls": 3, "maidens": 2, "catches": 0, "keeper_catches": 2, "run_outs": 2, "run_out_assists": 0, "stumpings": 0}, {"player": "MJo", "games": 11, "runs": 68, "balls_faced": 140, "strike_rate": 48.6, "runs_per_game": 6.2, "high_score": 13, "fours": 4, "overs": "24", "balls_bowled": 144, "runs_conceded": 157, "wickets": 7, "economy": 6.54, "best_bowling": "1/6", "wides": 28, "no_balls": 11, "maidens": 0, "catches": 1, "keeper_catches": 0, "run_outs": 0, "run_out_assists": 0, "stumpings": 0}, {"player": "HMa", "games": 9, "runs": 32, "balls_faced": 114, "strike_rate": 28.1, "runs_per_game": 3.6, "high_score": 7, "fours": 3, "overs": "20", "balls_bowled": 120, "runs_conceded": 85, "wickets": 4, "economy": 4.25, "best_bowling": "2/6", "wides": 16, "no_balls": 10, "maidens": 0, "catches": 0, "keeper_catches": 0, "run_outs": 0, "run_out_assists": 0, "stumpings": 0}, {"player": "JWi", "games": 6, "runs": 29, "balls_faced": 78, "strike_rate": 37.2, "runs_per_game": 4.8, "high_score": 10, "fours": 1, "overs": "12", "balls_bowled": 72, "runs_conceded": 66, "wickets": 0, "economy": 5.5, "best_bowling": "0/8", "wides": 16, "no_balls": 9, "maidens": 0, "catches": 0, "keeper_catches": 0, "run_outs": 1, "run_out_assists": 0, "stumpings": 0}, {"player": "GMo", "games": 12, "runs": 28, "balls_faced": 159, "strike_rate": 17.6, "runs_per_game": 2.3, "high_score": 8, "fours": 2, "overs": "25", "balls_bowled": 150, "runs_conceded": 167, "wickets": 0, "economy": 6.68, "best_bowling": "0/10", "wides": 42, "no_balls": 41, "maidens": 0, "catches": 1, "keeper_catches": 0, "run_outs": 0, "run_out_assists": 1, "stumpings": 0}], "player_games": [{"player": "LBa", "iso": "2025-11-08", "short": "08 Nov", "played": true, "runs": 6, "balls_faced": 17, "fours": 0, "overs": "2", "runs_conceded": 6, "wickets": 1, "wides": 0, "no_balls": 1, "catches": 0, "run_outs": 0}, {"player": "LBa", "iso": "2025-11-22", "short": "22 Nov", "played": true, "runs": 8, "balls_faced": 16, "fours": 1, "overs": "2", "runs_conceded": 13, "wickets": 0, "wides": 1, "no_balls": 0, "catches": 0, "run_outs": 0}, {"player": "LBa", "iso": "2025-12-06", "short": "06 Dec", "played": true, "runs": 6, "balls_faced": 22, "fours": 0, "overs": "3", "runs_conceded": 15, "wickets": 0, "wides": 2, "no_balls": 0, "catches": 0, "run_outs": 2}, {"player": "LBa", "iso": "2025-12-13", "short": "13 Dec", "played": true, "runs": 19, "balls_faced": 19, "fours": 3, "overs": "3", "runs_conceded": 22, "wickets": 1, "wides": 3, "no_balls": 0, "catches": 0, "run_outs": 0}, {"player": "LBa", "iso": "2025-12-18", "short": "18 Dec", "played": true, "runs": 15, "balls_faced": 17, "fours": 2, "overs": "2", "runs_conceded": 14, "wickets": 0, "wides": 0, "no_balls": 2, "catches": 0, "run_outs": 0}, {"player": "LBa", "iso": "2026-01-31", "short": "31 Jan", "played": true, "runs": 12, "balls_faced": 15, "fours": 2, "overs": "2", "runs_conceded": 4, "wickets": 1, "wides": 0, "no_balls": 2, "catches": 0, "run_outs": 2}, {"player": "LBa", "iso": "2026-02-05", "short": "05 Feb", "played": true, "runs": 5, "balls_faced": 13, "fours": 0, "overs": "2", "runs_conceded": 10, "wickets": 1, "wides": 2, "no_balls": 0, "catches": 0, "run_outs": 0}, {"player": "LBa", "iso": "2026-02-14", "short": "14 Feb", "played": true, "runs": 12, "balls_faced": 13, "fours": 1, "overs": "2", "runs_conceded": 10, "wickets": 1, "wides": 3, "no_balls": 0, "catches": 0, "run_outs": 0}, {"player": "LBa", "iso": "2026-02-21", "short": "21 Feb", "played": false, "runs": null, "balls_faced": null, "fours": null, "overs": null, "runs_conceded": null, "wickets": null, "wides": null, "no_balls": null, "catches": 0, "run_outs": 0}, {"player": "LBa", "iso": "2026-02-28", "short": "28 Feb", "played": true, "runs": 11, "balls_faced": 13, "fours": 2, "overs": "2", "runs_conceded": 6, "wickets": 2, "wides": 3, "no_balls": 0, "catches": 0, "run_outs": 0}, {"player": "LBa", "iso": "2026-03-21", "short": "21 Mar", "played": true, "runs": 10, "balls_faced": 11, "fours": 0, "overs": "2", "runs_conceded": 11, "wickets": 0, "wides": 5, "no_balls": 0, "catches": 0, "run_outs": 1}, {"player": "LBa", "iso": "2026-03-28", "short": "28 Mar", "played": true, "runs": 15, "balls_faced": 13, "fours": 3, "overs": "2", "runs_conceded": 24, "wickets": 0, "wides": 0, "no_balls": 1, "catches": 1, "run_outs": 0}, {"player": "DGo", "iso": "2025-11-08", "short": "08 Nov", "played": true, "runs": 13, "balls_faced": 18, "fours": 1, "overs": "3", "runs_conceded": 17, "wickets": 1, "wides": 0, "no_balls": 1, "catches": 0, "run_outs": 0}, {"player": "DGo", "iso": "2025-11-22", "short": "22 Nov", "played": false, "runs": null, "balls_faced": null, "fours": null, "overs": null, "runs_conceded": null, "wickets": null, "wides": null, "no_balls": null, "catches": 0, "run_outs": 0}, {"player": "DGo", "iso": "2025-12-06", "short": "06 Dec", "played": true, "runs": 13, "balls_faced": 17, "fours": 2, "overs": "2", "runs_conceded": 10, "wickets": 1, "wides": 0, "no_balls": 0, "catches": 0, "run_outs": 1}, {"player": "DGo", "iso": "2025-12-13", "short": "13 Dec", "played": true, "runs": 22, "balls_faced": 18, "fours": 3, "overs": "4", "runs_conceded": 35, "wickets": 2, "wides": 3, "no_balls": 0, "catches": 0, "run_outs": 0}, {"player": "DGo", "iso": "2025-12-18", "short": "18 Dec", "played": true, "runs": 3, "balls_faced": 9, "fours": 0, "overs": "2", "runs_conceded": 9, "wickets": 2, "wides": 2, "no_balls": 0, "catches": 1, "run_outs": 1}, {"player": "DGo", "iso": "2026-01-31", "short": "31 Jan", "played": true, "runs": 26, "balls_faced": 23, "fours": 4, "overs": "2", "runs_conceded": 8, "wickets": 0, "wides": 2, "no_balls": 0, "catches": 1, "run_outs": 1}, {"player": "DGo", "iso": "2026-02-05", "short": "05 Feb", "played": true, "runs": 3, "balls_faced": 10, "fours": 0, "overs": "2", "runs_conceded": 7, "wickets": 1, "wides": 0, "no_balls": 0, "catches": 0, "run_outs": 0}, {"player": "DGo", "iso": "2026-02-14", "short": "14 Feb", "played": true, "runs": 13, "balls_faced": 12, "fours": 2, "overs": "2", "runs_conceded": 12, "wickets": 0, "wides": 1, "no_balls": 0, "catches": 0, "run_outs": 0}, {"player": "DGo", "iso": "2026-02-21", "short": "21 Feb", "played": false, "runs": null, "balls_faced": null, "fours": null, "overs": null, "runs_conceded": null, "wickets": null, "wides": null, "no_balls": null, "catches": 0, "run_outs": 0}, {"player": "DGo", "iso": "2026-02-28", "short": "28 Feb", "played": true, "runs": 14, "balls_faced": 15, "fours": 2, "overs": "1", "runs_conceded": 4, "wickets": 1, "wides": 0, "no_balls": 1, "catches": 0, "run_outs": 0}, {"player": "DGo", "iso": "2026-03-21", "short": "21 Mar", "played": true, "runs": 7, "balls_faced": 11, "fours": 1, "overs": "2", "runs_conceded": 10, "wickets": 0, "wides": 5, "no_balls": 0, "catches": 0, "run_outs": 0}, {"player": "DGo", "iso": "2026-03-28", "short": "28 Mar", "played": true, "runs": 5, "balls_faced": 10, "fours": 0, "overs": "2", "runs_conceded": 14, "wickets": 0, "wides": 1, "no_balls": 0, "catches": 0, "run_outs": 0}, {"player": "AJa", "iso": "2025-11-08", "short": "08 Nov", "played": true, "runs": 4, "balls_faced": 12, "fours": 0, "overs": "2", "runs_conceded": 7, "wickets": 0, "wides": 1, "no_balls": 0, "catches": 0, "run_outs": 0}, {"player": "AJa", "iso": "2025-11-22", "short": "22 Nov", "played": true, "runs": 9, "balls_faced": 14, "fours": 0, "overs": "3", "runs_conceded": 13, "wickets": 0, "wides": 0, "no_balls": 3, "catches": 0, "run_outs": 0}, {"player": "AJa", "iso": "2025-12-06", "short": "06 Dec", "played": true, "runs": 3, "balls_faced": 13, "fours": 0, "overs": "3", "runs_conceded": 5, "wickets": 1, "wides": 0, "no_balls": 0, "catches": 0, "run_outs": 0}, {"player": "AJa", "iso": "2025-12-13", "short": "13 Dec", "played": false, "runs": null, "balls_faced": null, "fours": null, "overs": null, "runs_conceded": null, "wickets": null, "wides": null, "no_balls": null, "catches": 0, "run_outs": 0}, {"player": "AJa", "iso": "2025-12-18", "short": "18 Dec", "played": true, "runs": 11, "balls_faced": 13, "fours": 1, "overs": "3", "runs_conceded": 25, "wickets": 0, "wides": 6, "no_balls": 2, "catches": 0, "run_outs": 0}, {"player": "AJa", "iso": "2026-01-31", "short": "31 Jan", "played": true, "runs": 12, "balls_faced": 14, "fours": 1, "overs": "2", "runs_conceded": 5, "wickets": 0, "wides": 0, "no_balls": 1, "catches": 0, "run_outs": 1}, {"player": "AJa", "iso": "2026-02-05", "short": "05 Feb", "played": true, "runs": 14, "balls_faced": 12, "fours": 1, "overs": "2", "runs_conceded": 7, "wickets": 0, "wides": 3, "no_balls": 0, "catches": 0, "run_outs": 0}, {"player": "AJa", "iso": "2026-02-14", "short": "14 Feb", "played": true, "runs": 13, "balls_faced": 13, "fours": 2, "overs": "2", "runs_conceded": 9, "wickets": 0, "wides": 0, "no_balls": 0, "catches": 0, "run_outs": 0}, {"player": "AJa", "iso": "2026-02-21", "short": "21 Feb", "played": true, "runs": 24, "balls_faced": 14, "fours": 4, "overs": "3", "runs_conceded": 12, "wickets": 2, "wides": 3, "no_balls": 0, "catches": 0, "run_outs": 0}, {"player": "AJa", "iso": "2026-02-28", "short": "28 Feb", "played": false, "runs": null, "balls_faced": null, "fours": null, "overs": null, "runs_conceded": null, "wickets": null, "wides": null, "no_balls": null, "catches": 0, "run_outs": 0}, {"player": "AJa", "iso": "2026-03-21", "short": "21 Mar", "played": true, "runs": 11, "balls_faced": 13, "fours": 1, "overs": "2", "runs_conceded": 7, "wickets": 1, "wides": 4, "no_balls": 1, "catches": 0, "run_outs": 1}, {"player": "AJa", "iso": "2026-03-28", "short": "28 Mar", "played": true, "runs": 16, "balls_faced": 12, "fours": 2, "overs": "2", "runs_conceded": 5, "wickets": 3, "wides": 1, "no_balls": 0, "catches": 1, "run_outs": 1}, {"player": "SRo", "iso": "2025-11-08", "short": "08 Nov", "played": true, "runs": 2, "balls_faced": 12, "fours": 0, "overs": "2", "runs_conceded": 7, "wickets": 1, "wides": 4, "no_balls": 0, "catches": 0, "run_outs": 1}, {"player": "SRo", "iso": "2025-11-22", "short": "22 Nov", "played": true, "runs": 19, "balls_faced": 13, "fours": 4, "overs": "3", "runs_conceded": 34, "wickets": 1, "wides": 1, "no_balls": 0, "catches": 0, "run_outs": 0}, {"player": "SRo", "iso": "2025-12-06", "short": "06 Dec", "played": false, "runs": null, "balls_faced": null, "fours": null, "overs": null, "runs_conceded": null, "wickets": null, "wides": null, "no_balls": null, "catches": 0, "run_outs": 0}, {"player": "SRo", "iso": "2025-12-13", "short": "13 Dec", "played": true, "runs": 4, "balls_faced": 23, "fours": 0, "overs": "3", "runs_conceded": 16, "wickets": 2, "wides": 3, "no_balls": 0, "catches": 0, "run_outs": 0}, {"player": "SRo", "iso": "2025-12-18", "short": "18 Dec", "played": true, "runs": 4, "balls_faced": 16, "fours": 0, "overs": "3", "runs_conceded": 25, "wickets": 2, "wides": 0, "no_balls": 2, "catches": 1, "run_outs": 0}, {"player": "SRo", "iso": "2026-01-31", "short": "31 Jan", "played": true, "runs": 4, "balls_faced": 10, "fours": 0, "overs": "3", "runs_conceded": 5, "wickets": 1, "wides": 2, "no_balls": 0, "catches": 0, "run_outs": 0}, {"player": "SRo", "iso": "2026-02-05", "short": "05 Feb", "played": true, "runs": 2, "balls_faced": 12, "fours": 0, "overs": "2", "runs_conceded": 6, "wickets": 1, "wides": 1, "no_balls": 0, "catches": 1, "run_outs": 0}, {"player": "SRo", "iso": "2026-02-14", "short": "14 Feb", "played": true, "runs": 8, "balls_faced": 11, "fours": 0, "overs": "2", "runs_conceded": 11, "wickets": 1, "wides": 2, "no_balls": 1, "catches": 0, "run_outs": 0}, {"player": "SRo", "iso": "2026-02-21", "short": "21 Feb", "played": true, "runs": 13, "balls_faced": 16, "fours": 1, "overs": "3", "runs_conceded": 14, "wickets": 1, "wides": 2, "no_balls": 1, "catches": 0, "run_outs": 0}, {"player": "SRo", "iso": "2026-02-28", "short": "28 Feb", "played": true, "runs": 19, "balls_faced": 18, "fours": 2, "overs": "2", "runs_conceded": 13, "wickets": 1, "wides": 4, "no_balls": 1, "catches": 0, "run_outs": 1}, {"player": "SRo", "iso": "2026-03-21", "short": "21 Mar", "played": true, "runs": 12, "balls_faced": 17, "fours": 2, "overs": "2", "runs_conceded": 5, "wickets": 1, "wides": 0, "no_balls": 1, "catches": 1, "run_outs": 0}, {"player": "SRo", "iso": "2026-03-28", "short": "28 Mar", "played": true, "runs": 4, "balls_faced": 11, "fours": 0, "overs": "2", "runs_conceded": 12, "wickets": 0, "wides": 0, "no_balls": 0, "catches": 0, "run_outs": 1}, {"player": "COr", "iso": "2025-11-08", "short": "08 Nov", "played": true, "runs": 4, "balls_faced": 12, "fours": 1, "overs": "2", "runs_conceded": 11, "wickets": 1, "wides": 0, "no_balls": 1, "catches": 0, "run_outs": 0}, {"player": "COr", "iso": "2025-11-22", "short": "22 Nov", "played": true, "runs": 13, "balls_faced": 16, "fours": 2, "overs": "3", "runs_conceded": 24, "wickets": 0, "wides": 1, "no_balls": 0, "catches": 0, "run_outs": 0}, {"player": "COr", "iso": "2025-12-06", "short": "06 Dec", "played": true, "runs": 3, "balls_faced": 16, "fours": 0, "overs": "2", "runs_conceded": 12, "wickets": 0, "wides": 5, "no_balls": 0, "catches": 0, "run_outs": 0}, {"player": "COr", "iso": "2025-12-13", "short": "13 Dec", "played": true, "runs": 2, "balls_faced": 16, "fours": 0, "overs": "2", "runs_conceded": 10, "wickets": 1, "wides": 1, "no_balls": 0, "catches": 0, "run_outs": 0}, {"player": "COr", "iso": "2025-12-18", "short": "18 Dec", "played": true, "runs": 10, "balls_faced": 13, "fours": 1, "overs": "3", "runs_conceded": 18, "wickets": 1, "wides": 6, "no_balls": 0, "catches": 0, "run_outs": 0}, {"player": "COr", "iso": "2026-01-31", "short": "31 Jan", "played": true, "runs": 2, "balls_faced": 12, "fours": 0, "overs": "2", "runs_conceded": 4, "wickets": 0, "wides": 0, "no_balls": 0, "catches": 0, "run_outs": 0}, {"player": "COr", "iso": "2026-02-05", "short": "05 Feb", "played": true, "runs": 4, "balls_faced": 14, "fours": 1, "overs": "2", "runs_conceded": 4, "wickets": 0, "wides": 1, "no_balls": 0, "catches": 0, "run_outs": 0}, {"player": "COr", "iso": "2026-02-14", "short": "14 Feb", "played": true, "runs": 4, "balls_faced": 13, "fours": 0, "overs": "2", "runs_conceded": 11, "wickets": 0, "wides": 0, "no_balls": 0, "catches": 0, "run_outs": 0}, {"player": "COr", "iso": "2026-02-21", "short": "21 Feb", "played": true, "runs": 5, "balls_faced": 14, "fours": 0, "overs": "2", "runs_conceded": 19, "wickets": 1, "wides": 3, "no_balls": 0, "catches": 2, "run_outs": 2}, {"player": "COr", "iso": "2026-02-28", "short": "28 Feb", "played": true, "runs": 10, "balls_faced": 19, "fours": 0, "overs": "3", "runs_conceded": 13, "wickets": 3, "wides": 5, "no_balls": 2, "catches": 0, "run_outs": 0}, {"player": "COr", "iso": "2026-03-21", "short": "21 Mar", "played": true, "runs": 9, "balls_faced": 13, "fours": 1, "overs": "2", "runs_conceded": 11, "wickets": 0, "wides": 1, "no_balls": 0, "catches": 0, "run_outs": 0}, {"player": "COr", "iso": "2026-03-28", "short": "28 Mar", "played": true, "runs": 4, "balls_faced": 14, "fours": 0, "overs": "2", "runs_conceded": 18, "wickets": 1, "wides": 0, "no_balls": 0, "catches": 0, "run_outs": 0}, {"player": "MJo", "iso": "2025-11-08", "short": "08 Nov", "played": true, "runs": 1, "balls_faced": 12, "fours": 0, "overs": "2", "runs_conceded": 13, "wickets": 1, "wides": 2, "no_balls": 2, "catches": 0, "run_outs": 0}, {"player": "MJo", "iso": "2025-11-22", "short": "22 Nov", "played": true, "runs": 3, "balls_faced": 15, "fours": 0, "overs": "3", "runs_conceded": 31, "wickets": 0, "wides": 0, "no_balls": 4, "catches": 0, "run_outs": 0}, {"player": "MJo", "iso": "2025-12-06", "short": "06 Dec", "played": false, "runs": null, "balls_faced": null, "fours": null, "overs": null, "runs_conceded": null, "wickets": null, "wides": null, "no_balls": null, "catches": 0, "run_outs": 0}, {"player": "MJo", "iso": "2025-12-13", "short": "13 Dec", "played": true, "runs": 7, "balls_faced": 14, "fours": 1, "overs": "2", "runs_conceded": 19, "wickets": 1, "wides": 1, "no_balls": 2, "catches": 0, "run_outs": 0}, {"player": "MJo", "iso": "2025-12-18", "short": "18 Dec", "played": true, "runs": 5, "balls_faced": 14, "fours": 0, "overs": "2", "runs_conceded": 6, "wickets": 1, "wides": 1, "no_balls": 0, "catches": 1, "run_outs": 0}, {"player": "MJo", "iso": "2026-01-31", "short": "31 Jan", "played": true, "runs": 2, "balls_faced": 14, "fours": 0, "overs": "2", "runs_conceded": 8, "wickets": 1, "wides": 2, "no_balls": 0, "catches": 0, "run_outs": 0}, {"player": "MJo", "iso": "2026-02-05", "short": "05 Feb", "played": true, "runs": 5, "balls_faced": 10, "fours": 0, "overs": "2", "runs_conceded": 12, "wickets": 1, "wides": 1, "no_balls": 2, "catches": 0, "run_outs": 0}, {"player": "MJo", "iso": "2026-02-14", "short": "14 Feb", "played": true, "runs": 7, "balls_faced": 12, "fours": 0, "overs": "2", "runs_conceded": 22, "wickets": 1, "wides": 3, "no_balls": 0, "catches": 0, "run_outs": 0}, {"player": "MJo", "iso": "2026-02-21", "short": "21 Feb", "played": true, "runs": 13, "balls_faced": 14, "fours": 1, "overs": "3", "runs_conceded": 17, "wickets": 1, "wides": 7, "no_balls": 0, "catches": 0, "run_outs": 0}, {"player": "MJo", "iso": "2026-02-28", "short": "28 Feb", "played": true, "runs": 8, "balls_faced": 12, "fours": 1, "overs": "2", "runs_conceded": 10, "wickets": 0, "wides": 4, "no_balls": 0, "catches": 0, "run_outs": 0}, {"player": "MJo", "iso": "2026-03-21", "short": "21 Mar", "played": true, "runs": 6, "balls_faced": 11, "fours": 0, "overs": "2", "runs_conceded": 11, "wickets": 0, "wides": 3, "no_balls": 0, "catches": 0, "run_outs": 0}, {"player": "MJo", "iso": "2026-03-28", "short": "28 Mar", "played": true, "runs": 11, "balls_faced": 12, "fours": 1, "overs": "2", "runs_conceded": 8, "wickets": 0, "wides": 4, "no_balls": 1, "catches": 0, "run_outs": 0}, {"player": "HMa", "iso": "2025-11-08", "short": "08 Nov", "played": true, "runs": 6, "balls_faced": 14, "fours": 1, "overs": "2", "runs_conceded": 6, "wickets": 2, "wides": 3, "no_balls": 2, "catches": 0, "run_outs": 0}, {"player": "HMa", "iso": "2025-11-22", "short": "22 Nov", "played": true, "runs": 2, "balls_faced": 15, "fours": 0, "overs": "2", "runs_conceded": 9, "wickets": 0, "wides": 4, "no_balls": 2, "catches": 0, "run_outs": 0}, {"player": "HMa", "iso": "2025-12-06", "short": "06 Dec", "played": false, "runs": null, "balls_faced": null, "fours": null, "overs": null, "runs_conceded": null, "wickets": null, "wides": null, "no_balls": null, "catches": 0, "run_outs": 0}, {"player": "HMa", "iso": "2025-12-13", "short": "13 Dec", "played": false, "runs": null, "balls_faced": null, "fours": null, "overs": null, "runs_conceded": null, "wickets": null, "wides": null, "no_balls": null, "catches": 0, "run_outs": 0}, {"player": "HMa", "iso": "2025-12-18", "short": "18 Dec", "played": false, "runs": null, "balls_faced": null, "fours": null, "overs": null, "runs_conceded": null, "wickets": null, "wides": null, "no_balls": null, "catches": 0, "run_outs": 0}, {"player": "HMa", "iso": "2026-01-31", "short": "31 Jan", "played": true, "runs": 0, "balls_faced": 12, "fours": 0, "overs": "2", "runs_conceded": 6, "wickets": 0, "wides": 0, "no_balls": 1, "catches": 0, "run_outs": 0}, {"player": "HMa", "iso": "2026-02-05", "short": "05 Feb", "played": true, "runs": 4, "balls_faced": 12, "fours": 0, "overs": "2", "runs_conceded": 11, "wickets": 0, "wides": 1, "no_balls": 0, "catches": 0, "run_outs": 0}, {"player": "HMa", "iso": "2026-02-14", "short": "14 Feb", "played": true, "runs": 7, "balls_faced": 11, "fours": 1, "overs": "2", "runs_conceded": 6, "wickets": 0, "wides": 4, "no_balls": 0, "catches": 0, "run_outs": 0}, {"player": "HMa", "iso": "2026-02-21", "short": "21 Feb", "played": true, "runs": 4, "balls_faced": 16, "fours": 0, "overs": "3", "runs_conceded": 12, "wickets": 0, "wides": 3, "no_balls": 0, "catches": 0, "run_outs": 0}, {"player": "HMa", "iso": "2026-02-28", "short": "28 Feb", "played": true, "runs": 1, "balls_faced": 9, "fours": 0, "overs": "3", "runs_conceded": 16, "wickets": 0, "wides": 1, "no_balls": 1, "catches": 0, "run_outs": 0}, {"player": "HMa", "iso": "2026-03-21", "short": "21 Mar", "played": true, "runs": 5, "balls_faced": 14, "fours": 1, "overs": "2", "runs_conceded": 11, "wickets": 0, "wides": 0, "no_balls": 2, "catches": 0, "run_outs": 0}, {"player": "HMa", "iso": "2026-03-28", "short": "28 Mar", "played": true, "runs": 3, "balls_faced": 11, "fours": 0, "overs": "2", "runs_conceded": 8, "wickets": 2, "wides": 0, "no_balls": 2, "catches": 0, "run_outs": 0}, {"player": "JWi", "iso": "2025-11-08", "short": "08 Nov", "played": false, "runs": null, "balls_faced": null, "fours": null, "overs": null, "runs_conceded": null, "wickets": null, "wides": null, "no_balls": null, "catches": 0, "run_outs": 0}, {"player": "JWi", "iso": "2025-11-22", "short": "22 Nov", "played": false, "runs": null, "balls_faced": null, "fours": null, "overs": null, "runs_conceded": null, "wickets": null, "wides": null, "no_balls": null, "catches": 0, "run_outs": 0}, {"player": "JWi", "iso": "2025-12-06", "short": "06 Dec", "played": false, "runs": null, "balls_faced": null, "fours": null, "overs": null, "runs_conceded": null, "wickets": null, "wides": null, "no_balls": null, "catches": 0, "run_outs": 0}, {"player": "JWi", "iso": "2025-12-13", "short": "13 Dec", "played": false, "runs": null, "balls_faced": null, "fours": null, "overs": null, "runs_conceded": null, "wickets": null, "wides": null, "no_balls": null, "catches": 0, "run_outs": 0}, {"player": "JWi", "iso": "2025-12-18", "short": "18 Dec", "played": false, "runs": null, "balls_faced": null, "fours": null, "overs": null, "runs_conceded": null, "wickets": null, "wides": null, "no_balls": null, "catches": 0, "run_outs": 0}, {"player": "JWi", "iso": "2026-01-31", "short": "31 Jan", "played": false, "runs": null, "balls_faced": null, "fours": null, "overs": null, "runs_conceded": null, "wickets": null, "wides": null, "no_balls": null, "catches": 0, "run_outs": 0}, {"player": "JWi", "iso": "2026-02-05", "short": "05 Feb", "played": true, "runs": 2, "balls_faced": 15, "fours": 0, "overs": "2", "runs_conceded": 13, "wickets": 0, "wides": 2, "no_balls": 2, "catches": 0, "run_outs": 0}, {"player": "JWi", "iso": "2026-02-14", "short": "14 Feb", "played": true, "runs": 7, "balls_faced": 13, "fours": 0, "overs": "2", "runs_conceded": 11, "wickets": 0, "wides": 4, "no_balls": 0, "catches": 0, "run_outs": 0}, {"player": "JWi", "iso": "2026-02-21", "short": "21 Feb", "played": true, "runs": 5, "balls_faced": 17, "fours": 0, "overs": "2", "runs_conceded": 10, "wickets": 0, "wides": 6, "no_balls": 1, "catches": 0, "run_outs": 0}, {"player": "JWi", "iso": "2026-02-28", "short": "28 Feb", "played": true, "runs": 10, "balls_faced": 12, "fours": 1, "overs": "2", "runs_conceded": 12, "wickets": 0, "wides": 1, "no_balls": 3, "catches": 0, "run_outs": 0}, {"player": "JWi", "iso": "2026-03-21", "short": "21 Mar", "played": true, "runs": 3, "balls_faced": 7, "fours": 0, "overs": "2", "runs_conceded": 8, "wickets": 0, "wides": 1, "no_balls": 3, "catches": 0, "run_outs": 0}, {"player": "JWi", "iso": "2026-03-28", "short": "28 Mar", "played": true, "runs": 2, "balls_faced": 14, "fours": 0, "overs": "2", "runs_conceded": 12, "wickets": 0, "wides": 2, "no_balls": 0, "catches": 0, "run_outs": 1}, {"player": "GMo", "iso": "2025-11-08", "short": "08 Nov", "played": true, "runs": 2, "balls_faced": 12, "fours": 0, "overs": "2", "runs_conceded": 10, "wickets": 0, "wides": 5, "no_balls": 3, "catches": 0, "run_outs": 0}, {"player": "GMo", "iso": "2025-11-22", "short": "22 Nov", "played": true, "runs": 1, "balls_faced": 17, "fours": 0, "overs": "2", "runs_conceded": 14, "wickets": 0, "wides": 0, "no_balls": 5, "catches": 0, "run_outs": 0}, {"player": "GMo", "iso": "2025-12-06", "short": "06 Dec", "played": true, "runs": 1, "balls_faced": 16, "fours": 0, "overs": "2", "runs_conceded": 10, "wickets": 0, "wides": 2, "no_balls": 1, "catches": 0, "run_outs": 1}, {"player": "GMo", "iso": "2025-12-13", "short": "13 Dec", "played": true, "runs": 4, "balls_faced": 12, "fours": 1, "overs": "3", "runs_conceded": 21, "wickets": 0, "wides": 12, "no_balls": 1, "catches": 0, "run_outs": 0}, {"player": "GMo", "iso": "2025-12-18", "short": "18 Dec", "played": true, "runs": 4, "balls_faced": 17, "fours": 1, "overs": "2", "runs_conceded": 15, "wickets": 0, "wides": 1, "no_balls": 3, "catches": 0, "run_outs": 0}, {"player": "GMo", "iso": "2026-01-31", "short": "31 Jan", "played": true, "runs": 0, "balls_faced": 13, "fours": 0, "overs": "2", "runs_conceded": 15, "wickets": 0, "wides": 1, "no_balls": 3, "catches": 0, "run_outs": 0}, {"player": "GMo", "iso": "2026-02-05", "short": "05 Feb", "played": true, "runs": 3, "balls_faced": 11, "fours": 0, "overs": "2", "runs_conceded": 12, "wickets": 0, "wides": 5, "no_balls": 5, "catches": 0, "run_outs": 0}, {"player": "GMo", "iso": "2026-02-14", "short": "14 Feb", "played": true, "runs": 0, "balls_faced": 12, "fours": 0, "overs": "2", "runs_conceded": 17, "wickets": 0, "wides": 3, "no_balls": 6, "catches": 0, "run_outs": 0}, {"player": "GMo", "iso": "2026-02-21", "short": "21 Feb", "played": true, "runs": 4, "balls_faced": 14, "fours": 0, "overs": "2", "runs_conceded": 13, "wickets": 0, "wides": 4, "no_balls": 2, "catches": 0, "run_outs": 0}, {"player": "GMo", "iso": "2026-02-28", "short": "28 Feb", "played": true, "runs": 8, "balls_faced": 12, "fours": 0, "overs": "2", "runs_conceded": 16, "wickets": 0, "wides": 4, "no_balls": 4, "catches": 1, "run_outs": 0}, {"player": "GMo", "iso": "2026-03-21", "short": "21 Mar", "played": true, "runs": 0, "balls_faced": 13, "fours": 0, "overs": "2", "runs_conceded": 12, "wickets": 0, "wides": 3, "no_balls": 3, "catches": 0, "run_outs": 0}, {"player": "GMo", "iso": "2026-03-28", "short": "28 Mar", "played": true, "runs": 1, "balls_faced": 10, "fours": 0, "overs": "2", "runs_conceded": 12, "wickets": 0, "wides": 2, "no_balls": 5, "catches": 0, "run_outs": 0}]};
+(function () {
+  const store = {};
+  Object.keys(window.GL_DATA).forEach((k) => { store[k] = window.GL_DATA[k]; });
+  const listeners = [];
+  const css = (n) => `var(--c${n})`;
+  window.dash = {
+    colors: [1, 2, 3, 4, 5, 6, 7, 8].map(css),
+    data(id) {
+      return id in store ? { status: 'ok', data: store[id], meta: [], refreshing: false } : { status: 'missing', data: [], meta: [] };
+    },
+    calc(id, spec) {
+      store[id] = spec.fn.apply(null, spec.inputs.map((i) => store[i]));
+    },
+    loader() {},
+    onData(fn) {
+      listeners.push(fn);
+      const run = () => fn();
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
+    },
+    setLink(name) { try { history.replaceState(null, '', '#' + name); } catch (e) {} },
+    params() { return {}; }, setParams() {}, resetParams() {}, refresh() {},
+  };
+  let w = 0, t;
+  window.addEventListener('resize', () => {
+    clearTimeout(t);
+    t = setTimeout(() => { if (window.innerWidth !== w) { w = window.innerWidth; listeners.forEach((f) => f()); } }, 150);
+  });
+})();
+</script>
+</head>
+<body>
+<div id="dash-root">
+<style>
+.gl { font-family: var(--font-anthropic-sans); color: var(--color-fg); }
+.gl * { box-sizing: border-box; }
+.gl h1, .gl h2, .gl h3, .gl p { margin: 0; }
+.gl .num { font-variant-numeric: tabular-nums; }
+.gl-head { display: grid; gap: var(--cds-gap-sm); margin-bottom: var(--cds-gap-xl); }
+.gl-title { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); line-height: 1.15; }
+.gl-sub { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+.gl-take { font-size: var(--cds-font-size-heading); max-width: 60rem; line-height: 1.45; }
+.gl-take b, .gl .gl-strong { font-weight: 600; }
+.gl-section { margin-top: var(--cds-gap-xl); display: grid; gap: var(--cds-gap-md); }
+.gl-h2 { font-size: var(--cds-font-size-title); font-family: var(--font-anthropic-serif); font-weight: 400; padding-top: var(--cds-gap-lg); border-top: 1px solid var(--color-border-line); }
+.gl-h2-note { color: var(--color-fg-muted); font-size: var(--cds-font-size-body); margin-top: calc(-1 * var(--cds-gap-sm)); }
+.gl-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 10.5rem), 1fr)); gap: var(--cds-gap-md); }
+.gl-tile { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-md) var(--cds-pad-lg); display: grid; gap: var(--cds-gap-xs); align-content: start; }
+.gl-tile-label { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+.gl-tile-value { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); line-height: 1.1; font-variant-numeric: tabular-nums; }
+.gl-tile-note { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; }
+.gl-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: var(--cds-gap-md); }
+.gl-card { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-lg); display: grid; gap: var(--cds-gap-sm); align-content: start; min-width: 0; }
+.gl-card-title { font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); }
+.gl-card-note { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); line-height: 1.4; }
+.gl-chart { position: relative; width: 100%; min-height: 240px; }
+.gl-chart.gl-short { min-height: 150px; }
+.gl-chart svg { display: block; overflow: visible; }
+.gl-legend { display: flex; flex-wrap: wrap; gap: var(--cds-gap-sm) var(--cds-gap-md); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.gl-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.gl-sw { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+.gl-tip { position: absolute; pointer-events: none; background: var(--cds-surface-popover); border: 1px solid var(--cds-border); border-radius: var(--cds-radius); box-shadow: var(--cds-shadow-popover); padding: var(--cds-pad-xs) var(--cds-pad-sm); font-size: var(--cds-font-size-caption); line-height: 1.45; white-space: nowrap; opacity: 0; transition: opacity 120ms; z-index: 5; font-variant-numeric: tabular-nums; }
+.gl-tip .gl-tip-h { color: var(--cds-text-secondary); }
+.gl-axis text, .gl-lbl { fill: var(--color-fg-muted); font-size: var(--cds-font-size-caption); font-family: var(--font-anthropic-sans); }
+.gl-axis line, .gl-axis path { stroke: var(--cds-chart-axis); }
+.gl-grid-line { stroke: var(--cds-chart-grid); stroke-width: 1; }
+.gl-val { fill: var(--color-fg); font-size: var(--cds-font-size-caption); font-family: var(--font-anthropic-sans); font-variant-numeric: tabular-nums; }
+.gl-win { fill: var(--color-ok); font-weight: 600; } .gl-loss { fill: var(--color-bad); font-weight: 600; }
+.gl-split { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr)); gap: var(--cds-gap-sm); }
+.gl-big { font-family: var(--font-anthropic-serif); font-size: var(--cds-font-size-title); font-variant-numeric: tabular-nums; }
+.gl-tablebox { overflow: auto; max-height: 34rem; border-radius: var(--cds-radius); }
+.gl table { border-collapse: collapse; width: 100%; font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; }
+.gl th, .gl td { padding: 7px 10px; text-align: right; border-bottom: 1px solid var(--color-border-line); white-space: nowrap; }
+.gl th:first-child, .gl td:first-child, .gl td.gl-left, .gl th.gl-left { text-align: left; }
+.gl th { position: sticky; top: 0; background: var(--color-panel); color: var(--color-fg-muted); font-weight: var(--cds-font-weight-medium); z-index: 1; }
+.gl th button { all: unset; cursor: pointer; display: inline-flex; gap: 4px; align-items: center; }
+.gl th button:focus-visible { outline: 2px solid var(--cds-border); border-radius: 3px; }
+.gl td.gl-res-w { color: var(--color-ok); font-weight: 600; } .gl td.gl-res-l { color: var(--color-bad); font-weight: 600; }
+.gl a { color: inherit; }
+.gl-chips { display: flex; flex-wrap: wrap; gap: var(--cds-gap-xs); }
+.gl-chip { all: unset; cursor: pointer; font-size: var(--cds-font-size-caption); padding: 5px 11px; border: 1px solid var(--color-border-line); border-radius: 999px; background: var(--color-panel); }
+.gl-chip:hover, .gl-chip:focus-visible { border-color: var(--cds-border); }
+.gl-players { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 25rem), 1fr)); gap: var(--cds-gap-md); }
+.gl-pcard { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-lg); display: grid; gap: var(--cds-gap-md); align-content: start; scroll-margin-top: 1rem; min-width: 0; }
+.gl-pname { font-family: var(--font-anthropic-serif); font-size: var(--cds-font-size-title); font-weight: 400; line-height: 1.1; }
+.gl-pstats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--cds-gap-sm) var(--cds-gap-md); }
+.gl-pgroup { display: grid; gap: 2px; }
+.gl-pgroup h4 { margin: 0 0 4px; font-size: var(--cds-font-size-caption); font-weight: var(--cds-font-weight-medium); text-transform: uppercase; letter-spacing: .06em; color: var(--color-fg-muted); }
+.gl-prow { display: flex; justify-content: space-between; gap: 6px; font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; }
+.gl-prow span:first-child { color: var(--color-fg-muted); }
+.gl-prow span:last-child { font-weight: 600; }
+.gl-notes { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); line-height: 1.55; display: grid; gap: var(--cds-gap-xs); max-width: 60rem; }
+.gl-notes b { color: var(--color-fg); }
+[data-dash-source-state=empty] { color: transparent; }
+[data-dash-source-state=refreshing] { opacity: .5; transition: opacity var(--cds-dur-slow); }
+.gl-fail { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: inherit; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+.gl-fail::before { content: ""; width: .375rem; height: .375rem; border-radius: 50%; background: var(--color-bad); }
+@media (max-width: 34rem) { .gl-pstats { grid-template-columns: 1fr 1fr; } }
+</style>
+
+<div class="gl">
+  <header class="gl-head">
+    <h1 class="gl-title" id="top">Easts Y6 Spartans · season 2025/26</h1>
+    <p class="gl-sub">Junior Cricket – Wellington, Year 6 · completed T20 games · Blue grade Nov–Dec, Green grade Jan–Mar · from PlayHQ scorecards</p>
+    <p class="gl-take">
+      Won <b class="gl-fill dash-skeleton" data-source="season" data-field="won" data-row="0">—</b> of <b class="gl-fill dash-skeleton" data-source="season" data-field="played" data-row="0">—</b>:
+      <b class="gl-fill dash-skeleton" data-source="season" data-field="bat_first_won" data-row="0">—</b> of <span class="gl-fill dash-skeleton" data-source="season" data-field="bat_first_played" data-row="0">—</span> batting first, <b class="gl-fill dash-skeleton" data-source="season" data-field="bowl_first_won" data-row="0">—</b> of <span class="gl-fill dash-skeleton" data-source="season" data-field="bowl_first_played" data-row="0">—</span> bowling first.
+      Extras made up <b class="gl-fill dash-skeleton" data-source="season" data-field="extras_pct" data-row="0" data-fmt="pct">—</b> of our runs, and we bowled <b class="gl-fill dash-skeleton" data-source="season" data-field="wides" data-row="0">—</b> wides and <b class="gl-fill dash-skeleton" data-source="season" data-field="no_balls" data-row="0">—</b> no-balls — the clearest thing to work on.
+    </p>
+  </header>
+
+  <section class="gl-section" id="season">
+    <h2 class="gl-h2">The season</h2>
+    <div class="gl-tiles">
+      <div class="gl-tile"><span class="gl-tile-label">Record</span><span class="gl-tile-value"><span class="gl-fill dash-skeleton" data-source="season" data-field="won" data-row="0">—</span>–<span class="gl-fill dash-skeleton" data-source="season" data-field="lost" data-row="0">—</span></span><span class="gl-tile-note">won–lost, <span class="gl-fill" data-source="season" data-field="played" data-row="0">—</span> games</span></div>
+      <div class="gl-tile"><span class="gl-tile-label">Avg runs scored</span><span class="gl-tile-value gl-fill dash-skeleton" data-source="season" data-field="avg_for" data-row="0" data-fmt="d1">—</span><span class="gl-tile-note">high <span class="gl-fill" data-source="season" data-field="highest" data-row="0">—</span> · low <span class="gl-fill" data-source="season" data-field="lowest" data-row="0">—</span></span></div>
+      <div class="gl-tile"><span class="gl-tile-label">Avg runs conceded</span><span class="gl-tile-value gl-fill dash-skeleton" data-source="season" data-field="avg_against" data-row="0" data-fmt="d1">—</span><span class="gl-tile-note">per opposition innings</span></div>
+      <div class="gl-tile"><span class="gl-tile-label">Wickets taken</span><span class="gl-tile-value gl-fill dash-skeleton" data-source="season" data-field="wickets" data-row="0">—</span><span class="gl-tile-note"><span class="gl-fill" data-source="season" data-field="wickets_per_game" data-row="0" data-fmt="d1">—</span> a game</span></div>
+      <div class="gl-tile"><span class="gl-tile-label">Catches · run-outs</span><span class="gl-tile-value"><span class="gl-fill dash-skeleton" data-source="season" data-field="catches" data-row="0">—</span> · <span class="gl-fill dash-skeleton" data-source="season" data-field="run_outs" data-row="0">—</span></span><span class="gl-tile-note">incl. keeper catches · run-out involvements</span></div>
+      <div class="gl-tile"><span class="gl-tile-label">Wides bowled</span><span class="gl-tile-value gl-fill dash-skeleton" data-source="season" data-field="wides" data-row="0">—</span><span class="gl-tile-note"><span class="gl-fill" data-source="season" data-field="wides_per_game" data-row="0" data-fmt="d1">—</span> a game · <span class="gl-fill" data-source="season" data-field="no_balls" data-row="0">—</span> no-balls</span></div>
+    </div>
+
+    <div class="gl-grid">
+      <div class="gl-card" id="card-scores">
+        <h3 class="gl-card-title">Runs scored v conceded, game by game</h3>
+        <p class="gl-card-note">Spartans' total beside the opposition's. W/L under each date.</p>
+        <div class="gl-legend" id="lg-scores"></div>
+        <div class="gl-chart dash-skeleton" id="ch-scores" data-source="games"></div>
+      </div>
+      <div class="gl-card" id="card-extras">
+        <h3 class="gl-card-title">Where our runs came from</h3>
+        <p class="gl-card-note">Runs off the bat v extras (wides, no-balls, byes, leg-byes and penalty runs) in each Spartans innings.</p>
+        <div class="gl-legend" id="lg-extras"></div>
+        <div class="gl-chart dash-skeleton" id="ch-extras" data-source="games"></div>
+      </div>
+    </div>
+
+    <div class="gl-grid">
+      <div class="gl-card" id="card-discipline">
+        <h3 class="gl-card-title">Bowling discipline</h3>
+        <p class="gl-card-note">Wides and no-balls our bowlers sent down each game; wickets taken shown above each bar.</p>
+        <div class="gl-legend" id="lg-disc"></div>
+        <div class="gl-chart dash-skeleton" id="ch-disc" data-source="games"></div>
+      </div>
+      <div class="gl-card" id="card-toss">
+        <h3 class="gl-card-title">Batting first v bowling first</h3>
+        <p class="gl-card-note">Games won, by whether we batted or bowled first.</p>
+        <div class="gl-split">
+          <div class="gl-tile"><span class="gl-tile-label">Batting first</span><span class="gl-big"><span class="gl-fill dash-skeleton" data-source="season" data-field="bat_first_won" data-row="0">—</span> of <span class="gl-fill dash-skeleton" data-source="season" data-field="bat_first_played" data-row="0">—</span></span><span class="gl-tile-note">games won</span></div>
+          <div class="gl-tile"><span class="gl-tile-label">Bowling first</span><span class="gl-big"><span class="gl-fill dash-skeleton" data-source="season" data-field="bowl_first_won" data-row="0">—</span> of <span class="gl-fill dash-skeleton" data-source="season" data-field="bowl_first_played" data-row="0">—</span></span><span class="gl-tile-note">games won</span></div>
+          <div class="gl-tile"><span class="gl-tile-label">Extras share of our runs</span><span class="gl-big gl-fill dash-skeleton" data-source="season" data-field="extras_pct" data-row="0" data-fmt="pct">—</span><span class="gl-tile-note">conceded <span class="gl-fill" data-source="season" data-field="extras_against" data-row="0">—</span> extras</span></div>
+          <div class="gl-tile"><span class="gl-tile-label">Boundaries hit</span><span class="gl-big gl-fill dash-skeleton" data-source="season" data-field="fours" data-row="0">—</span><span class="gl-tile-note">fours hit</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gl-card" id="card-results">
+      <h3 class="gl-card-title">Results</h3>
+      <p class="gl-card-note">Each date links to the PlayHQ scorecard.</p>
+      <div class="gl-tablebox">
+        <table id="tbl-results" data-source="games" data-row-key="iso">
+          <thead><tr>
+            <th class="gl-left" data-field="short">Date</th>
+            <th class="gl-left" data-field="opp">Opponent</th>
+            <th class="gl-left" data-field="grade">Grade</th>
+            <th class="gl-left" data-field="result">Result</th>
+            <th data-field="for">Us</th>
+            <th data-field="against">Them</th>
+            <th class="gl-left" data-field="margin">Margin</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="gl-section" id="players">
+    <h2 class="gl-h2">The players</h2>
+    <p class="gl-h2-note">Season totals for the squad, then a card for each player. Jump to a player:</p>
+    <div class="gl-chips" id="chips"></div>
+
+    <div class="gl-grid">
+      <div class="gl-card" id="card-runs">
+        <h3 class="gl-card-title">Runs scored</h3>
+        <p class="gl-card-note">Season total; strike rate (runs per 100 balls) at the end of each bar.</p>
+        <div class="gl-chart dash-skeleton" id="ch-runs" data-source="players"></div>
+      </div>
+      <div class="gl-card" id="card-wkts">
+        <h3 class="gl-card-title">Wickets taken</h3>
+        <p class="gl-card-note">Season total; best bowling in a game at the end of each bar.</p>
+        <div class="gl-chart dash-skeleton" id="ch-wkts" data-source="players"></div>
+      </div>
+      <div class="gl-card" id="card-econ">
+        <h3 class="gl-card-title">Economy rate</h3>
+        <p class="gl-card-note">Runs conceded per over — lower is better. Dashed line is the squad's average.</p>
+        <div class="gl-chart dash-skeleton" id="ch-econ" data-source="players"></div>
+      </div>
+      <div class="gl-card" id="card-field">
+        <h3 class="gl-card-title">In the field</h3>
+        <p class="gl-card-note">Catches (including as keeper), run-out involvements (direct or assisting) and stumpings.</p>
+        <div class="gl-legend" id="lg-field"></div>
+        <div class="gl-chart dash-skeleton" id="ch-field" data-source="players"></div>
+      </div>
+    </div>
+
+    <div class="gl-card" id="card-table">
+      <h3 class="gl-card-title">Season stats</h3>
+      <p class="gl-card-note">Click a column to sort.</p>
+      <div class="gl-tablebox">
+        <table id="tbl-players" data-source="players" data-row-key="player">
+          <thead><tr></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="gl-players" id="pcards"></div>
+  </section>
+
+  <section class="gl-section" id="notes">
+    <h2 class="gl-h2">About these numbers</h2>
+    <div class="gl-notes">
+      <p><b>Games included.</b> Every completed game with a scorecard. Left out: the cancelled 29 Nov and 24 Jan games, and 14 Mar, which was abandoned.</p>
+      <p><b>Wickets.</b> What PlayHQ credits each bowler. In this junior format a dismissed batter usually keeps batting, so team scores show few or no wickets even when bowlers took several.</p>
+      <p><b>Extras.</b> Wides, no-balls, byes, leg-byes and penalty runs, as recorded on each scorecard.</p>
+      <p><b>Players</b> are shown by initials: first name, surname, then the second letter of the surname (e.g. ECo).</p>
+      <p><b>Fill-in and private players.</b> Stand-in players, and one squad member PlayHQ lists only as "Private player", appear in team totals but don't have a player card.</p>
+      <p><b>Strike rate</b> is runs per 100 balls faced; <b>economy</b> is runs conceded per six-ball over.</p>
+    </div>
+  </section>
+</div>
+
+<script>
+(function () {
+  const fmt = {
+    int: d3.format(','), d1: d3.format('.1f'), d2: d3.format('.2f'),
+    pct: (v) => d3.format('.0f')(v) + '%', str: (v) => String(v),
+  };
+  const C = () => dash.colors;
+  const muted = 'var(--cds-chart-muted)';
+  const slug = (s) => 'p-' + String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-');
+
+  dash.calc('season', {
+    inputs: ['games'],
+    title: 'Season totals',
+    description: 'Results, totals and per-game averages over every completed game.',
+    fn: (games) => {
+      const n = games.length;
+      const sum = (k) => games.reduce((a, g) => a + Number(g[k]), 0);
+      const r1 = (x) => Math.round(x * 10) / 10;
+      const won = games.filter((g) => g.won === true).length;
+      const batFirst = games.filter((g) => g.batted_first === true);
+      const bowlFirst = games.filter((g) => g.batted_first !== true);
+      return [{
+        played: n, won: won, lost: n - won,
+        avg_for: r1(sum('for') / n), avg_against: r1(sum('against') / n),
+        highest: Math.max(...games.map((g) => Number(g.for))), lowest: Math.min(...games.map((g) => Number(g.for))),
+        wickets: sum('wickets'), wickets_per_game: r1(sum('wickets') / n),
+        catches: sum('catches'), run_outs: sum('runouts'),
+        wides: sum('wides'), wides_per_game: r1(sum('wides') / n), no_balls: sum('noballs'),
+        extras_pct: Math.round(sum('extras_for') * 100 / sum('for')), extras_against: sum('extras_against'),
+        fours: sum('fours'),
+        bat_first_played: batFirst.length, bat_first_won: batFirst.filter((g) => g.won === true).length,
+        bowl_first_played: bowlFirst.length, bowl_first_won: bowlFirst.filter((g) => g.won === true).length,
+      }];
+    },
+  });
+
+  function rowsOf(id) { const d = dash.data(id); return d.status === 'ok' && Array.isArray(d.data) ? d.data : null; }
+  function lookup(el) {
+    const rows = rowsOf(el.dataset.source);
+    if (!rows) return undefined;
+    let row;
+    if (el.dataset.row != null) row = rows[+el.dataset.row];
+    else if (el.dataset.where) {
+      const conds = el.dataset.where.split('&').map((p) => p.split('=').map(decodeURIComponent));
+      row = rows.find((r) => conds.every(([k, v]) => String(r[k]) === v));
+    }
+    return row ? row[el.dataset.field] : undefined;
+  }
+  function fillAll(root) {
+    root.querySelectorAll('.gl-fill').forEach((el) => {
+      const st = dash.data(el.dataset.source).status;
+      const v = lookup(el);
+      if (st === 'ok' && v !== undefined && v !== null) {
+        const f = fmt[el.dataset.fmt || (typeof v === 'number' ? 'int' : 'str')];
+        el.textContent = f(v);
+        el.classList.remove('dash-skeleton');
+      } else {
+        el.textContent = '—';
+        if (st !== 'loading') el.classList.remove('dash-skeleton');
+      }
+    });
+  }
+  function failOrWait(el, id) {
+    const st = dash.data(id).status;
+    el.innerHTML = '';
+    if (st === 'loading') { el.classList.add('dash-skeleton'); return true; }
+    el.classList.remove('dash-skeleton');
+    if (st !== 'ok') { const f = document.createElement('div'); f.className = 'gl-fail'; f.textContent = 'Failed to load'; el.appendChild(f); return true; }
+    return false;
+  }
+  function legend(el, items) {
+    el.innerHTML = '';
+    items.forEach(([label, color]) => {
+      const s = document.createElement('span');
+      const sw = document.createElement('i'); sw.className = 'gl-sw'; sw.style.background = color;
+      s.appendChild(sw); s.appendChild(document.createTextNode(label)); el.appendChild(s);
+    });
+  }
+  function tipFor(box) {
+    const t = document.createElement('div'); t.className = 'gl-tip'; box.appendChild(t);
+    return {
+      show(ev, lines) {
+        t.replaceChildren();
+        lines.forEach((ln, i) => {
+          const d = document.createElement('div');
+          if (i === 0) d.className = 'gl-tip-h';
+          if (ln.color) { const sw = document.createElement('i'); sw.className = 'gl-sw'; sw.style.background = ln.color; sw.style.marginRight = '6px'; d.appendChild(sw); }
+          d.appendChild(document.createTextNode(ln.text || ln));
+          t.appendChild(d);
+        });
+        const r = box.getBoundingClientRect();
+        let x = ev.clientX - r.left + 12, y = ev.clientY - r.top + 12;
+        t.style.opacity = 1;
+        const tw = t.offsetWidth, th = t.offsetHeight;
+        if (x + tw > r.width) x = Math.max(0, ev.clientX - r.left - tw - 12);
+        if (y + th > r.height) y = Math.max(0, ev.clientY - r.top - th - 12);
+        t.style.left = x + 'px'; t.style.top = y + 'px';
+      },
+      hide() { t.style.opacity = 0; },
+    };
+  }
+  function cleanAxis(g) { g.attr('font-size', null).attr('font-family', null).attr('class', 'gl-axis'); }
+
+  // ---------- season charts ----------
+  function gamesBars(el, games, opts) {
+    if (failOrWait(el, 'games')) return;
+    const W = el.clientWidth, H = opts.h || 240;
+    const m = { t: 18, r: 6, b: 38, l: 30 };
+    const svg = d3.select(el).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`);
+    const x = d3.scaleBand(games.map((g) => g.iso), [m.l, W - m.r]).paddingInner(0.28).paddingOuter(0.1);
+    const yMax = d3.max(games, opts.max);
+    const y = d3.scaleLinear([0, yMax * 1.08], [H - m.b, m.t]).nice();
+    svg.append('g').selectAll('line').data(y.ticks(4)).join('line').attr('class', 'gl-grid-line').attr('x1', m.l).attr('x2', W - m.r).attr('y1', y).attr('y2', y);
+    const ya = svg.append('g').attr('transform', `translate(${m.l},0)`).call(d3.axisLeft(y).ticks(4).tickSize(0).tickPadding(6));
+    cleanAxis(ya); ya.select('.domain').remove();
+    const step = Math.max(1, Math.ceil(46 / x.step()));
+    const lab = svg.append('g');
+    games.forEach((g, i) => {
+      const cx = x(g.iso) + x.bandwidth() / 2;
+      if (i % step === 0) lab.append('text').attr('class', 'gl-lbl').attr('x', cx).attr('y', H - m.b + 14).attr('text-anchor', 'middle').text(g.short);
+      if (opts.wl) lab.append('text').attr('class', g.won ? 'gl-lbl gl-win' : 'gl-lbl gl-loss').attr('x', cx).attr('y', H - m.b + 29).attr('text-anchor', 'middle').text(g.won ? 'W' : 'L');
+    });
+    opts.draw(svg, games, x, y, H - m.b);
+    if (opts.top) games.forEach((g) => svg.append('text').attr('class', 'gl-val').attr('x', x(g.iso) + x.bandwidth() / 2).attr('y', y(opts.max(g)) - 5).attr('text-anchor', 'middle').text(opts.top(g)));
+    const tip = tipFor(el);
+    svg.append('g').selectAll('rect').data(games).join('rect')
+      .attr('x', (g) => x(g.iso) - x.step() * x.paddingInner() / 2).attr('width', x.step()).attr('y', m.t).attr('height', H - m.t - m.b).attr('fill', 'transparent')
+      .on('mousemove', (ev, g) => tip.show(ev, opts.tip(g))).on('mouseleave', () => tip.hide());
+  }
+
+  function drawScores(games) {
+    legend(document.getElementById('lg-scores'), [['Spartans', C()[0]], ['Opposition', muted]]);
+    gamesBars(document.getElementById('ch-scores'), games, {
+      wl: true, max: (g) => Math.max(g.for, g.against),
+      draw(svg, gs, x, y, base) {
+        const inner = d3.scaleBand(['for', 'against'], [0, x.bandwidth()]).padding(0.08);
+        gs.forEach((g) => ['for', 'against'].forEach((k) => {
+          svg.append('rect').attr('x', x(g.iso) + inner(k)).attr('width', inner.bandwidth()).attr('y', y(g[k])).attr('height', base - y(g[k])).attr('rx', 3).attr('fill', k === 'for' ? C()[0] : muted);
+        }));
+      },
+      tip: (g) => [`${g.short} · v ${g.opp}`, { text: `Spartans ${g.for}`, color: C()[0] }, { text: `${g.opp} ${g.against}`, color: muted }, `${g.result} — ${g.margin}`],
+    });
+  }
+  function drawExtras(games) {
+    legend(document.getElementById('lg-extras'), [['Off the bat', C()[0]], ['Extras', C()[1]]]);
+    gamesBars(document.getElementById('ch-extras'), games, {
+      max: (g) => g.for, top: (g) => g.for,
+      draw(svg, gs, x, y, base) {
+        gs.forEach((g) => {
+          svg.append('rect').attr('x', x(g.iso)).attr('width', x.bandwidth()).attr('y', y(g.bat_runs)).attr('height', base - y(g.bat_runs)).attr('fill', C()[0]);
+          svg.append('rect').attr('x', x(g.iso)).attr('width', x.bandwidth()).attr('y', y(g.for)).attr('height', y(g.bat_runs) - y(g.for)).attr('rx', 3).attr('fill', C()[1]);
+        });
+      },
+      tip: (g) => [`${g.short} · v ${g.opp}`, { text: `Off the bat ${g.bat_runs}`, color: C()[0] }, { text: `Extras ${g.extras_for} (${Math.round(g.extras_for * 100 / g.for)}%)`, color: C()[1] }, `Total ${g.for}`],
+    });
+  }
+  function drawDisc(games) {
+    legend(document.getElementById('lg-disc'), [['Wides', C()[2]], ['No-balls', C()[3]]]);
+    gamesBars(document.getElementById('ch-disc'), games, {
+      max: (g) => g.wides + g.noballs, top: (g) => `${g.wickets} wkt${g.wickets === 1 ? '' : 's'}`,
+      draw(svg, gs, x, y, base) {
+        gs.forEach((g) => {
+          svg.append('rect').attr('x', x(g.iso)).attr('width', x.bandwidth()).attr('y', y(g.wides)).attr('height', base - y(g.wides)).attr('fill', C()[2]);
+          svg.append('rect').attr('x', x(g.iso)).attr('width', x.bandwidth()).attr('y', y(g.wides + g.noballs)).attr('height', y(g.wides) - y(g.wides + g.noballs)).attr('rx', 3).attr('fill', C()[3]);
+        });
+      },
+      tip: (g) => [`${g.short} · v ${g.opp}`, { text: `Wides ${g.wides}`, color: C()[2] }, { text: `No-balls ${g.noballs}`, color: C()[3] }, `Wickets ${g.wickets} · conceded ${g.against}`],
+    });
+  }
+  function drawResults(games) {
+    const tb = document.querySelector('#tbl-results tbody');
+    tb.replaceChildren();
+    games.forEach((g) => {
+      const tr = document.createElement('tr'); tr.dataset.key = g.iso;
+      const td = (txt, cls) => { const c = document.createElement('td'); if (cls) c.className = cls; c.textContent = txt; tr.appendChild(c); return c; };
+      const d = td('', 'gl-left'); const a = document.createElement('a'); a.href = g.source; a.target = '_blank'; a.rel = 'noopener'; a.textContent = g.short; d.appendChild(a);
+      td(g.opp, 'gl-left'); td(g.grade, 'gl-left'); td(g.result, 'gl-left ' + (g.won ? 'gl-res-w' : 'gl-res-l'));
+      td(String(g.for)); td(String(g.against)); td(g.margin, 'gl-left');
+      tb.appendChild(tr);
+    });
+  }
+
+  // ---------- player comparison ----------
+  function hbars(el, rows, o) {
+    if (failOrWait(el, 'players')) return;
+    const W = el.clientWidth, bh = 22, gap = 8;
+    const H = rows.length * (bh + gap) + 6;
+    el.style.minHeight = H + 'px';
+    const svg = d3.select(el).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`);
+    const probe = svg.append('text').attr('class', 'gl-lbl');
+    const lw = d3.max(rows, (r) => { probe.text(r.player); return probe.node().getComputedTextLength(); }) + 10;
+    const ew = d3.max(rows, (r) => { probe.text(o.end(r)); return probe.node().getComputedTextLength(); }) + 8;
+    probe.remove();
+    const x = d3.scaleLinear([0, d3.max(rows, o.total) || 1], [lw, Math.max(lw + 20, W - ew)]);
+    if (o.ref != null) svg.append('line').attr('x1', x(o.ref)).attr('x2', x(o.ref)).attr('y1', 0).attr('y2', H - 4).attr('stroke', 'var(--cds-chart-reference)').attr('stroke-dasharray', '4 3');
+    const tip = tipFor(el);
+    rows.forEach((r, i) => {
+      const yy = i * (bh + gap);
+      svg.append('text').attr('class', 'gl-lbl').attr('x', lw - 8).attr('y', yy + bh / 2).attr('dy', '0.35em').attr('text-anchor', 'end').text(r.player);
+      let acc = 0;
+      o.parts.forEach((p, j) => {
+        const v = Number(r[p.key]) + (p.plus ? Number(r[p.plus]) : 0);
+        if (v > 0) svg.append('rect').attr('x', x(acc)).attr('y', yy).attr('height', bh).attr('width', Math.max(0, x(acc + v) - x(acc))).attr('rx', j === o.parts.length - 1 || o.parts.length === 1 ? 4 : 0).attr('fill', p.color(r));
+        acc += v;
+      });
+      svg.append('text').attr('class', 'gl-val').attr('x', x(o.total(r)) + 6).attr('y', yy + bh / 2).attr('dy', '0.35em').text(o.end(r));
+      svg.append('rect').attr('x', 0).attr('y', yy - gap / 2).attr('width', W).attr('height', bh + gap).attr('fill', 'transparent')
+        .on('mousemove', (ev) => tip.show(ev, o.tip(r))).on('mouseleave', () => tip.hide());
+    });
+  }
+  function drawCompare(players) {
+    const top = (rows, k) => rows.slice().sort((a, b) => b[k] - a[k] || a.player.localeCompare(b.player));
+    hbars(document.getElementById('ch-runs'), top(players, 'runs'), {
+      total: (r) => r.runs, end: (r) => `${r.runs} · SR ${fmt.d1(r.strike_rate)}`,
+      parts: [{ key: 'runs', color: (r, i) => C()[0] }],
+      tip: (r) => [r.player, `${r.runs} runs off ${r.balls_faced} balls`, `Strike rate ${fmt.d1(r.strike_rate)} · high score ${r.high_score}`, `${r.fours} fours · ${r.games} games`],
+    });
+    hbars(document.getElementById('ch-wkts'), top(players, 'wickets'), {
+      total: (r) => r.wickets, end: (r) => `${r.wickets} · best ${r.best_bowling}`,
+      parts: [{ key: 'wickets', color: () => C()[1] }],
+      tip: (r) => [r.player, `${r.wickets} wickets from ${r.overs} overs`, `Best ${r.best_bowling} · economy ${fmt.d2(r.economy)}`],
+    });
+    const bowlers = players.filter((p) => p.balls_bowled > 0).sort((a, b) => a.economy - b.economy);
+    const sqAvg = d3.sum(bowlers, (p) => p.runs_conceded) * 6 / d3.sum(bowlers, (p) => p.balls_bowled);
+    hbars(document.getElementById('ch-econ'), bowlers, {
+      total: (r) => r.economy, end: (r) => fmt.d2(r.economy), ref: sqAvg,
+      parts: [{ key: 'economy', color: (r) => (r.economy <= sqAvg ? C()[2] : muted) }],
+      tip: (r) => [r.player, `${fmt.d2(r.economy)} runs per over`, `${r.runs_conceded} runs off ${r.overs} overs`, `${r.wides} wides · ${r.no_balls} no-balls`],
+    });
+    legend(document.getElementById('lg-field'), [['Catches', C()[3]], ['Run-outs', C()[4]], ['Stumpings', C()[5]]]);
+    hbars(document.getElementById('ch-field'), players.slice().sort((a, b) => (b.catches + b.keeper_catches + b.run_outs + b.run_out_assists) - (a.catches + a.keeper_catches + a.run_outs + a.run_out_assists) || a.player.localeCompare(b.player)), {
+      total: (r) => r.catches + r.keeper_catches + r.run_outs + r.run_out_assists + (r.stumpings || 0),
+      end: (r) => String(r.catches + r.keeper_catches + r.run_outs + r.run_out_assists + (r.stumpings || 0)),
+      parts: [{ key: 'catches', plus: 'keeper_catches', color: () => C()[3] }, { key: 'run_outs', plus: 'run_out_assists', color: () => C()[4] }, { key: 'stumpings', color: () => C()[5] }],
+      tip: (r) => [r.player, `Catches ${r.catches}${r.keeper_catches ? ` + ${r.keeper_catches} as keeper` : ''}`, `Run-outs ${r.run_outs}${r.run_out_assists ? ` + ${r.run_out_assists} assisted` : ''}`, ...(r.stumpings ? [`Stumpings ${r.stumpings}`] : [])],
+    });
+  }
+
+  // ---------- stats table ----------
+  const COLS = [
+    ['player', 'Player', 'str'], ['games', 'Games', 'int'], ['runs', 'Runs', 'int'], ['runs_per_game', 'Runs/game', 'd1'], ['high_score', 'High', 'int'],
+    ['strike_rate', 'SR', 'd1'], ['fours', '4s', 'int'], ['overs', 'Overs', 'str'], ['wickets', 'Wkts', 'int'], ['economy', 'Econ', 'd2'],
+    ['best_bowling', 'Best', 'str'], ['wides', 'Wides', 'int'], ['no_balls', 'NB', 'int'], ['catches', 'Ct', 'int'], ['keeper_catches', 'Ct (wk)', 'int'], ['run_outs', 'RO', 'int'], ['stumpings', 'St', 'int'],
+  ];
+  let sortKey = 'runs', sortDir = -1;
+  const thead = document.querySelector('#tbl-players thead tr');
+  COLS.forEach(([k, label]) => {
+    const th = document.createElement('th'); th.dataset.field = k; if (k === 'player') th.className = 'gl-left';
+    const b = document.createElement('button'); b.type = 'button'; b.textContent = label;
+    b.addEventListener('click', () => { if (sortKey === k) sortDir = -sortDir; else { sortKey = k; sortDir = k === 'player' || k === 'economy' ? 1 : -1; } drawTable(rowsOf('players')); });
+    th.appendChild(b); thead.appendChild(th);
+  });
+  function drawTable(players) {
+    const tb = document.querySelector('#tbl-players tbody');
+    tb.replaceChildren();
+    if (!players) return;
+    thead.querySelectorAll('th').forEach((th) => th.setAttribute('aria-sort', th.dataset.field === sortKey ? (sortDir > 0 ? 'ascending' : 'descending') : 'none'));
+    const num = (v) => (typeof v === 'number' ? v : parseFloat(v));
+    const rows = players.slice().sort((a, b) => {
+      const va = a[sortKey], vb = b[sortKey];
+      if (sortKey === 'player' || sortKey === 'best_bowling') return String(va).localeCompare(String(vb)) * sortDir;
+      return ((num(va) || 0) - (num(vb) || 0)) * sortDir || a.player.localeCompare(b.player);
+    });
+    rows.forEach((r) => {
+      const tr = document.createElement('tr');
+      COLS.forEach(([k, , f]) => { const td = document.createElement('td'); if (k === 'player') td.className = 'gl-left'; td.textContent = r[k] == null ? '—' : fmt[f](r[k]); tr.appendChild(td); });
+      tb.appendChild(tr);
+    });
+  }
+
+  // ---------- player cards ----------
+  const PSTATS = [
+    ['Batting', [['Runs', 'runs'], ['Strike rate', 'strike_rate', 'd1'], ['High score', 'high_score'], ['Runs a game', 'runs_per_game', 'd1'], ['Fours', 'fours']]],
+    ['Bowling', [['Wickets', 'wickets'], ['Overs', 'overs'], ['Economy', 'economy', 'd2'], ['Best', 'best_bowling'], ['Wides', 'wides']]],
+    ['Fielding', [['Catches', 'catches'], ['Keeper catches', 'keeper_catches'], ['Run-outs', 'run_outs'], ['Run-out assists', 'run_out_assists'], ['Stumpings', 'stumpings']]],
+  ];
+  const built = new Set();
+  function buildCards(players) {
+    const box = document.getElementById('pcards');
+    const chips = document.getElementById('chips');
+    players.forEach((p) => {
+      if (built.has(p.player)) return;
+      built.add(p.player);
+      const id = slug(p.player);
+      const chip = document.createElement('button'); chip.type = 'button'; chip.className = 'gl-chip'; chip.textContent = p.player;
+      chip.addEventListener('click', () => { const el = document.getElementById(id); el.scrollIntoView({ behavior: 'smooth', block: 'start' }); dash.setLink(id); });
+      chips.appendChild(chip);
+      const card = document.createElement('article'); card.className = 'gl-pcard'; card.id = id;
+      const head = document.createElement('div');
+      const h = document.createElement('h3'); h.className = 'gl-pname'; h.textContent = p.player;
+      const sub = document.createElement('p'); sub.className = 'gl-card-note';
+      const gs = document.createElement('span'); gs.className = 'gl-fill'; gs.dataset.source = 'players'; gs.dataset.field = 'games'; gs.dataset.where = 'player=' + encodeURIComponent(p.player);
+      const tot = document.createElement('span'); tot.className = 'gl-fill'; tot.dataset.source = 'season'; tot.dataset.field = 'played'; tot.dataset.row = '0';
+      sub.append('Played ', gs, ' of ', tot, ' games');
+      head.append(h, sub); card.appendChild(head);
+      const stats = document.createElement('div'); stats.className = 'gl-pstats';
+      PSTATS.forEach(([grp, items]) => {
+        const g = document.createElement('div'); g.className = 'gl-pgroup';
+        const t = document.createElement('h4'); t.textContent = grp; g.appendChild(t);
+        items.forEach(([label, field, f]) => {
+          const row = document.createElement('div'); row.className = 'gl-prow';
+          const l = document.createElement('span'); l.textContent = label;
+          const v = document.createElement('span'); v.className = 'gl-fill dash-skeleton'; v.dataset.source = 'players'; v.dataset.field = field; v.dataset.where = 'player=' + encodeURIComponent(p.player); if (f) v.dataset.fmt = f; v.textContent = '—';
+          row.append(l, v); g.appendChild(row);
+        });
+        stats.appendChild(g);
+      });
+      card.appendChild(stats);
+      const ct = document.createElement('div'); ct.className = 'gl-card-title'; ct.style.fontSize = 'var(--cds-font-size-body)'; ct.textContent = 'Game by game';
+      const lg = document.createElement('div'); lg.className = 'gl-legend';
+      legend(lg, [['Runs scored ↑', C()[0]], ['Runs conceded ↓', muted], ['Wicket', C()[1]]]);
+      const ch = document.createElement('div'); ch.className = 'gl-chart gl-short dash-skeleton'; ch.dataset.source = 'player_games'; ch.id = id + '-chart';
+      card.append(ct, lg, ch);
+      box.appendChild(card);
+    });
+  }
+  function drawMini(el, rows, maxUp, maxDown) {
+    if (failOrWait(el, 'player_games')) return;
+    const W = el.clientWidth, H = 170, mid = 82, m = { l: 4, r: 4, b: 18 };
+    const svg = d3.select(el).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`);
+    const x = d3.scaleBand(rows.map((r) => r.iso), [m.l, W - m.r]).paddingInner(0.25);
+    const up = d3.scaleLinear([0, maxUp], [0, mid - 16]);
+    const down = d3.scaleLinear([0, maxDown], [0, H - m.b - mid - 30]);
+    svg.append('line').attr('x1', m.l).attr('x2', W - m.r).attr('y1', mid).attr('y2', mid).attr('stroke', 'var(--cds-chart-axis)');
+    const tip = tipFor(el);
+    const step = x.bandwidth() < 22 ? 2 : 1;
+    rows.forEach((r, i) => {
+      const x0 = x(r.iso), bw = x.bandwidth(), cx = x0 + bw / 2;
+      if (!r.played) {
+        svg.append('text').attr('class', 'gl-lbl').attr('x', cx).attr('y', mid - 4).attr('text-anchor', 'middle').text('–');
+      } else {
+        if (r.runs != null) {
+          svg.append('rect').attr('x', x0).attr('width', bw).attr('y', mid - up(r.runs)).attr('height', up(r.runs)).attr('rx', 2).attr('fill', C()[0]);
+          svg.append('text').attr('class', 'gl-val').attr('x', cx).attr('y', mid - up(r.runs) - 4).attr('text-anchor', 'middle').text(r.runs);
+        }
+        if (r.runs_conceded != null) {
+          svg.append('rect').attr('x', x0).attr('width', bw).attr('y', mid + 1).attr('height', down(r.runs_conceded)).attr('rx', 2).attr('fill', muted);
+          for (let k = 0; k < (r.wickets || 0); k++) svg.append('circle').attr('cx', cx).attr('cy', mid + down(r.runs_conceded) + 8 + k * 9).attr('r', 3.5).attr('fill', C()[1]);
+        }
+      }
+      if (i % step === 0) svg.append('text').attr('class', 'gl-lbl').attr('x', cx).attr('y', H - 4).attr('text-anchor', 'middle').text(r.short.replace(/^0/, ''));
+      svg.append('rect').attr('x', x0 - x.step() * x.paddingInner() / 2).attr('width', x.step()).attr('y', 0).attr('height', H).attr('fill', 'transparent')
+        .on('mousemove', (ev) => tip.show(ev, !r.played ? [r.short, 'Did not play'] : [
+          r.short,
+          r.runs != null ? { text: `Batting ${r.runs} off ${r.balls_faced} balls`, color: C()[0] } : 'Did not bat',
+          r.runs_conceded != null ? { text: `Bowling ${r.wickets}/${r.runs_conceded} off ${r.overs} ov`, color: muted } : 'Did not bowl',
+          `Fielding ${r.catches} ct · ${r.run_outs} run-out`,
+        ])).on('mouseleave', () => tip.hide());
+    });
+  }
+
+  let linked = false;
+  dash.onData(() => {
+    const games = rowsOf('games');
+    const players = rowsOf('players');
+    const pg = rowsOf('player_games');
+    fillAll(document.querySelector('.gl'));
+    const gs = games ? games.slice().sort((a, b) => a.iso.localeCompare(b.iso)) : [];
+    drawScores(gs); drawExtras(gs); drawDisc(gs);
+    if (games) drawResults(gs);
+    if (players) {
+      drawCompare(players);
+      drawTable(players);
+      buildCards(players.slice().sort((a, b) => b.runs - a.runs));
+      fillAll(document.getElementById('pcards'));
+    } else {
+      ['ch-runs', 'ch-wkts', 'ch-econ', 'ch-field'].forEach((id) => failOrWait(document.getElementById(id), 'players'));
+    }
+    if (players) {
+      const maxUp = pg ? d3.max(pg, (r) => r.runs || 0) : 1;
+      const maxDown = pg ? d3.max(pg, (r) => r.runs_conceded || 0) : 1;
+      players.forEach((p) => {
+        const el = document.getElementById(slug(p.player) + '-chart');
+        if (!el) return;
+        const rows = pg ? pg.filter((r) => r.player === p.player).sort((a, b) => a.iso.localeCompare(b.iso)) : [];
+        drawMini(el, rows, maxUp, maxDown);
+      });
+      if (!linked) {
+        linked = true;
+        const named = document.getElementById(location.hash.slice(1));
+        if (named) { named.scrollIntoView(); dash.setLink(named.id); }
+      }
+    }
+  });
+})();
+</script>
+
+<p class="gl-foot">Data: PlayHQ scorecards, Junior Cricket – Wellington, Summer 2025/26. Snapshot taken 22 Oct 2026.</p>
+</div>
+</body>
+</html>
