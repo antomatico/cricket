@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="en-NZ">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Gladiators Welcome Guide</title>
+<meta name="description" content="Welcome guide for parents and players of the Y7 Eastern Suburbs Junior Cricket Club Gladiators, summer 2026/27.">
+<style>
+html { color-scheme: light; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+body { margin: 0; }
+img { max-width: 100%; }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Roboto:wght@400;500;700&display=swap">
+<style>
+/* Layout: club-maroon hero band, then one reading column; the contents is the team's batting order (11 sections = a full XI); a slim sticky bar shows who's "now batting". */
+:root {
+  --maroon: #87325B;
+  --maroon-deep: #6E2849;
+  --navy: #152764;
+  --bg: #FBF9FA;
+  --surface: #FFFFFF;
+  --tint: #F5EDF1;
+  --ink: #2B2732;
+  --muted: #69626F;
+  --line: #E8E0E5;
+  --on-accent: #FFFFFF;
+  --accent-text: #87325B;
+  --number: #152764;
+  --font-display: "Oswald", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --font-body: "Roboto", "Open Sans", "Segoe UI", Arial, sans-serif;
+  --bar-h: 52px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --maroon: #87325B; --maroon-deep: #5C2240; --navy: #152764;
+    --bg: #13141C; --surface: #1B1C27; --tint: #261B24; --ink: #EDE9EF; --muted: #A69FAD;
+    --line: #2E2D3B; --on-accent: #FFFFFF; --accent-text: #DC8DB4; --number: #A9B7F0;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --maroon: #87325B; --maroon-deep: #5C2240; --navy: #152764;
+  --bg: #13141C; --surface: #1B1C27; --tint: #261B24; --ink: #EDE9EF; --muted: #A69FAD;
+  --line: #2E2D3B; --on-accent: #FFFFFF; --accent-text: #DC8DB4; --number: #A9B7F0;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-padding-top: calc(var(--bar-h) + env(safe-area-inset-top, 0px) + 12px); }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--font-body); font-size: 17px; line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px);
+  z-index: 10; background: var(--maroon-deep);
+}
+.wrap {
+  max-width: 780px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+a { color: var(--accent-text); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible { outline: 3px solid var(--accent-text); outline-offset: 3px; border-radius: 4px; }
+strong { font-weight: 700; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 500; text-wrap: balance; margin: 0; }
+
+/* Sticky bar */
+.bar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  background: var(--maroon-deep); color: var(--on-accent);
+}
+.bar .wrap { height: var(--bar-h); display: flex; align-items: center; gap: 16px; justify-content: space-between; }
+.bar-team { font-family: var(--font-display); text-transform: uppercase; letter-spacing: .06em; font-size: 15px; white-space: nowrap; }
+.bar-now { font-size: 13px; opacity: .92; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: right; }
+.bar-now span { font-family: var(--font-display); text-transform: uppercase; letter-spacing: .08em; font-size: 12px; opacity: .75; margin-right: 6px; }
+.bar a { color: var(--on-accent); text-decoration: none; }
+
+/* Hero */
+.hero { background: var(--maroon); color: var(--on-accent); overflow: hidden; position: relative; }
+.hero .wrap { padding-block: 56px 64px; position: relative; display: grid; gap: 18px; }
+.eyebrow { font-family: var(--font-display); text-transform: uppercase; letter-spacing: .14em; font-size: 14px; opacity: .85; }
+.hero h1 { font-size: clamp(40px, 9vw, 76px); line-height: .98; text-transform: uppercase; letter-spacing: .01em; font-weight: 600; max-width: 12ch; }
+.hero p { margin: 0; max-width: 58ch; font-size: 18px; }
+.hero .aim { font-family: var(--font-display); font-size: 22px; letter-spacing: .02em; border-top: 1px solid rgba(255,255,255,.35); padding-top: 18px; max-width: 30ch; }
+.ball { position: absolute; right: -40px; top: 26px; width: 260px; height: 260px; opacity: .9; pointer-events: none; }
+@media (max-width: 640px) { .ball { width: 150px; height: 150px; right: -36px; top: 14px; opacity: .55; } }
+
+/* Batting order (contents) */
+.order { padding-block: 44px 8px; }
+.order h2, .section h2 { font-size: 30px; text-transform: uppercase; color: var(--accent-text); letter-spacing: .02em; }
+.order-sub { color: var(--muted); margin: 6px 0 20px; font-size: 15px; }
+.order ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 28px; }
+@media (max-width: 600px) { .order ol { grid-template-columns: 1fr; } }
+.order li a {
+  display: flex; align-items: baseline; gap: 14px; padding: 11px 4px;
+  border-bottom: 1px solid var(--line); color: var(--ink); text-decoration: none;
+  transition: background .2s, padding-left .2s;
+}
+.order li a:hover { background: var(--tint); padding-left: 10px; }
+.num { font-family: var(--font-display); font-size: 22px; color: var(--number); min-width: 2ch; text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+.order li a span:last-child { min-width: 0; }
+
+/* Sections */
+.section { padding-block: 40px; border-top: 1px solid var(--line); outline: none; }
+.section:first-of-type { border-top: 0; }
+.sec-head { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+.tag {
+  font-family: var(--font-display); font-weight: 600; font-size: 18px; color: var(--on-accent);
+  background: var(--navy); width: 40px; height: 40px; flex: none; border-radius: 50%;
+  display: grid; place-items: center; font-variant-numeric: tabular-nums;
+}
+.section.arrived .tag { animation: hit .9s ease-out; }
+@keyframes hit { 0% { box-shadow: 0 0 0 0 rgba(135,50,91,.55); transform: scale(1); } 30% { transform: scale(1.15); } 100% { box-shadow: 0 0 0 18px rgba(135,50,91,0); transform: scale(1); } }
+.section p { margin: 0 0 14px; max-width: 65ch; }
+.section ul, .section ol.plain { margin: 0 0 14px; padding-left: 22px; max-width: 65ch; }
+.section li { margin-bottom: 8px; }
+.back { font-size: 14px; display: inline-block; margin-top: 6px; color: var(--muted); }
+.note { color: var(--muted); font-size: 15px; }
+
+/* Date rows */
+.rows { display: grid; margin: 0 0 16px; border-top: 2px solid var(--navy); }
+.row { display: grid; grid-template-columns: minmax(0, 15rem) minmax(0, 1fr); gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.row dt { font-family: var(--font-display); font-size: 18px; color: var(--number); letter-spacing: .01em; }
+.row dd { margin: 0; }
+.row.key dd { font-weight: 700; }
+@media (max-width: 520px) { .row { grid-template-columns: 1fr; gap: 2px; } }
+
+/* People */
+.people { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-bottom: 16px; }
+@media (max-width: 560px) { .people { grid-template-columns: 1fr; } }
+.person { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 18px; min-width: 0; }
+.person h3 { font-size: 22px; color: var(--ink); }
+.role { font-family: var(--font-display); text-transform: uppercase; letter-spacing: .1em; font-size: 13px; color: var(--accent-text); margin-bottom: 10px; }
+.contact { display: flex; align-items: center; gap: 8px; justify-content: space-between; padding: 6px 0; border-top: 1px dashed var(--line); font-size: 15px; }
+.contact span { min-width: 0; overflow-wrap: anywhere; user-select: all; }
+.copy {
+  font: 500 12px var(--font-body); text-transform: uppercase; letter-spacing: .06em;
+  border: 1px solid var(--line); background: transparent; color: var(--muted);
+  border-radius: 4px; padding: 4px 8px; cursor: pointer; flex: none;
+}
+.copy:hover { color: var(--accent-text); border-color: var(--accent-text); }
+
+/* Team sheet */
+.squad { list-style: none; padding: 0 !important; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 520px) { .squad { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.squad li { margin: 0; padding: 12px 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; font-family: var(--font-display); font-size: 20px; letter-spacing: .02em; }
+.squad li.vacant { border-style: dashed; color: var(--muted); font-family: var(--font-body); font-size: 15px; display: flex; align-items: center; }
+.callout { background: var(--tint); border-left: 4px solid var(--maroon); padding: 14px 16px; border-radius: 0 6px 6px 0; margin: 0 0 14px; max-width: 65ch; }
+.callout p { margin: 0; }
+
+/* Stats */
+.stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; margin: 4px 0 22px; border: 2px solid var(--navy); border-radius: 6px; overflow: hidden; }
+.stat { padding: 14px 12px; text-align: center; border-left: 1px solid var(--line); min-width: 0; }
+.stat:first-child { border-left: 0; }
+.stat b { display: block; font-family: var(--font-display); font-size: 40px; font-weight: 600; color: var(--number); line-height: 1.1; font-variant-numeric: tabular-nums; }
+.stat small { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+h3.sub { font-size: 20px; text-transform: uppercase; letter-spacing: .04em; color: var(--ink); margin: 18px 0 10px; }
+
+.btns { display: flex; flex-wrap: wrap; gap: 10px; margin: 6px 0 14px; }
+.btn { display: inline-block; background: var(--maroon); color: var(--on-accent); text-decoration: none; font-family: var(--font-display); text-transform: uppercase; letter-spacing: .06em; padding: 10px 16px; border-radius: 4px; }
+.btn.alt { background: transparent; color: var(--accent-text); border: 2px solid var(--maroon); padding: 8px 14px; }
+.btn:hover { filter: brightness(1.08); }
+
+footer { background: var(--navy); color: var(--on-accent); margin-top: 40px; }
+footer .wrap { padding-block: 40px 48px; display: grid; gap: 10px; }
+footer h2 { font-size: 26px; text-transform: uppercase; }
+footer p { margin: 0; max-width: 60ch; }
+footer .sign { font-family: var(--font-display); font-size: 20px; margin-top: 8px; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="bar" role="navigation" aria-label="Guide">
+  <div class="wrap">
+    <a class="bar-team" href="#order">Y7 Gladiators</a>
+    <div class="bar-now" id="now" aria-live="polite"><span>Batting order</span><a href="#order">Contents</a></div>
+  </div>
+</div>
+
+<header class="hero">
+  <svg class="ball" viewBox="0 0 200 200" aria-hidden="true">
+    <defs>
+      <radialGradient id="leather" cx="38%" cy="35%" r="70%">
+        <stop offset="0" stop-color="#E25A6B"/><stop offset=".6" stop-color="#B3263B"/><stop offset="1" stop-color="#6F1220"/>
+      </radialGradient>
+    </defs>
+    <g stroke="#FFFFFF" stroke-opacity=".35" stroke-width="4" stroke-linecap="round" fill="none">
+      <path d="M20 60 L70 70"/><path d="M8 92 L64 96"/><path d="M18 124 L68 120"/>
+    </g>
+    <circle cx="120" cy="96" r="62" fill="url(#leather)"/>
+    <path d="M86 44 C 112 76, 112 116, 86 148" stroke="#F4E9D8" stroke-width="3" fill="none"/>
+    <path d="M96 41 C 122 74, 122 118, 96 151" stroke="#F4E9D8" stroke-width="3" fill="none"/>
+    <g stroke="#F4E9D8" stroke-width="2" stroke-linecap="round">
+      <path d="M89 56 l8 -3"/><path d="M95 70 l9 -2"/><path d="M98 85 l9 -1"/><path d="M99 100 l9 0"/><path d="M98 115 l9 1"/><path d="M95 130 l9 2"/><path d="M90 143 l8 3"/>
+    </g>
+  </svg>
+  <div class="wrap">
+    <div class="eyebrow">Eastern Suburbs Junior Cricket Club · Summer 2026/27</div>
+    <h1>Welcome to the Y7 Gladiators</h1>
+    <p>Kia ora koutou, and a huge welcome to the 2026/27 season!</p>
+    <p>To our returning Gladiators: it's great to have you back. You've grown a lot as cricketers over the past year, and Year 7 is where the game starts to look and feel like "proper" cricket. To our new players and whānau: welcome to the team. Whether you've played for years or are picking up a hard ball for the first time, there's a place for you here.</p>
+    <p class="aim">Improve every week, back each other, and have fun doing it.</p>
+  </div>
+</header>
+
+<main>
+  <nav class="order wrap" id="order" aria-labelledby="order-h" tabindex="-1">
+    <h2 id="order-h">Batting order</h2>
+    <p class="order-sub">Eleven sections, a full XI. Tap any one to jump straight there.</p>
+    <ol>
+      <li><a href="#year-ahead"><span class="num">1</span><span>The year ahead</span></a></li>
+      <li><a href="#coaches"><span class="num">2</span><span>Coaches &amp; managers</span></a></li>
+      <li><a href="#whatsapp"><span class="num">3</span><span>Stay in touch: our WhatsApp group</span></a></li>
+      <li><a href="#team"><span class="num">4</span><span>Team list</span></a></li>
+      <li><a href="#format"><span class="num">5</span><span>Game format: what changes in Year 7</span></a></li>
+      <li><a href="#practice"><span class="num">6</span><span>Practice</span></a></li>
+      <li><a href="#fixtures"><span class="num">7</span><span>Fixtures</span></a></li>
+      <li><a href="#awards"><span class="num">8</span><span>Player of the Day &amp; Spirit of Cricket</span></a></li>
+      <li><a href="#scoring"><span class="num">9</span><span>Scoring: we need you!</span></a></li>
+      <li><a href="#review"><span class="num">10</span><span>Last season in review</span></a></li>
+      <li><a href="#calendar"><span class="num">11</span><span>Team calendar</span></a></li>
+    </ol>
+  </nav>
+
+  <div class="wrap">
+
+    <section class="section" id="year-ahead" tabindex="-1" data-n="1" data-name="The year ahead">
+      <div class="sec-head"><span class="tag">1</span><h2>The year ahead</h2></div>
+      <dl class="rows">
+        <div class="row key"><dt>Sat 7 November</dt><dd>First games of the season</dd></div>
+        <div class="row"><dt>Sat 19 December</dt><dd>Final games for 2026</dd></div>
+        <div class="row"><dt>Sun 17 – Wed 20 Jan 2027</dt><dd>Year 7 Hawke's Bay Cricket Camp</dd></div>
+        <div class="row"><dt>Sat 23 January</dt><dd>First game back for 2027</dd></div>
+        <div class="row"><dt>Wed 10 February</dt><dd>Easts Junior Photos</dd></div>
+        <div class="row"><dt>Fri 19 March</dt><dd>Prizegivings</dd></div>
+        <div class="row key"><dt>Sat 20 March</dt><dd>Final games of the season</dd></div>
+      </dl>
+      <p>Everything is in the <a href="#calendar">team calendar</a>. We'll add each week's fixtures as they're released.</p>
+      <a class="back" href="#order">Back to the batting order</a>
+    </section>
+
+    <section class="section" id="coaches" tabindex="-1" data-n="2" data-name="Coaches & managers">
+      <div class="sec-head"><span class="tag">2</span><h2>Coaches &amp; managers</h2></div>
+      <div class="people">
+        <div class="person">
+          <div class="role">Coach</div>
+          <h3>Ants Jackson</h3>
+          <div class="contact"><span>021 0227 7117</span><button class="copy" type="button" data-copy="021 0227 7117">Copy</button></div>
+          <div class="contact"><span>ants.jackson@gmail.com</span><button class="copy" type="button" data-copy="ants.jackson@gmail.com">Copy</button></div>
+        </div>
+        <div class="person">
+          <div class="role">Team manager</div>
+          <h3>Simon Hall</h3>
+          <div class="contact"><span>021 241 4824</span><button class="copy" type="button" data-copy="021 241 4824">Copy</button></div>
+          <div class="contact"><span>simonbhall76@gmail.com</span><button class="copy" type="button" data-copy="simonbhall76@gmail.com">Copy</button></div>
+        </div>
+      </div>
+      <p>Please get in touch with either of us any time: questions, worries, availability, or if you're keen to help out.</p>
+      <a class="back" href="#order">Back to the batting order</a>
+    </section>
+
+    <section class="section" id="whatsapp" tabindex="-1" data-n="3" data-name="Stay in touch">
+      <div class="sec-head"><span class="tag">3</span><h2>Stay in touch: our WhatsApp group</h2></div>
+      <p>WhatsApp is our main channel for everything: game-day details, practice updates, rain calls and the occasional celebration.</p>
+      <div class="callout"><p><strong>Joining:</strong> we'll add you to the group directly. If you're not in yet, message Ants or Simon with the number you'd like added.</p></div>
+      <p>Let us know if a second parent or caregiver would like to be added too.</p>
+      <a class="back" href="#order">Back to the batting order</a>
+    </section>
+
+    <section class="section" id="team" tabindex="-1" data-n="4" data-name="Team list">
+      <div class="sec-head"><span class="tag">4</span><h2>Team list</h2></div>
+      <ul class="squad">
+        <li>Mir</li><li>Ethan</li><li>Evan</li><li>Rowan</li><li>George</li><li>James</li><li>Nelindu</li><li>Leon</li>
+        <li class="vacant">Your name here?</li>
+      </ul>
+      <div class="callout"><p><strong>We're looking for one more Gladiator!</strong> If you know a Year 7 who'd love to play, whether experienced or brand new to cricket, please put them in touch with Ants or Simon.</p></div>
+      <a class="back" href="#order">Back to the batting order</a>
+    </section>
+
+    <section class="section" id="format" tabindex="-1" data-n="5" data-name="Game format">
+      <div class="sec-head"><span class="tag">5</span><h2>Game format: what changes in Year 7</h2></div>
+      <p>Year 7 is a step up from last season. The headline changes for players and parents:</p>
+      <ul>
+        <li><strong>Dismissals now count.</strong> Last season, batters usually kept batting after getting out. In Year 7, every batter is guaranteed <strong>at least 6 balls</strong>, and after that <strong>normal dismissals apply</strong>.</li>
+        <li><strong>Retirement at 30 balls,</strong> so everyone gets a turn at the crease.</li>
+        <li><strong>Longer pitch and bigger field:</strong> an <strong>18m pitch</strong> (up from 16m) and <strong>40m boundaries</strong>.</li>
+        <li><strong>9 players a side,</strong> up to <strong>30 overs</strong> in a game.</li>
+        <li><strong>Hard ball:</strong> 142g two-piece ball. <strong>Helmets are compulsory</strong> when batting and keeping.</li>
+      </ul>
+      <p class="note">This summary follows New Zealand Cricket's Year 7–8 junior format. Cricket Wellington's playing conditions have the local details, such as start times and overs per bowler: <a href="https://www.cricketwellington.co.nz/asset/downloadasset?id=d2b7682a-a56c-4e5b-a235-0bb2bdfc37b6" target="_blank" rel="noopener">Cricket Wellington Junior Playing Conditions</a>.</p>
+      <a class="back" href="#order">Back to the batting order</a>
+    </section>
+
+    <section class="section" id="practice" tabindex="-1" data-n="6" data-name="Practice">
+      <div class="sec-head"><span class="tag">6</span><h2>Practice</h2></div>
+      <p><strong>Thursdays at the Rongotai College nets.</strong> <a href="https://maps.app.goo.gl/hQBLTYx5mKULbrJJ6" target="_blank" rel="noopener">Open the map pin</a></p>
+      <dl class="rows">
+        <div class="row"><dt>5:00pm</dt><dd>Nets open (booked 5:00 – 6:30pm)</dd></div>
+        <div class="row"><dt>5:15pm</dt><dd>Warm-up</dd></div>
+        <div class="row key"><dt>5:30 – 6:30pm</dt><dd>Practice</dd></div>
+      </dl>
+      <div class="callout"><p><strong>We expect everyone there from 5:30pm to 6:30pm as a minimum.</strong> Arriving earlier for the warm-up is a bonus.</p></div>
+      <p>We know some of the team have other commitments that clash slightly, so we accept that a few of us may run a little late. We also know a 6:30pm finish affects evening routines at home, so thank you for your patience.</p>
+      <p>Please bring a water bottle, a hat and sunscreen. Bring helmets and any of your own gear (pads, gloves, box) too.</p>
+      <a class="back" href="#order">Back to the batting order</a>
+    </section>
+
+    <section class="section" id="fixtures" tabindex="-1" data-n="7" data-name="Fixtures">
+      <div class="sec-head"><span class="tag">7</span><h2>Fixtures</h2></div>
+      <p>Fixtures will be added to the <a href="#calendar">team calendar</a> as soon as they're released.</p>
+      <a class="back" href="#order">Back to the batting order</a>
+    </section>
+
+    <section class="section" id="awards" tabindex="-1" data-n="8" data-name="Awards">
+      <div class="sec-head"><span class="tag">8</span><h2>Player of the Day &amp; Spirit of Cricket</h2></div>
+      <p><strong>Player of the Day</strong> is awarded after every game.</p>
+      <p>Eastern Suburbs Junior Cricket Club also has a <strong>Spirit of Cricket</strong> award, given out each game:</p>
+      <ul>
+        <li>one to a player from <strong>the opposition</strong>, and</li>
+        <li>one to a member of <strong>our own team</strong>.</li>
+      </ul>
+      <p>The Spirit of Cricket award isn't about the most runs or wickets. It recognises <strong>kindness, support for teammates, leadership, fair play and looking after the game</strong>: clapping in an opposition batter, helping a teammate who's having a tough day, owning up, or setting a great example in the field.</p>
+      <a class="back" href="#order">Back to the batting order</a>
+    </section>
+
+    <section class="section" id="scoring" tabindex="-1" data-n="9" data-name="Scoring">
+      <div class="sec-head"><span class="tag">9</span><h2>Scoring: we need you!</h2></div>
+      <p>We record every game's score in <strong>PlayHQ</strong>, the app Cricket Wellington uses for junior cricket. Each game, we need <strong>one parent to be our scorer</strong>.</p>
+      <p>Having a parent score frees Simon and Ants to do the on-field jobs: warming the team up, umpiring and running the match day.</p>
+      <h3 class="sub">How it works</h3>
+      <ul>
+        <li><strong>Create a free PlayHQ account</strong> at <a href="https://www.playhq.com/signup" target="_blank" rel="noopener">playhq.com/signup</a>.</li>
+        <li>On game day, you score the match ball by ball in the app on your phone. No cricket expertise needed. It's easy to pick up, and we'll help you get started.</li>
+        <li>The opposition has their own scorer too. The two scorers usually sit together to compare notes and agree (or disagree agreeably!) on what happened.</li>
+      </ul>
+      <p>Once you've signed up, please let us know on WhatsApp so we can share the scoring around the team.</p>
+      <a class="back" href="#order">Back to the batting order</a>
+    </section>
+
+    <section class="section" id="review" tabindex="-1" data-n="10" data-name="Last season">
+      <div class="sec-head"><span class="tag">10</span><h2>Last season in review</h2></div>
+      <p>Last summer, as the <strong>Easts Y6 Gladiators</strong>, we played 10 completed T20 games across the Blue grade (Nov–Dec) and Green grade (Jan–Mar).</p>
+      <div class="stats" role="list">
+        <div class="stat" role="listitem"><b>3</b><small>Wins</small></div>
+        <div class="stat" role="listitem"><b>42</b><small>Wickets</small></div>
+        <div class="stat" role="listitem"><b>77</b><small>Fours</small></div>
+      </div>
+      <h3 class="sub">What went well</h3>
+      <ul>
+        <li><strong>3 wins</strong>, including a 51-run win over the BJCC Typhoons and a strong finish, winning our <strong>final game of the season</strong> against the Easts Spartans.</li>
+        <li><strong>42 wickets</strong> taken (about 4 a game).</li>
+        <li><strong>77 fours</strong> hit across the season.</li>
+        <li><strong>Sharp in the field:</strong> 13 catches and 23 run-out involvements. Our fielding and backing up were real strengths.</li>
+        <li>We stayed competitive. Several losses were by 15–16 runs, so we were often only a few good overs away.</li>
+      </ul>
+      <h3 class="sub">What we'll work on this season</h3>
+      <ol class="plain">
+        <li><strong>Bowling accuracy.</strong> This is the big one. We bowled 294 wides (about 29 a game) plus 47 no-balls, and extras made up nearly half the runs we conceded. Tightening our line and length is the fastest way to turn close games into wins.</li>
+        <li><strong>Scoring off the bat.</strong> Extras made up 45% of our own runs, too. More good contact, running hard between the wickets and turning ones into twos will help us post bigger totals ourselves.</li>
+        <li><strong>Chasing.</strong> We won 3 of 6 when batting first, but 0 of 4 when bowling first. We'll practise pacing an innings and knowing what the target needs.</li>
+      </ol>
+      <p>The full stats from last season: <a href="https://antomatico.github.io/cricket/" target="_blank" rel="noopener">Easts Y6 Gladiators · Season 2025/26</a></p>
+      <a class="back" href="#order">Back to the batting order</a>
+    </section>
+
+    <section class="section" id="calendar" tabindex="-1" data-n="11" data-name="Team calendar">
+      <div class="sec-head"><span class="tag">11</span><h2>Team calendar</h2></div>
+      <p>All key dates, practices, and fixtures once they're released, live in one calendar that updates automatically on your phone.</p>
+      <div class="btns">
+        <a class="btn" href="https://calendar.google.com/calendar/u/0?cid=OTI0ZjFmMTYzYmRlYjdlOTJkYzQyNjg4MDAxYjRiZjBmMDYyZjc1NDQ4ZWJkOTcyMDFkNmZhNTUxMDliNTM3NEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t" target="_blank" rel="noopener">Add to Google Calendar</a>
+        <a class="btn alt" href="https://calendar.google.com/calendar/ical/924f1f163bdeb7e92dc42688001b4bf0f062f75448ebd97201d6fa55109b5374%40group.calendar.google.com/public/basic.ics" target="_blank" rel="noopener">iPhone, Outlook &amp; others (iCal)</a>
+      </div>
+      <p class="note">On iPhone or Outlook, choose "subscribe" when asked, so new fixtures appear automatically.</p>
+      <a class="back" href="#order">Back to the batting order</a>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <h2>More to come…</h2>
+    <p>We'll share more as the season gets underway. In the meantime, dig out the bat, find the helmet and get some throw-downs in the backyard!</p>
+    <p class="sign">Ngā mihi, Ants &amp; Simon</p>
+    <p>Y7 ESJCC Gladiators</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function go(id, smooth) {
+    var t = document.getElementById(id);
+    if (!t) return;
+    t.scrollIntoView({ behavior: smooth && !reduce ? 'smooth' : 'auto', block: 'start' });
+    try { t.focus({ preventScroll: true }); } catch (e) {}
+    if (t.classList.contains('section')) {
+      t.classList.remove('arrived'); void t.offsetWidth; t.classList.add('arrived');
+    }
+  }
+
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    var id = a.getAttribute('href').slice(1);
+    if (!document.getElementById(id)) return;
+    e.preventDefault();
+    go(id, true);
+  });
+
+  if (location.hash && /^#[\w.~-]+$/.test(location.hash)) {
+    window.addEventListener('load', function () { go(location.hash.slice(1), false); });
+  }
+
+  // "Now batting" readout in the sticky bar
+  var now = document.getElementById('now');
+  var sections = Array.prototype.slice.call(document.querySelectorAll('.section'));
+  var current = null;
+  function update() {
+    var y = 90, pick = null;
+    for (var i = 0; i < sections.length; i++) {
+      if (sections[i].getBoundingClientRect().top - y <= 0) pick = sections[i];
+    }
+    if (pick === current) return;
+    current = pick;
+    if (!pick) { now.innerHTML = '<span>Batting order</span><a href="#order">Contents</a>'; return; }
+    now.innerHTML = '<span>Now batting</span>' + pick.dataset.n + ' · ' + pick.dataset.name.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  }
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+
+  // Copy buttons
+  document.querySelectorAll('.copy').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var text = b.dataset.copy;
+      function done() { b.textContent = 'Copied'; setTimeout(function () { b.textContent = 'Copy'; }, 1600); }
+      function fallback() {
+        var r = document.createRange(); r.selectNodeContents(b.previousElementSibling);
+        var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+        b.textContent = 'Selected';
+        setTimeout(function () { b.textContent = 'Copy'; }, 1600);
+      }
+      try {
+        navigator.clipboard.writeText(text).then(done, fallback);
+      } catch (e) { fallback(); }
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
