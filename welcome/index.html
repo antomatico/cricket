@@ -87,8 +87,10 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 500; text-wrap: bala
 .hero h1 { font-size: clamp(40px, 9vw, 76px); line-height: .98; text-transform: uppercase; letter-spacing: .01em; font-weight: 600; max-width: 12ch; }
 .hero p { margin: 0; max-width: 58ch; font-size: 18px; }
 .hero .aim { font-family: var(--font-display); font-size: 22px; letter-spacing: .02em; border-top: 1px solid rgba(255,255,255,.35); padding-top: 18px; max-width: 30ch; }
-.ball { position: absolute; right: -40px; top: 26px; width: 260px; height: 260px; opacity: .9; pointer-events: none; }
-@media (max-width: 640px) { .ball { width: 150px; height: 150px; right: -36px; top: 14px; opacity: .55; } }
+.ball { position: absolute; right: max(16px, env(safe-area-inset-right, 0px)); top: 32px; width: 240px; height: 240px; pointer-events: none; }
+.crest { object-fit: contain; }
+@media (min-width: 761px) { .hero .wrap { padding-right: calc(max(16px, env(safe-area-inset-right, 0px)) + 264px); } }
+@media (max-width: 760px) { .ball { position: static; width: 120px; height: 120px; order: -1; } }
 
 /* Batting order (contents) */
 .order { padding-block: 44px 8px; }
@@ -187,23 +189,8 @@ footer .sign { font-family: var(--font-display); font-size: 20px; margin-top: 8p
 </div>
 
 <header class="hero">
-  <svg class="ball" viewBox="0 0 200 200" aria-hidden="true">
-    <defs>
-      <radialGradient id="leather" cx="38%" cy="35%" r="70%">
-        <stop offset="0" stop-color="#E25A6B"/><stop offset=".6" stop-color="#B3263B"/><stop offset="1" stop-color="#6F1220"/>
-      </radialGradient>
-    </defs>
-    <g stroke="#FFFFFF" stroke-opacity=".35" stroke-width="4" stroke-linecap="round" fill="none">
-      <path d="M20 60 L70 70"/><path d="M8 92 L64 96"/><path d="M18 124 L68 120"/>
-    </g>
-    <circle cx="120" cy="96" r="62" fill="url(#leather)"/>
-    <path d="M86 44 C 112 76, 112 116, 86 148" stroke="#F4E9D8" stroke-width="3" fill="none"/>
-    <path d="M96 41 C 122 74, 122 118, 96 151" stroke="#F4E9D8" stroke-width="3" fill="none"/>
-    <g stroke="#F4E9D8" stroke-width="2" stroke-linecap="round">
-      <path d="M89 56 l8 -3"/><path d="M95 70 l9 -2"/><path d="M98 85 l9 -1"/><path d="M99 100 l9 0"/><path d="M98 115 l9 1"/><path d="M95 130 l9 2"/><path d="M90 143 l8 3"/>
-    </g>
-  </svg>
   <div class="wrap">
+  <img class="ball crest" src="https://prodcdn.sporty.co.nz/cms/13818/83131/1442870/bf252aa4-da9f-4931-8a67-9d34d3b929ef_wo.png?t=638882118001570000" alt="Eastern Suburbs Cricket Club logo" width="320" height="320" onerror="this.remove()">
     <div class="eyebrow">Eastern Suburbs Junior Cricket Club · Summer 2026/27</div>
     <h1>Welcome to the Y7 Gladiators</h1>
     <p>Kia ora koutou, and a huge welcome to the 2026/27 season!</p>
