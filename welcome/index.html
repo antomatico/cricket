@@ -178,330 +178,157 @@ footer .sign { font-family: var(--font-display); font-size: 20px; margin-top: 8p
   * { transition: none !important; animation: none !important; }
 }
 </style>
+<!--lock:start-->
+<meta name="robots" content="noindex, nofollow">
+<style>
+/* Login modal: club-maroon backdrop, one card, password only. */
+html.locked body { overflow: hidden; }
+.gate {
+  position: fixed; inset: 0; z-index: 50; overflow-y: auto;
+  background: radial-gradient(120% 90% at 85% 0%, var(--maroon) 0%, var(--maroon-deep) 55%, var(--navy) 130%);
+  display: grid; place-items: center; grid-template-columns: minmax(0, 1fr);
+  padding: max(24px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(24px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+}
+html.checking .gate-card { opacity: 0; }
+.gate-card {
+  width: 100%; max-width: 440px; background: var(--surface); color: var(--ink);
+  border-radius: 10px; box-shadow: 0 24px 60px rgba(0,0,0,.35);
+  overflow: hidden; transition: opacity .2s;
+}
+.gate-top { background: var(--maroon); color: var(--on-accent); padding: 26px 26px 22px; display: grid; gap: 10px; justify-items: start; }
+.gate-crest { width: 72px; height: 72px; object-fit: contain; }
+.gate-top .eyebrow { font-size: 12px; }
+.gate-top h1 { font-size: 40px; line-height: 1; text-transform: uppercase; font-weight: 600; letter-spacing: .01em; }
+.gate-top p { margin: 0; font-size: 16px; }
+.gate-form { padding: 22px 26px 26px; display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr); }
+.gate-form label { font-family: var(--font-display); text-transform: uppercase; letter-spacing: .08em; font-size: 14px; color: var(--accent-text); }
+.gate-field { display: flex; border: 2px solid var(--line); border-radius: 6px; background: var(--bg); }
+.gate-field:focus-within { border-color: var(--maroon); }
+.gate-field input { flex: 1; min-width: 0; border: 0; background: transparent; color: var(--ink); font: 18px var(--font-body); padding: 12px 14px; outline: none; }
+.gate-field button { border: 0; background: transparent; color: var(--muted); font: 500 12px var(--font-body); text-transform: uppercase; letter-spacing: .06em; padding: 0 14px; cursor: pointer; }
+.gate-hint { margin: 0; font-size: 14px; color: var(--muted); }
+.gate-form .gate-remember { font-family: var(--font-body); text-transform: none; letter-spacing: 0; display: flex; gap: 8px; align-items: center; font-size: 14px; color: var(--muted); }
+.gate-form .gate-remember input { accent-color: var(--maroon); width: 16px; height: 16px; }
+.gate-go { border: 0; cursor: pointer; font-size: 17px; padding: 13px 16px; text-align: center; }
+.gate-go[disabled] { opacity: .7; cursor: progress; }
+.gate-error:empty { display: none; }
+.gate-error { margin: 0; min-height: 1.4em; font-size: 14px; color: #B3261E; }
+:root[data-theme="dark"] .gate-error { color: #F2B8B5; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .gate-error { color: #F2B8B5; } }
+.gate-sign { margin: 4px 0 0; font-family: var(--font-display); font-size: 17px; color: var(--ink); }
+.shake { animation: shake .4s; }
+@keyframes shake { 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
+</style>
+<script>document.documentElement.classList.add('locked', 'checking');</script>
+<!--lock:end-->
 </head>
 <body>
-
-<div class="bar" role="navigation" aria-label="Guide">
-  <div class="wrap">
-    <a class="bar-team" href="#order">Y7 Gladiators</a>
-    <div class="bar-now" id="now" aria-live="polite"><span>Batting order</span><a href="#order">Contents</a></div>
+<div class="gate" role="dialog" aria-modal="true" aria-labelledby="gate-h" aria-describedby="gate-intro">
+  <div class="gate-card">
+    <div class="gate-top">
+      <img class="gate-crest" src="https://prodcdn.sporty.co.nz/cms/13818/83131/1442870/bf252aa4-da9f-4931-8a67-9d34d3b929ef_wo.png?t=638882118001570000" alt="Eastern Suburbs Cricket Club logo" width="72" height="72" onerror="this.remove()">
+      <div class="eyebrow">Eastern Suburbs Junior Cricket Club · Summer 2026/27</div>
+      <h1 id="gate-h">Kia ora, Gladiators!</h1>
+      <p id="gate-intro">Welcome to our team guide for the season: who's who, when we play, and how you can help. It's just for our players and whānau, so it sits behind a team password.</p>
+    </div>
+    <form class="gate-form" id="gate-form" autocomplete="off">
+      <label for="gate-pw">Team password</label>
+      <div class="gate-field">
+        <input id="gate-pw" type="password" required autocapitalize="off" autocorrect="off" spellcheck="false" aria-describedby="gate-hint gate-error">
+        <button type="button" id="gate-peek" aria-pressed="false" aria-label="Show password">Show</button>
+      </div>
+      <p class="gate-hint" id="gate-hint">You'll find it in the description of our team WhatsApp group.</p>
+      <label class="gate-remember"><input type="checkbox" id="gate-remember" checked> Remember me on this device</label>
+      <button class="btn gate-go" id="gate-go" type="submit">Walk out to bat</button>
+      <p class="gate-error" id="gate-error" role="alert"></p>
+      <p class="gate-sign">Ngā mihi, Ants &amp; Simon</p>
+    </form>
   </div>
 </div>
-
-<header class="hero">
-  <div class="wrap">
-  <img class="ball crest" src="https://prodcdn.sporty.co.nz/cms/13818/83131/1442870/bf252aa4-da9f-4931-8a67-9d34d3b929ef_wo.png?t=638882118001570000" alt="Eastern Suburbs Cricket Club logo" width="320" height="320" onerror="this.remove()">
-    <div class="eyebrow">Eastern Suburbs Junior Cricket Club · Summer 2026/27</div>
-    <h1>Welcome to the Y7 Gladiators</h1>
-    <p>Kia ora koutou, and a huge welcome to the 2026/27 season!</p>
-    <p>To our returning Gladiators: it's great to have you back. You've grown a lot as cricketers over the past year, and Year 7 is where the game starts to look and feel like "proper" cricket. To our new players and whānau: welcome to the team. Whether you've played for years or are picking up a hard ball for the first time, there's a place for you here.</p>
-    <p class="aim">Improve every week, back each other, and have fun doing it.</p>
-  </div>
-</header>
-
-<main>
-  <nav class="order wrap" id="order" aria-labelledby="order-h" tabindex="-1">
-    <h2 id="order-h">Batting order</h2>
-    <p class="order-sub">Eleven sections for a full XI, plus the twelfth man. Tap any one to jump straight there.</p>
-    <ol>
-      <li><a href="#year-ahead"><span class="num">1</span><span>The year ahead</span></a></li>
-      <li><a href="#coaches"><span class="num">2</span><span>Coaches &amp; team manager</span></a></li>
-      <li><a href="#whatsapp"><span class="num">3</span><span>Stay in touch: our WhatsApp group</span></a></li>
-      <li><a href="#team"><span class="num">4</span><span>Team list</span></a></li>
-      <li><a href="#format"><span class="num">5</span><span>Game format: what changes in Year 7</span></a></li>
-      <li><a href="#practice"><span class="num">6</span><span>Practice</span></a></li>
-      <li><a href="#fixtures"><span class="num">7</span><span>Fixtures</span></a></li>
-      <li><a href="#awards"><span class="num">8</span><span>Player of the Day &amp; Spirit of Cricket</span></a></li>
-      <li><a href="#scoring"><span class="num">9</span><span>Scoring: we need you!</span></a></li>
-      <li><a href="#review"><span class="num">10</span><span>Last season in review</span></a></li>
-      <li><a href="#calendar"><span class="num">11</span><span>Team calendar</span></a></li>
-      <li><a href="#cricket-central"><span class="num">12</span><span>The Twelfth Man: Cricket Central App</span></a></li>
-    </ol>
-  </nav>
-
-  <div class="wrap">
-
-    <section class="section" id="year-ahead" tabindex="-1" data-n="1" data-name="The year ahead">
-      <div class="sec-head"><span class="tag">1</span><h2>The year ahead</h2></div>
-      <dl class="rows">
-        <div class="row"><dt>Thu 29 October</dt><dd>First practice, 5:00 – 6:30pm at the Rongotai College nets (<a href="https://maps.app.goo.gl/hQBLTYx5mKULbrJJ6" target="_blank" rel="noopener">map pin</a>)</dd></div>
-        <div class="row"><dt>Thu 5 November</dt><dd>Second practice, 5:00 – 6:30pm at the Rongotai College nets (<a href="https://maps.app.goo.gl/hQBLTYx5mKULbrJJ6" target="_blank" rel="noopener">map pin</a>)</dd></div>
-        <div class="row key"><dt>Sat 7 November</dt><dd>First game of the season</dd></div>
-        <div class="row"><dt>Sat 19 December</dt><dd>Final game for 2026</dd></div>
-        <div class="row"><dt>Sun 17 – Wed 20 Jan 2027</dt><dd>Year 7 Hawke's Bay Cricket Camp</dd></div>
-        <div class="row"><dt>Sat 23 January</dt><dd>First game back for 2027</dd></div>
-        <div class="row"><dt>Wed 10 February</dt><dd>Easts Junior Photos</dd></div>
-        <div class="row"><dt>Fri 19 March</dt><dd>Prizegivings</dd></div>
-        <div class="row key"><dt>Sat 20 March</dt><dd>Final game of the season</dd></div>
-      </dl>
-      <p>Everything is in the <a href="#calendar">team calendar</a>. We'll add each week's fixtures as they're released.</p>
-      <a class="back" href="#order">Back to the batting order</a>
-    </section>
-
-    <section class="section" id="coaches" tabindex="-1" data-n="2" data-name="Coaches & team manager">
-      <div class="sec-head"><span class="tag">2</span><h2>Coaches &amp; team manager</h2></div>
-      <div class="people">
-        <div class="person">
-          <div class="role">Co-coach</div>
-          <h3>Ants Jackson</h3>
-          <div class="contact"><span>021 0227 7117</span><button class="copy" type="button" data-copy="021 0227 7117">Copy</button></div>
-          <div class="contact"><span>ants.jackson@gmail.com</span><button class="copy" type="button" data-copy="ants.jackson@gmail.com">Copy</button></div>
-        </div>
-        <div class="person">
-          <div class="role">Co-coach &amp; team manager</div>
-          <h3>Simon Hall</h3>
-          <div class="contact"><span>021 241 4824</span><button class="copy" type="button" data-copy="021 241 4824">Copy</button></div>
-          <div class="contact"><span>simonbhall76@gmail.com</span><button class="copy" type="button" data-copy="simonbhall76@gmail.com">Copy</button></div>
-        </div>
-      </div>
-      <p>Please get in touch with either of us any time: questions, worries, availability, or if you're keen to help out.</p>
-      <a class="back" href="#order">Back to the batting order</a>
-    </section>
-
-    <section class="section" id="whatsapp" tabindex="-1" data-n="3" data-name="Stay in touch">
-      <div class="sec-head"><span class="tag">3</span><h2>Stay in touch: our WhatsApp group</h2></div>
-      <p>WhatsApp is our main channel for everything: game-day details, practice updates, rain calls and the occasional celebration.</p>
-      <div class="callout"><p><strong>Joining:</strong> we'll add you to the group directly. If you're not in yet, message Ants or Simon with the number you'd like added.</p></div>
-      <p>Let us know if a second parent or caregiver would like to be added too.</p>
-      <a class="back" href="#order">Back to the batting order</a>
-    </section>
-
-    <section class="section" id="team" tabindex="-1" data-n="4" data-name="Team list">
-      <div class="sec-head"><span class="tag">4</span><h2>Team list</h2></div>
-      <ul class="squad">
-        <li>Player M</li><li>Player Et</li><li>Player Ev</li><li>Player R</li><li>Player G</li><li>Player J</li><li>Player N</li><li>Player L</li>
-        <li class="vacant">Your name here?</li>
-      </ul>
-      <div class="callout"><p><strong>We're looking for one more Gladiator!</strong> If you know a Year 7 who'd love to play, whether experienced or brand new to cricket, please put them in touch with Ants or Simon.</p></div>
-      <a class="back" href="#order">Back to the batting order</a>
-    </section>
-
-    <section class="section" id="format" tabindex="-1" data-n="5" data-name="Game format">
-      <div class="sec-head"><span class="tag">5</span><h2>Game format: what changes in Year 7</h2></div>
-      <p>Year 7 is a step up from last season. These are the key rules from Cricket Wellington's Year 7/8 playing rules.</p>
-      <h3 class="sub">The game</h3>
-      <ul>
-        <li><strong>9 players a side,</strong> up to <strong>30 overs</strong> per team. Games run for about <strong>3 hours</strong>.</li>
-        <li><strong>18m pitch</strong> (up from 16m) and boundaries of up to <strong>40m</strong> from the centre of the pitch.</li>
-        <li><strong>Hard ball:</strong> a red or pink 142g ball (Kookaburra Crown or Menace, or Gray Nicholls Shield).</li>
-        <li><strong>Passing the other team's total doesn't end the game.</strong> Everyone still gets their turn.</li>
-      </ul>
-      <h3 class="sub">Batting</h3>
-      <ul>
-        <li><strong>6-ball grace period.</strong> After a batter has faced 6 balls, all dismissals apply.</li>
-        <li><strong>When a batter is dismissed,</strong> they change ends and <strong>5 runs are added to the bowling team's score</strong>.</li>
-        <li><strong>Retirement after 30 balls.</strong> Wides and no-balls count towards those 30.</li>
-        <li><strong>Coming back in:</strong> retired batters can return later with no grace period, in the order they retired. A batter dismissed in their grace period who then faces 30 balls can't return.</li>
-        <li><strong>LBW</strong> only if the ball hits the back leg and the batter doesn't offer a shot. <strong>No "mankad" run-outs</strong> (the bowler can't run out the non-striker for backing up).</li>
-      </ul>
-      <h3 class="sub">Bowling</h3>
-      <ul>
-        <li><strong>All 9 players bowl 3 overs</strong> before anyone bowls a 4th.</li>
-        <li><strong>Maximum of 5 overs</strong> per bowler.</li>
-        <li><strong>Overs are 6 balls,</strong> with no extra balls for wides or no-balls, except in the final over (8 balls maximum).</li>
-        <li><strong>Run-ups of 15m or less</strong> from the stumps.</li>
-        <li><strong>Bowling changes ends every 5 overs.</strong></li>
-        <li><strong>Wides and no-balls</strong> follow junior rules: full tosses above the waist, balls that bounce twice before the crease, and balls over the shoulder on the bounce are all called. The official sheet has the wide guidelines.</li>
-      </ul>
-      <h3 class="sub">Fielding</h3>
-      <ul>
-        <li><strong>Fielders rotate clockwise after each over,</strong> so everyone gets a go in different positions.</li>
-        <li><strong>No fielder within 10m</strong> of the striking batter <strong>or of another fielder</strong>. Slips are the only exception.</li>
-      </ul>
-      <div class="callout"><p><strong>Helmets are compulsory</strong> for all Gladiators when batting and wicketkeeping, at games and at practice. This is a team rule.</p></div>
-      <p class="note">Full details are in Cricket Wellington's <a href="https://www.cricketwellington.co.nz/asset/downloadasset?id=d2b7682a-a56c-4e5b-a235-0bb2bdfc37b6" target="_blank" rel="noopener">Year 7/8 Playing Rules</a>.</p>
-      <a class="back" href="#order">Back to the batting order</a>
-    </section>
-
-    <section class="section" id="practice" tabindex="-1" data-n="6" data-name="Practice">
-      <div class="sec-head"><span class="tag">6</span><h2>Practice</h2></div>
-      <p><strong>Thursdays at the Rongotai College nets.</strong> <a href="https://maps.app.goo.gl/hQBLTYx5mKULbrJJ6" target="_blank" rel="noopener">Open the map pin</a></p>
-      <dl class="rows">
-        <div class="row"><dt>5:00pm</dt><dd>Nets open (booked 5:00 – 6:30pm)</dd></div>
-        <div class="row"><dt>5:15pm</dt><dd>Warm-up</dd></div>
-        <div class="row key"><dt>5:30 – 6:30pm</dt><dd>Practice</dd></div>
-      </dl>
-      <div class="callout"><p><strong>We expect everyone there from 5:30pm to 6:30pm as a minimum.</strong> Arriving earlier for the warm-up is a bonus.</p></div>
-      <p>We know some of the team have other commitments that clash slightly, so we accept that a few of us may run a little late. We also know a 6:30pm finish affects evening routines at home, so thank you for your patience.</p>
-      <p>Please bring a water bottle, a hat and sunscreen. Bring helmets and any of your own gear (pads, gloves, box) too.</p>
-      <a class="back" href="#order">Back to the batting order</a>
-    </section>
-
-    <section class="section" id="fixtures" tabindex="-1" data-n="7" data-name="Fixtures">
-      <div class="sec-head"><span class="tag">7</span><h2>Fixtures</h2></div>
-      <p>Fixtures will be added to the <a href="#calendar">team calendar</a> as soon as they're released.</p>
-      <a class="back" href="#order">Back to the batting order</a>
-    </section>
-
-    <section class="section" id="awards" tabindex="-1" data-n="8" data-name="Awards">
-      <div class="sec-head"><span class="tag">8</span><h2>Player of the Day &amp; Spirit of Cricket</h2></div>
-      <p><strong>Player of the Day</strong> is awarded after every game.</p>
-      <p>Eastern Suburbs Junior Cricket Club also has a <strong>Spirit of Cricket</strong> award, given out each game:</p>
-      <ul>
-        <li>one to a player from <strong>the opposition</strong>, and</li>
-        <li>one to a member of <strong>our own team</strong>.</li>
-      </ul>
-      <p>The Spirit of Cricket award isn't about the most runs or wickets. It recognises <strong>kindness, support for teammates, leadership, fair play and looking after the game</strong>: clapping in an opposition batter, helping a teammate who's having a tough day, owning up, or setting a great example in the field.</p>
-      <a class="back" href="#order">Back to the batting order</a>
-    </section>
-
-    <section class="section" id="scoring" tabindex="-1" data-n="9" data-name="Scoring">
-      <div class="sec-head"><span class="tag">9</span><h2>Scoring: we need you!</h2></div>
-      <p>We record every game's score electronically in <strong>PlayHQ</strong>, the system Cricket Wellington uses for junior cricket. Each game needs one scorer, and the club recommends a <strong>small group of parents/caregivers who share the scoring</strong> across the season, so no one is stuck with it every week.</p>
-      <p>Having a parent score frees Simon and Ants to do the on-field jobs: warming the team up, umpiring and running the match day.</p>
-
-      <h3 class="sub">Getting set up as a scorer</h3>
-      <p>To score electronically, each scorer needs their own <strong>scoring access activated in PlayHQ</strong>. The club arranges this for us, once it has your details.</p>
-      <ol class="plain">
-        <li><strong>Put your hand up.</strong> Let us know on WhatsApp, or grab Simon or Ants at practice.</li>
-        <li><strong>Create a free PlayHQ account</strong> at <a href="https://www.playhq.com/signup" target="_blank" rel="noopener">playhq.com/signup</a>, if you don't already have one.</li>
-        <li><strong>Get your details to the club</strong> through the Electronic Scorer Access Form. We can fill it in for you, or you can submit your own details (if you do, give us a quick heads-up on WhatsApp so we know you're on the list).</li>
-        <li>The club uses those details to <strong>switch on your scoring access</strong>.</li>
-      </ol>
-      <div class="btns">
-        <a class="btn" href="https://vuw.qualtrics.com/jfe/form/SV_8v2empkoyxZUMmy" target="_blank" rel="noopener">Electronic Scorer Access Form</a>
-      </div>
-
-      <h3 class="sub">How to score</h3>
-      <ul>
-        <li><strong>Use a laptop, iPad or similar tablet</strong> if you can. Phones work, but the smaller screen makes them less practical.</li>
-        <li>You score the match ball by ball. No cricket expertise needed. It's easy to pick up, and we'll help you get started.</li>
-        <li>The opposition has their own scorer too. The two scorers usually sit together to compare notes and agree (or disagree agreeably!) on what happened.</li>
-      </ul>
-
-      <h3 class="sub">Useful resources to get started</h3>
-      <ul>
-        <li><a href="https://www.cjca.org.nz/wp-content/uploads/2022/09/PlayHQ-Game-Day-Guide.pdf" target="_blank" rel="noopener"><strong>PlayHQ Game Day Guide</strong></a> (PDF): a quick guide to setting up and scoring a match on game day.</li>
-        <li><a href="https://youtu.be/6oj8gS6cwqI?si=qt1E6GhebzGt-En7" target="_blank" rel="noopener"><strong>PlayHQ electronic scoring video</strong></a>: a useful walkthrough of the scoring system.</li>
-      </ul>
-      <a class="back" href="#order">Back to the batting order</a>
-    </section>
-
-    <section class="section" id="review" tabindex="-1" data-n="10" data-name="Last season">
-      <div class="sec-head"><span class="tag">10</span><h2>Last season in review</h2></div>
-      <p>Last summer, as the <strong>Easts Y6 Gladiators</strong>, we played 10 completed T20 games across the Blue grade (Nov–Dec) and Green grade (Jan–Mar).</p>
-      <div class="stats" role="list">
-        <div class="stat" role="listitem"><b>3</b><small>Wins</small></div>
-        <div class="stat" role="listitem"><b>42</b><small>Wickets</small></div>
-        <div class="stat" role="listitem"><b>77</b><small>Fours</small></div>
-      </div>
-      <h3 class="sub">What went well</h3>
-      <ul>
-        <li><strong>3 wins</strong>, including a 51-run win over the BJCC Typhoons and a strong finish, winning our <strong>final game of the season</strong> against the Easts Spartans.</li>
-        <li><strong>42 wickets</strong> taken (about 4 a game).</li>
-        <li><strong>77 fours</strong> hit across the season.</li>
-        <li><strong>Sharp in the field:</strong> 13 catches and 23 run-out involvements. Our fielding and backing up were real strengths.</li>
-        <li>We stayed competitive. Several losses were by 15–16 runs, so we were often only a few good overs away.</li>
-      </ul>
-      <h3 class="sub">What we'll work on this season</h3>
-      <ol class="plain">
-        <li><strong>Bowling accuracy.</strong> This is the big one. We bowled 294 wides (about 29 a game) plus 47 no-balls, and extras made up nearly half the runs we conceded. Tightening our line and length is the fastest way to turn close games into wins.</li>
-        <li><strong>Scoring off the bat.</strong> Extras made up 45% of our own runs, too. More good contact, running hard between the wickets and turning ones into twos will help us post bigger totals ourselves.</li>
-        <li><strong>Chasing.</strong> We won 3 of 6 when batting first, but 0 of 4 when bowling first. We'll practise pacing an innings and knowing what the target needs.</li>
-      </ol>
-      <p>The full stats from last season: <a href="https://antomatico.github.io/cricket/" target="_blank" rel="noopener">Easts Y6 Gladiators · Season 2025/26</a></p>
-      <a class="back" href="#order">Back to the batting order</a>
-    </section>
-
-    <section class="section" id="calendar" tabindex="-1" data-n="11" data-name="Team calendar">
-      <div class="sec-head"><span class="tag">11</span><h2>Team calendar</h2></div>
-      <p>All key dates, practices, and fixtures once they're released, live in one calendar that updates automatically on your phone.</p>
-      <div class="btns">
-        <a class="btn" href="https://calendar.google.com/calendar/u/0?cid=OTI0ZjFmMTYzYmRlYjdlOTJkYzQyNjg4MDAxYjRiZjBmMDYyZjc1NDQ4ZWJkOTcyMDFkNmZhNTUxMDliNTM3NEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t" target="_blank" rel="noopener">Add to Google Calendar</a>
-        <a class="btn alt" href="https://calendar.google.com/calendar/ical/924f1f163bdeb7e92dc42688001b4bf0f062f75448ebd97201d6fa55109b5374%40group.calendar.google.com/public/basic.ics" target="_blank" rel="noopener">iPhone, Outlook &amp; others (iCal)</a>
-      </div>
-      <p class="note">On iPhone or Outlook, choose "subscribe" when asked, so new fixtures appear automatically.</p>
-      <a class="back" href="#order">Back to the batting order</a>
-    </section>
-
-    <section class="section" id="cricket-central" tabindex="-1" data-n="12" data-name="The Twelfth Man">
-      <div class="sec-head"><span class="tag">12</span><h2>The Twelfth Man: Cricket Central App</h2></div>
-      <p>We use PlayHQ's <strong>Cricket Central</strong> app for two things:</p>
-      <ul>
-        <li><strong>Player availability:</strong> tell us whether your player is available for each game.</li>
-        <li><strong>The weekly draw:</strong> see who we're playing, and where and when.</li>
-      </ul>
-      <div class="callout"><p><strong>Please download the app and let us know if your player is available or not as soon as you're able.</strong> Knowing early helps us plan the team, and find a fill-in if we need one.</p></div>
-      <div class="btns">
-        <a class="btn" href="https://get.playhq.com/apps/cricket-central" target="_blank" rel="noopener">Download for iPhone or Android</a>
-      </div>
-      <a class="back" href="#order">Back to the batting order</a>
-    </section>
-
-  </div>
-</main>
-
-<footer>
-  <div class="wrap">
-    <h2>More to come…</h2>
-    <p>We'll share more as the season gets underway. In the meantime, dig out the bat, find the helmet and get some throw-downs in the backyard!</p>
-    <p class="sign">Ngā mihi, Ants &amp; Simon</p>
-    <p>Y7 ESJCC Gladiators</p>
-  </div>
-</footer>
-
+<script type="application/json" id="locked-data">{"v": 1, "iter": 250000, "salt": "byBiMpNSEY/twFGDPNSYCw==", "iv": "kW5FmdKZ5Dp07nNh", "ct": "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"}</script>
 <script>
 (function () {
-  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var P = JSON.parse(document.getElementById('locked-data').textContent);
+  var STORE = 'gladiators-welcome:' + P.salt.slice(0, 12);
+  var root = document.documentElement;
+  var form = document.getElementById('gate-form'), pw = document.getElementById('gate-pw');
+  var go = document.getElementById('gate-go'), err = document.getElementById('gate-error');
+  var remember = document.getElementById('gate-remember'), peek = document.getElementById('gate-peek');
 
-  function go(id, smooth) {
-    var t = document.getElementById(id);
-    if (!t) return;
-    t.scrollIntoView({ behavior: smooth && !reduce ? 'smooth' : 'auto', block: 'start' });
-    try { t.focus({ preventScroll: true }); } catch (e) {}
-    if (t.classList.contains('section')) {
-      t.classList.remove('arrived'); void t.offsetWidth; t.classList.add('arrived');
-    }
+  function fromB64(s) { var b = atob(s), u = new Uint8Array(b.length); for (var i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u; }
+  function toB64(buf) { var u = new Uint8Array(buf), s = ''; for (var i = 0; i < u.length; i++) s += String.fromCharCode(u[i]); return btoa(s); }
+  function store(fn) { try { return fn(window.localStorage); } catch (e) { return null; } }
+
+  function derive(password) {
+    return crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveKey'])
+      .then(function (base) {
+        return crypto.subtle.deriveKey({ name: 'PBKDF2', salt: fromB64(P.salt), iterations: P.iter, hash: 'SHA-256' },
+          base, { name: 'AES-GCM', length: 256 }, true, ['decrypt']);
+      });
+  }
+  function decrypt(key) {
+    return crypto.subtle.decrypt({ name: 'AES-GCM', iv: fromB64(P.iv) }, key, fromB64(P.ct))
+      .then(function (buf) { return new TextDecoder().decode(buf); });
+  }
+  function reveal(html) {
+    document.body.innerHTML = html;
+    // Scripts added via innerHTML don't run, so re-create them.
+    document.body.querySelectorAll('script').forEach(function (old) {
+      var s = document.createElement('script'); s.textContent = old.textContent; old.replaceWith(s);
+    });
+    root.classList.remove('locked', 'checking');
+    var id = location.hash.slice(1), t = id && document.getElementById(id);
+    if (t) t.scrollIntoView();
+  }
+  function ready() { root.classList.remove('checking'); pw.focus(); }
+
+  if (!window.crypto || !crypto.subtle) {
+    ready(); err.textContent = 'This browser can’t open the guide. Try an up-to-date Safari, Chrome or Firefox.';
+    go.disabled = true; return;
   }
 
-  document.addEventListener('click', function (e) {
-    var a = e.target.closest('a[href^="#"]');
-    if (!a) return;
-    var id = a.getAttribute('href').slice(1);
-    if (!document.getElementById(id)) return;
-    e.preventDefault();
-    go(id, true);
+  // Returning visitor: try the remembered key first.
+  var saved = store(function (s) { return s.getItem(STORE); });
+  if (saved) {
+    crypto.subtle.importKey('raw', fromB64(saved), 'AES-GCM', false, ['decrypt'])
+      .then(decrypt).then(reveal)
+      .catch(function () { store(function (s) { s.removeItem(STORE); }); ready(); });
+  } else { ready(); }
+
+  peek.addEventListener('click', function () {
+    var show = pw.type === 'password';
+    pw.type = show ? 'text' : 'password';
+    peek.textContent = show ? 'Hide' : 'Show';
+    peek.setAttribute('aria-pressed', String(show));
+    peek.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+    pw.focus();
   });
 
-  if (location.hash && /^#[\w.~-]+$/.test(location.hash)) {
-    window.addEventListener('load', function () { go(location.hash.slice(1), false); });
-  }
-
-  // "Now batting" readout in the sticky bar
-  var now = document.getElementById('now');
-  var sections = Array.prototype.slice.call(document.querySelectorAll('.section'));
-  var current = null;
-  function update() {
-    var y = 90, pick = null;
-    for (var i = 0; i < sections.length; i++) {
-      if (sections[i].getBoundingClientRect().top - y <= 0) pick = sections[i];
-    }
-    if (pick === current) return;
-    current = pick;
-    if (!pick) { now.innerHTML = '<span>Batting order</span><a href="#order">Contents</a>'; return; }
-    now.innerHTML = '<span>Now batting</span>' + pick.dataset.n + ' · ' + pick.dataset.name.replace(/&/g, '&amp;').replace(/</g, '&lt;');
-  }
-  window.addEventListener('scroll', update, { passive: true });
-  update();
-
-  // Copy buttons
-  document.querySelectorAll('.copy').forEach(function (b) {
-    b.addEventListener('click', function () {
-      var text = b.dataset.copy;
-      function done() { b.textContent = 'Copied'; setTimeout(function () { b.textContent = 'Copy'; }, 1600); }
-      function fallback() {
-        var r = document.createRange(); r.selectNodeContents(b.previousElementSibling);
-        var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
-        b.textContent = 'Selected';
-        setTimeout(function () { b.textContent = 'Copy'; }, 1600);
-      }
-      try {
-        navigator.clipboard.writeText(text).then(done, fallback);
-      } catch (e) { fallback(); }
-    });
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!pw.value) return;
+    go.disabled = true; go.textContent = 'Padding up…'; err.textContent = '';
+    var key;
+    derive(pw.value)
+      .then(function (k) { key = k; return decrypt(k); })
+      .then(function (html) {
+        if (remember.checked) {
+          return crypto.subtle.exportKey('raw', key).then(function (raw) {
+            store(function (s) { s.setItem(STORE, toB64(raw)); });
+            reveal(html);
+          });
+        }
+        reveal(html);
+      })
+      .catch(function () {
+        go.disabled = false; go.textContent = 'Walk out to bat';
+        err.textContent = 'Not quite: that one’s gone through to the keeper. Check the WhatsApp group description and try again.';
+        var card = document.querySelector('.gate-card');
+        card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
+        pw.select();
+      });
   });
 })();
 </script>
-
 </body>
 </html>
