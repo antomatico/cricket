@@ -30,17 +30,17 @@ html.locked body { overflow: hidden; }
 .gate {
   position: fixed; inset: 0; z-index: 50; overflow-y: auto;
   background: radial-gradient(120% 90% at 85% 0%, var(--maroon) 0%, var(--maroon-deep) 55%, var(--navy) 130%);
-  display: grid; place-items: center; grid-template-columns: minmax(0, 1fr);
+  display: grid; grid-template-columns: minmax(0, 1fr);
   padding: max(24px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(24px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
 }
 html.checking .gate-card { opacity: 0; }
 .gate-card {
-  width: 100%; max-width: 440px; background: var(--surface); color: var(--ink);
+  width: 100%; max-width: 440px; margin: auto; background: var(--surface); color: var(--ink);
   border-radius: 10px; box-shadow: 0 24px 60px rgba(0,0,0,.35);
   overflow: hidden; transition: opacity .2s;
 }
 .gate-top { background: var(--maroon); color: var(--on-accent); padding: 26px 26px 22px; display: grid; gap: 10px; justify-items: start; }
-.gate-crest { width: 72px; height: 72px; object-fit: contain; }
+.gate-crest { width: 128px; height: 128px; object-fit: contain; margin-bottom: 4px; }
 .gate-top .eyebrow { font-size: 12px; }
 .gate-top h1 { font-size: 40px; line-height: 1; text-transform: uppercase; font-weight: 600; letter-spacing: .01em; }
 .gate-top p { margin: 0; font-size: 16px; }
@@ -70,7 +70,7 @@ LOCK_BODY = r"""
 <div class="gate" role="dialog" aria-modal="true" aria-labelledby="gate-h" aria-describedby="gate-intro">
   <div class="gate-card">
     <div class="gate-top">
-      <img class="gate-crest" src="https://prodcdn.sporty.co.nz/cms/13818/83131/1442870/bf252aa4-da9f-4931-8a67-9d34d3b929ef_wo.png?t=638882118001570000" alt="Eastern Suburbs Cricket Club logo" width="72" height="72" onerror="this.remove()">
+      <img class="gate-crest" src="https://prodcdn.sporty.co.nz/cms/13818/83131/1442870/bf252aa4-da9f-4931-8a67-9d34d3b929ef_wo.png?t=638882118001570000" alt="Eastern Suburbs Cricket Club logo" width="128" height="128" onerror="this.remove()">
       <div class="eyebrow">Eastern Suburbs Junior Cricket Club · Summer 2026/27</div>
       <h1 id="gate-h">Kia ora, Gladiators!</h1>
       <p id="gate-intro">Welcome to our team guide for the season: who's who, when we play, and how you can help. It's just for our players and whānau, so it sits behind a team password.</p>
