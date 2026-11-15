@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Set the Field</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE: a coach's chalkboard turned game — encouraging, quick, kid-readable.
+   IDEA: the printed fielding sheet, brought to life as a mown oval you place pins on.
+   PICTURE: the oval itself, large, with stripes, pitch, keeper and clock face.
+   COLOUR and TYPE: grass greens, cricket-ball red accent, white lines; Barlow Condensed labels, Barlow body.
+   LAYOUT: header bar, field left + position tray right; stacks field-then-tray under 820px. */
+:root{color-scheme:light dark;--cond:"Barlow Condensed","Arial Narrow","Roboto Condensed",sans-serif;
+ --bg:light-dark(#f6f8f4,#0b0b0b);--panel:light-dark(#ffffff,#151515);--ink:light-dark(#13301c,#ffffff);--muted:light-dark(#4d6455,#b8b8b8);
+ --line:light-dark(#d5e0d6,#333333);--g1:light-dark(#6aa857,#24572f);--g2:light-dark(#5e9c4c,#1f4e2a);--rope:light-dark(#ffffff,#d9e6dc);
+ --pitch:light-dark(#d8c48c,#8f8257);--red:#c62d2d;--gold:#e8a917;--lab:light-dark(#ffffff,#0b0b0b);--labink:light-dark(#13301c,#ffffff)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Barlow,system-ui,sans-serif;overflow-x:clip}
+button{font:inherit;cursor:pointer}
+header{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;padding:12px max(3vw,14px);background:#13301c;color:#fff}
+header h1{margin:0;font:700 clamp(24px,3.4vw,32px)/1.05 var(--cond)}
+header h1 small{display:block;font:500 14px Barlow,sans-serif;opacity:.75}
+.hud{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.score{font:700 20px var(--cond);background:#fff1;border-radius:10px;padding:6px 12px;white-space:nowrap}
+.tog{min-height:40px;border:1px solid #fff5;background:transparent;color:#fff;border-radius:999px;padding:6px 14px;font-weight:600}
+.tog[aria-pressed=true]{background:#fff;color:#13301c}
+main{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:18px;padding:16px max(3vw,14px);max-width:1240px;margin:auto}
+.fieldwrap{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:8px}
+#field{display:block;width:100%;height:auto;max-height:calc(100vh - 120px);touch-action:none;user-select:none}
+.tray{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px;align-self:start}
+.tray h2{margin:0 0 4px;font:700 22px var(--cond)}.tray p{margin:0 0 10px;color:var(--muted);font-size:14px}
+.chips{display:flex;flex-direction:column;gap:6px}
+.chip{display:flex;justify-content:space-between;align-items:center;gap:8px;min-height:40px;padding:6px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font:600 16px var(--cond);touch-action:none;text-align:left}
+.chip:hover{border-color:var(--g1)}.chip small{font:500 12px Barlow,system-ui,sans-serif;color:var(--muted)}
+.chip.pending{border-color:var(--red);border-style:dashed}
+.chip.done{opacity:.55;cursor:default;border-style:solid}.chip .pts{font-weight:700;color:var(--ink)}
+.ghost{position:fixed;z-index:50;pointer-events:none;transform:translate(-50%,-120%);background:var(--red);color:#fff;font:600 15px var(--cond);padding:4px 10px;border-radius:8px;box-shadow:0 6px 18px #0004}
+.pop{position:absolute;z-index:20;width:230px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px;box-shadow:0 12px 30px #0003;text-align:center}
+.pop b{display:block;font:700 18px var(--cond);margin-bottom:8px}
+.pop div{display:flex;gap:8px}.pop button{flex:1;min-height:44px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font-weight:600}
+.pop .yes{background:var(--red);border-color:var(--red);color:#fff}
+.toast{position:absolute;left:50%;top:14px;transform:translateX(-50%);z-index:25;background:#13301c;color:#fff;padding:8px 16px;border-radius:999px;font:700 18px var(--cond);max-width:92%;text-align:center;transition:opacity .3s;pointer-events:none}
+.overlay{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:16px;background:#0a1a10aa;overflow:auto}
+.card{width:min(560px,100%);background:var(--panel);color:var(--ink);border-radius:20px;padding:clamp(18px,4vw,30px);box-shadow:0 20px 60px #0006}
+.card{position:relative}.x{position:absolute;top:10px;right:10px;width:44px;height:44px;border-radius:50%;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font-size:26px;line-height:1}
+.card h2{padding-right:44px;margin:0 0 6px;font:700 clamp(28px,5vw,40px)/1.05 var(--cond);text-wrap:balance}
+.card p{margin:0 0 14px;color:var(--muted)}
+label.f{display:block;font-weight:600;margin:10px 0 4px}
+input[type=text]{width:100%;font:16px Barlow,system-ui,sans-serif;padding:12px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+.seg{display:flex;gap:8px}.seg button{flex:1;min-height:44px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font-weight:600}
+.seg button[aria-pressed=true]{border-color:var(--red);background:var(--red);color:#fff}
+.go{width:100%;margin-top:16px;min-height:50px;border:0;border-radius:12px;background:var(--red);color:#fff;font:700 20px var(--cond)}
+.go.alt{background:transparent;color:var(--ink);border:1.5px solid var(--line);margin-top:8px}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+table{width:100%;border-collapse:collapse;font-size:15px;margin-top:6px}
+th,td{padding:7px 6px;border-bottom:1px solid var(--line);text-align:left}th{font-size:13px;color:var(--muted);font-weight:600}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tr.me td{background:light-dark(#fdf1d6,#3a3214);font-weight:700}
+.lb h3{margin:18px 0 0;font:700 20px var(--cond)}.note{font-size:13px;color:var(--muted);margin-top:8px}
+.big{font:700 clamp(48px,10vw,72px)/1 var(--cond);color:var(--red)}
+.lbl rect{fill:var(--lab);stroke:var(--line)}.lbl text{fill:var(--labink);font-family:var(--cond);font-weight:600}
+.lbl.pend rect{fill:var(--red);stroke:none}.lbl.pend text{fill:#fff}
+.clock{display:none}.showclock .clock{display:inline}
+.night{opacity:0}:root[data-theme=dark] .night{opacity:1}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]) .night{opacity:1}}
+@media(max-width:820px){.toast{font-size:16px}main{grid-template-columns:minmax(0,1fr)}.chips{flex-direction:row;flex-wrap:wrap}.chip{flex:1 1 auto}.chip small{display:none}}
+@keyframes pulse{50%{transform:scale(1.15)}}.pulse{animation:pulse .6s 2;transform-box:fill-box;transform-origin:50% 100%}
+@media(prefers-reduced-motion:reduce){.pulse{animation:none}.toast{transition:none}}
+</style>
+</head>
+<body>
+<header>
+ <h1>Set the Field<small>Gladiators fielding challenge</small></h1>
+ <div class="hud">
+  <span class="score" id="score">0 pts · 0/20</span>
+  <button class="tog" id="tClock" aria-pressed="true">Clock face</button>
+  <button class="tog" id="tNight" aria-pressed="false">Night mode</button>
+ </div>
+</header>
+<main>
+ <div class="fieldwrap" id="wrap">
+  <svg id="field" viewBox="0 100 655 712" aria-label="Cricket field">
+   <defs>
+    <pattern id="mow" width="655" height="44" patternUnits="userSpaceOnUse"><rect width="655" height="22" style="fill:var(--g1)"/><rect y="22" width="655" height="22" style="fill:var(--g2)"/></pattern>
+    <pattern id="mowv" width="44" height="712" patternUnits="userSpaceOnUse"><rect width="22" height="712" fill="#fff" fill-opacity=".09"/><rect x="22" width="22" height="712" fill="#000" fill-opacity=".05"/></pattern>
+    <radialGradient id="flood" cx="50%" cy="45%" r="60%"><stop offset="0" stop-color="#fffbe0" stop-opacity=".18"/><stop offset="1" stop-color="#000" stop-opacity=".25"/></radialGradient>
+   </defs>
+   <g id="base"></g><g id="marks"></g><circle id="hint" r="0" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="4 4" opacity="0"/><g id="labels"></g><g id="pinLayer"></g>
+  </svg>
+  <div class="pop" id="pop" hidden><b>Is this your final placement?</b><div><button class="mv" id="pMove">No, move it</button><button class="yes" id="pYes">Yes, lock it in</button></div></div>
+  <div class="toast" id="toast" style="opacity:0"></div>
+ </div>
+ <aside class="tray"><h2>Positions</h2><p>Drag each one onto the field. The tip of the pin is the exact spot.</p><div class="chips" id="chips"></div></aside>
+</main>
+<div class="overlay" id="ov"><div class="card"><button class="x" id="ovx" aria-label="Close">&times;</button><div id="card"></div></div></div>
+<div class="ghost" id="ghost" hidden></div>
+<script>
+{
+/* ---------- Data: positions measured from the coach's printed sheet (right-handed batter) ---------- */
+const POS=[["Slip",302,351],["Gully",251,375.8],["Backward point",212.5,369.8],["Deep backward point",88.8,325.8],["Point",216.5,408.5],["Deep point",59.8,409.5],["Cover",206.2,454],["Extra cover",226.5,522.5],["Deep extra cover",87.8,581],["Mid off",261.2,589],["Deep mid off",157,682.8,"aka Long off"],["Third man",205.8,195,"aka Deep third"],["Fine leg",455.5,201,"aka Deep fine leg"],["Deep backward square leg",566.2,336.8],["Backward square leg",441.2,368.5],["Square leg",444.8,408.5],["Mid wicket",447.8,466],["Deep mid wicket",558.2,585.8],["Mid on",367.8,590],["Long on",473.8,690.8]];
+const F={cx:326.75,cy:453.5,rx:284.75,ry:314.5},PT={x:303,y:389.5,w:39.5,h:99.5},AX=PT.x+PT.w/2;
+const R=PT.h/6;                 // scoring circle: diameter = 1/3 of pitch length
+const TIERS=[[0.15,5,"Bullseye!"],[0.5,3,"Great spot"],[0.75,2,"Close"],[1,1,"Just in"]];
+const MAXPTS=POS.length*5;
+/* Shared leaderboard (optional): fill in to use a Supabase table instead of this device's storage. */
+const REMOTE={url:"",key:""};
+
+const $=id=>document.getElementById(id),NS="http://www.w3.org/2000/svg",svg=$("field");
+const el=(t,a={},p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fmtDate=iso=>iso?new Date(iso).toLocaleDateString("en-NZ",{day:"numeric",month:"short",year:"numeric"}):"";
+let S={name:"",hand:"R",placed:{},pending:null};
+const tgt=n=>{const p=POS.find(q=>q[0]===n);return {x:S.hand==="L"?2*AX-p[1]:p[1],y:p[2]}};
+const inField=(x,y)=>((x-F.cx)/F.rx)**2+((y-F.cy)/F.ry)**2<=1;
+const score=d=>{const r=d/R;for(const t of TIERS)if(r<=t[0])return t;return [9,0,"Not quite"]};
+const total=()=>Object.values(S.placed).reduce((a,b)=>a+b.pts,0);
+
+/* ---------- Storage: this device, or a shared Supabase table when REMOTE is set ---------- */
+const KEY="setTheField.v1";
+const Store={
+ load(){try{return JSON.parse(localStorage.getItem(KEY))||{players:{},attempts:[]}}catch(e){return {players:{},attempts:[]}}},
+ async list(){
+  if(REMOTE.url){try{const r=await fetch(REMOTE.url+"/rest/v1/leaderboard?select=*&order=best.desc,best_date.asc",{headers:{apikey:REMOTE.key,Authorization:"Bearer "+REMOTE.key}});
+   if(r.ok)return (await r.json()).map(x=>({name:x.name,best:x.best,bestDate:x.best_date,plays:x.plays}))}catch(e){}}
+  return Object.values(this.load().players).sort((a,b)=>b.best-a.best||String(a.bestDate).localeCompare(b.bestDate));
+ },
+ async record(a){
+  const before=(await this.list()).find(p=>p.name.toLowerCase()===a.name.toLowerCase());
+  const pb=!before||a.score>before.best;
+  if(REMOTE.url){try{await fetch(REMOTE.url+"/rest/v1/attempts",{method:"POST",headers:{apikey:REMOTE.key,Authorization:"Bearer "+REMOTE.key,"Content-Type":"application/json",Prefer:"return=minimal"},body:JSON.stringify({name:a.name,score:a.score,hand:a.hand,played_at:a.date,points:a.points})});}catch(e){}}
+  const d=this.load(),k=a.name.trim().toLowerCase(),p=d.players[k]||{name:a.name,best:-1,plays:0};
+  p.plays++;p.last=a.date;if(a.score>p.best){p.best=a.score;p.bestDate=a.date;p.bestHand=a.hand}
+  d.players[k]=p;d.attempts.push(a);d.attempts=d.attempts.slice(-500);
+  try{localStorage.setItem(KEY,JSON.stringify(d))}catch(e){}
+  return pb;
+ }
+};
+
+/* ---------- Field drawing ---------- */
+function drawBase(){
+ const b=$("base");b.innerHTML="";
+ el("ellipse",{cx:F.cx,cy:F.cy,rx:F.rx,ry:F.ry,fill:"url(#mow)"},b);
+ el("ellipse",{cx:F.cx,cy:F.cy,rx:F.rx,ry:F.ry,fill:"url(#mowv)"},b);
+ el("ellipse",{class:"night",cx:F.cx,cy:F.cy,rx:F.rx,ry:F.ry,fill:"url(#flood)"},b);
+ el("ellipse",{cx:F.cx,cy:F.cy,rx:F.rx-3,ry:F.ry-3,fill:"none",style:"stroke:var(--rope)","stroke-width":3},b);
+ el("ellipse",{cx:AX,cy:PT.y+PT.h/2,rx:F.rx*.52,ry:F.ry*.5,fill:"none",stroke:"#fff","stroke-opacity":.45,"stroke-width":1.5,"stroke-dasharray":"6 7"},b);
+ const ck=el("g",{class:"clock"},b);
+ for(let h=1;h<=12;h++){const a=h*Math.PI/6,s=Math.sin(a),c=Math.cos(a);
+  el("line",{x1:F.cx,y1:F.cy,x2:F.cx+F.rx*s,y2:F.cy-F.ry*c,stroke:"#fff","stroke-opacity":h%3?0.12:0.35,"stroke-width":1.2,"stroke-dasharray":"5 6"},ck);
+  const t=el("text",{x:F.cx+(F.rx+22)*s,y:F.cy-(F.ry+22)*c+8,"text-anchor":"middle","font-size":24,"font-family":"Barlow Condensed,Arial Narrow,Roboto Condensed,sans-serif","font-weight":700,style:"fill:var(--ink)"},ck);t.textContent=h}
+ el("rect",{x:PT.x,y:PT.y,width:PT.w,height:PT.h,rx:3,style:"fill:var(--pitch)"},b);
+ for(const y of [PT.y+10,PT.y+PT.h-10]){el("line",{x1:PT.x-4,x2:PT.x+PT.w+4,y1:y,y2:y,stroke:"#fff","stroke-width":1.5},b);
+  for(const dx of [-4,0,4])el("circle",{cx:AX+dx,cy:y-3,r:1.6,fill:"#5a3b1a"},b)}
+ const L=S.hand==="L",side=(txt,x)=>{const t=el("text",{x,y:F.cy+18,"text-anchor":"middle","font-size":34,"font-family":"Barlow Condensed,Arial Narrow,Roboto Condensed,sans-serif","font-weight":700,fill:"#fff","fill-opacity":.3},b);t.textContent=txt};
+ side(L?"LEG SIDE":"OFF SIDE",140);side(L?"OFF SIDE":"LEG SIDE",518);
+ const bat=el("g",{},b);el("circle",{cx:AX+(L?9:-9),cy:PT.y+16,r:6,fill:"#fff",stroke:"#13301c","stroke-width":1.5},bat);
+ const tb=el("text",{x:AX,y:PT.y+PT.h/2+4,"text-anchor":"middle","font-size":11,"font-family":"Barlow Condensed,Arial Narrow,Roboto Condensed,sans-serif","font-weight":700,fill:"#13301c"},b);tb.textContent=L?"BAT (LH)":"BAT (RH)";
+ el("circle",{cx:L?2*AX-323.2:323.2,cy:372.5,r:5,fill:"#13301c"},b);
+ const kp=el("text",{x:(L?2*AX-323.2:323.2)+(L?-8:8),y:376,"text-anchor":L?"end":"start","font-size":11,"font-family":"Barlow Condensed,Arial Narrow,Roboto Condensed,sans-serif","font-weight":700,fill:"#fff"},b);kp.textContent="WK";
+ const bw=el("text",{x:AX,y:PT.y+PT.h+22,"text-anchor":"middle","font-size":12,"font-family":"Barlow Condensed,Arial Narrow,Roboto Condensed,sans-serif","font-weight":700,fill:"#fff"},b);bw.textContent="BOWLER ↑";
+}
+
+/* ---------- Pins, marks and labels ---------- */
+const k=()=>svg.getBoundingClientRect().width/655||1;
+const sc=()=>Math.min(2.2,Math.max(.9,1.05/k()));
+const ctx=document.createElement("canvas").getContext("2d");
+const tw=(t,fs)=>{ctx.font=`600 ${fs}px ${getComputedStyle(document.documentElement).getPropertyValue("--cond")}`;return ctx.measureText(t).width};
+const TCOL=p=>p>=5?"#e8a917":p>=3?"#2f9e44":p>=2?"#7fb800":p>=1?"#f08c00":"#c62d2d";
+
+function pin(x,y,cls){const s=sc(),g=el("g",{transform:`translate(${x} ${y}) scale(${s})`,class:cls||""});
+ el("path",{d:"M0 0 C-3 -9 -11 -14 -11 -24 A11 11 0 1 1 11 -24 C11 -14 3 -9 0 0Z",fill:"#c62d2d",stroke:"#fff","stroke-width":1.6},g);
+ el("circle",{cy:-24,r:4.2,fill:"#fff"},g);
+ el("circle",{r:2.6,fill:"none",stroke:"#fff","stroke-width":1.2},g);el("circle",{r:.9,fill:"#13301c"},g);return g}
+
+function render(){
+ const m=$("marks"),lb=$("labels"),pl=$("pinLayer");m.innerHTML=lb.innerHTML=pl.innerHTML="";
+ const s=sc(),items=[];
+ for(const [n,a] of Object.entries(S.placed)){const t=tgt(n),c=TCOL(a.pts);
+  el("line",{x1:a.x,y1:a.y,x2:t.x,y2:t.y,stroke:"#fff","stroke-width":1.4,"stroke-dasharray":"3 3"},m);
+  el("circle",{cx:t.x,cy:t.y,r:R,fill:c,"fill-opacity":.28,stroke:c,"stroke-width":2.2},m);
+  el("path",{d:`M${t.x-4} ${t.y-4}L${t.x+4} ${t.y+4}M${t.x+4} ${t.y-4}L${t.x-4} ${t.y+4}`,stroke:"#13301c","stroke-width":2.2},m);
+  el("circle",{cx:a.x,cy:a.y,r:3.4*Math.min(s,1.6),fill:c,stroke:"#fff","stroke-width":1.4},m);
+  items.push({x:t.x,y:t.y,t:k()<.7?n:`${n}  +${a.pts}`,gap:R+2})}
+ if(S.pending){const p=S.pending;pl.appendChild(pin(p.x,p.y,"pend"));items.push({x:p.x,y:p.y-30*s,t:p.name,gap:4,pend:1,fixed:"top"})}
+ placeLabels(items,s,lb);updateHud();
+}
+function placeLabels(items,s,layer){
+ const kk=k(),fs=(kk<.7?11.5:13)/kk,h=fs*1.45,boxes=[],ov=(a,b)=>Math.max(0,Math.min(a.x+a.w,b.x+b.w)-Math.max(a.x,b.x))*Math.max(0,Math.min(a.y+a.h,b.y+b.h)-Math.max(a.y,b.y));
+ const obst=items.map(i=>({x:i.x-4,y:i.y-4,w:8,h:8}));
+ const order=items.map((it,i)=>({it,i,c:items.filter(o=>Math.hypot(o.x-it.x,o.y-it.y)<120).length})).sort((a,b)=>(b.it.pend?99:b.c)-(a.it.pend?99:a.c));
+ for(const {it} of order){const w=tw(it.t,fs)+fs*.9,g=it.gap*1,c=[[g,-h/2],[-g-w,-h/2],[-w/2,-g-h],[-w/2,g],[g*.75,-g*.75-h],[-g*.75-w,-g*.75-h],[g*.75,g*.75],[-g*.75-w,g*.75],[g+12,-h/2-h],[-g-12-w,-h/2+h]];
+  const cands=it.fixed?[[-w/2,-g-h]]:c;let best=null,bc=1e9;
+  cands.forEach(([dx,dy],i)=>{const b={x:it.x+dx,y:it.y+dy,w,h};let cost=i*.5;
+   for(const o of boxes)cost+=ov(b,o)*4;for(const o of obst)cost+=ov(b,o)*2;
+   if(b.x<2||b.x+w>653||b.y<102||b.y+h>810)cost+=1e7;if(cost<bc){bc=cost;best=b}});
+  boxes.push(best);
+  const g2=el("g",{class:"lbl"+(it.pend?" pend":"")},layer);
+  if(!it.pend){const lx=Math.max(best.x,Math.min(it.x,best.x+w)),ly=Math.max(best.y,Math.min(it.y,best.y+h));
+   if(Math.hypot(lx-it.x,ly-it.y)>it.gap+3)el("line",{x1:it.x,y1:it.y,x2:lx,y2:ly,stroke:"#fff","stroke-width":1.2/kk},g2)}
+  el("rect",{x:best.x,y:best.y,width:w,height:h,rx:h/2.4,"stroke-width":1},g2);
+  const t=el("text",{x:best.x+w/2,y:best.y+h*.72,"text-anchor":"middle","font-size":fs},g2);t.textContent=it.t;
+  g2.addEventListener("pointerenter",()=>layer.appendChild(g2))}
+}
+function updateHud(){const n=Object.keys(S.placed).length;$("score").textContent=`${total()} pts · ${n}/${POS.length}`;
+ $("chips").innerHTML=POS.map(([n,,,aka])=>{const a=S.placed[n],p=S.pending&&S.pending.name===n;
+  return `<button class="chip${a?" done":""}${p?" pending":""}" data-n="${esc(n)}" ${a?'aria-disabled="true"':""}><span>${esc(n)}${aka?` <small>${aka}</small>`:""}</span>${a?`<span class="pts">+${a.pts}</span>`:""}</button>`}).join("")}
+
+/* ---------- Dragging ---------- */
+let drag=null;const ghost=$("ghost"),hint=$("hint");
+function toField(cx,cy){const p=new DOMPoint(cx,cy).matrixTransform(svg.getScreenCTM().inverse());return {x:p.x,y:p.y}}
+function start(n,e){if(!S.playing){startScreen();return}if(S.pending&&S.pending.name!==n){toast("Lock in or move "+S.pending.name+" first");return}
+ e.preventDefault();hidePop();drag={n,touch:e.pointerType!=="mouse",id:e.pointerId};ghost.textContent=n;move(e)}
+function move(e){if(!drag||e.pointerId!==drag.id)return;const off=drag.touch?48:0,p=toField(e.clientX,e.clientY-off);
+ drag.p=p;const inside=inField(p.x,p.y);ghost.hidden=inside;ghost.style.left=e.clientX+"px";ghost.style.top=e.clientY+"px";
+ S.pending=inside?{name:drag.n,x:p.x,y:p.y}:(S.pending&&S.pending.name===drag.n?null:S.pending);render();
+ const t=tgt(drag.n),d=Math.hypot(p.x-t.x,p.y-t.y);
+ if(inside&&d<=2*R){hint.setAttribute("cx",t.x);hint.setAttribute("cy",t.y);hint.setAttribute("r",R);hint.setAttribute("opacity",(.15+.5*(1-d/(2*R))).toFixed(2))}else hint.setAttribute("opacity",0)}
+function end(e){if(!drag||e.pointerId!==drag.id)return;move(e);ghost.hidden=true;hint.setAttribute("opacity",0);drag=null;render();if(S.pending)showPop()}
+$("chips").addEventListener("pointerdown",e=>{const c=e.target.closest(".chip");if(c&&!S.placed[c.dataset.n])start(c.dataset.n,e)});
+$("pinLayer").addEventListener("pointerdown",e=>{if(S.pending)start(S.pending.name,e)});
+addEventListener("pointermove",move);addEventListener("pointerup",end);addEventListener("pointercancel",end);
+
+/* ---------- Confirm + score ---------- */
+const pop=$("pop");
+function showPop(){const p=S.pending,w=$("wrap").getBoundingClientRect(),q=new DOMPoint(p.x,p.y).matrixTransform(svg.getScreenCTM());
+ pop.hidden=false;const pw=pop.offsetWidth,ph=pop.offsetHeight,sx=q.x-w.left,sy=q.y-w.top;
+ let top=sy-38*sc()*k()-ph-10;if(top<6)top=sy+14;
+ pop.style.left=Math.max(6,Math.min(w.width-pw-6,sx-pw/2))+"px";pop.style.top=top+"px";$("pYes").focus({preventScroll:true})}
+function hidePop(){pop.hidden=true}
+$("pMove").onclick=()=>{hidePop();const g=$("pinLayer").firstChild;if(g){g.firstChild.classList.add("pulse")}toast("Drag the pin to move it")};
+$("pYes").onclick=()=>{const p=S.pending,t=tgt(p.name),d=Math.hypot(p.x-t.x,p.y-t.y),[,pts,msg]=score(d);
+ S.placed[p.name]={x:p.x,y:p.y,pts};S.pending=null;hidePop();render();toast(`${msg}  +${pts}`);
+ if(Object.keys(S.placed).length===POS.length)setTimeout(finish,900)};
+let tt;function toast(m){const t=$("toast");t.textContent=m;t.style.opacity=1;clearTimeout(tt);tt=setTimeout(()=>t.style.opacity=0,1700)}
+
+/* ---------- Screens ---------- */
+const ov=$("ov"),card=$("card");
+function lbTable(list){if(!list.length)return `<p class="note">No scores yet. Be the first on the board.</p>`;
+ return `<table><thead><tr><th>#</th><th>Player</th><th class="n">Best</th><th>When</th><th class="n">Plays</th></tr></thead><tbody>${list.slice(0,30).map((p,i)=>
+ `<tr class="${p.name.toLowerCase()===S.name.toLowerCase()?"me":""}"><td>${i+1}</td><td>${esc(p.name)}</td><td class="n">${p.best}/${MAXPTS}</td><td>${fmtDate(p.bestDate)}</td><td class="n">${p.plays}</td></tr>`).join("")}</tbody></table>`}
+async function startScreen(){
+ let last="";try{last=localStorage.getItem(KEY+".name")||""}catch(e){}S.name=S.name||last;
+ card.innerHTML=`<h2>Can you set the field?</h2><p>Drag all ${POS.length} positions onto the oval. Land the pin inside the hidden circle to score, up to 5 points each.</p>
+ <label class="f" for="nm">Your name</label><input type="text" id="nm" maxlength="24" autocomplete="off" value="${esc(S.name)}" placeholder="First name">
+ <label class="f">Set the field for a</label><div class="seg"><button data-h="R" aria-pressed="${S.hand==="R"}">Right-hander</button><button data-h="L" aria-pressed="${S.hand==="L"}">Left-hander</button></div>
+ <button class="go" id="go">Start</button><div class="lb"><h3>Leaderboard</h3><div id="lbt"><p class="note">Loading…</p></div></div>
+ <p class="note">${REMOTE.url?"Scores are shared with the whole team.":"Scores are saved on this device."} Best score per player is kept.</p>`;
+ ov.hidden=false;
+ card.querySelectorAll(".seg button").forEach(b=>b.onclick=()=>{S.hand=b.dataset.h;card.querySelectorAll(".seg button").forEach(x=>x.setAttribute("aria-pressed",x===b))});
+ $("go").onclick=()=>{const v=$("nm").value.trim();if(!v){$("nm").focus();$("nm").placeholder="Type your name first";return}
+  S.name=v;try{localStorage.setItem(KEY+".name",v)}catch(e){}S.placed={};S.pending=null;S.playing=true;ov.hidden=true;drawBase();render()};
+ $("lbt").innerHTML=lbTable(await Store.list());
+}
+async function finish(){S.playing=false;const sc2=total(),date=new Date().toISOString();
+ const points={};for(const [n,a] of Object.entries(S.placed))points[n]=a.pts;
+ const pb=await Store.record({name:S.name,score:sc2,hand:S.hand,date,points});const list=await Store.list();
+ const rank=list.findIndex(p=>p.name.toLowerCase()===S.name.toLowerCase())+1;
+ const worst=Object.entries(points).sort((a,b)=>a[1]-b[1]).filter(x=>x[1]<3).slice(0,5);
+ card.innerHTML=`<p style="margin:0">${esc(S.name)}, you scored</p><div class="big">${sc2}<span style="font-size:.45em;color:var(--muted)"> / ${MAXPTS}</span></div>
+ <p>${pb?"That's a new personal best!":"Your best stays on the board."} You're #${rank} on the leaderboard.</p>
+ ${worst.length?`<p><b style="color:var(--ink)">Practise these:</b> ${worst.map(w=>`${esc(w[0])} (${w[1]})`).join(", ")}</p>`:"<p>Every position scored 3 or more. Superb fielding knowledge.</p>"}
+ <button class="go" id="again">Play again</button><button class="go alt" id="who">Change player</button><button class="go alt" id="look">Look at my field</button>
+ <div class="lb"><h3>Leaderboard</h3>${lbTable(list)}</div>`;ov.hidden=false;
+ $("again").onclick=()=>{S.placed={};S.pending=null;S.playing=true;ov.hidden=true;render()};$("who").onclick=()=>{S.name="";S.playing=false;startScreen()};
+ $("look").onclick=()=>{ov.hidden=true;toast("Tap New game when you're ready for another go")};}
+
+/* ---------- Toggles ---------- */
+const root=document.documentElement,tc=$("tClock"),tn=$("tNight");
+const isDark=()=>root.dataset.theme?root.dataset.theme==="dark":matchMedia("(prefers-color-scheme: dark)").matches;
+tn.setAttribute("aria-pressed",isDark());
+tn.onclick=()=>{const d=!isDark();root.dataset.theme=d?"dark":"light";tn.setAttribute("aria-pressed",d)};
+svg.classList.add("showclock");
+tc.onclick=()=>{const on=!svg.classList.contains("showclock");svg.classList.toggle("showclock",on);tc.setAttribute("aria-pressed",on)};
+const again=document.createElement("button");again.className="tog";again.textContent="New game";again.onclick=()=>startScreen();$("score").after(again);
+new ResizeObserver(()=>{render();if(S.pending&&!pop.hidden)showPop()}).observe(svg);
+const closeOv=()=>{ov.hidden=true;if(!S.playing)toast("Pick any position to start a game")};
+$("ovx").onclick=closeOv;ov.addEventListener("click",e=>{if(e.target===ov)closeOv()});
+addEventListener("keydown",e=>{if(e.key==="Escape"&&!ov.hidden)closeOv()});
+drawBase();render();startScreen();
+document.fonts&&document.fonts.ready.then(render);
+}
+</script>
+</body>
+</html>
