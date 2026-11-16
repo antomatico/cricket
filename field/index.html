@@ -94,7 +94,8 @@ tr.me td{background:light-dark(#fdf1d6,#3a3214);font-weight:700}
    <defs>
     <pattern id="mow" width="655" height="44" patternUnits="userSpaceOnUse"><rect width="655" height="22" style="fill:var(--g1)"/><rect y="22" width="655" height="22" style="fill:var(--g2)"/></pattern>
     <pattern id="mowv" width="44" height="712" patternUnits="userSpaceOnUse"><rect width="22" height="712" fill="#fff" fill-opacity=".09"/><rect x="22" width="22" height="712" fill="#000" fill-opacity=".05"/></pattern>
-    <linearGradient id="beam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff7cf" stop-opacity=".05"/><stop offset=".35" stop-color="#fff7cf" stop-opacity=".6"/><stop offset="1" stop-color="#fff7cf" stop-opacity=".12"/></linearGradient>
+    <linearGradient id="beam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff7cf" stop-opacity=".2"/><stop offset=".3" stop-color="#fff7cf" stop-opacity=".62"/><stop offset=".75" stop-color="#fff7cf" stop-opacity=".42"/><stop offset="1" stop-color="#fff7cf" stop-opacity=".18"/></linearGradient>
+    <filter id="feather" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="22"/></filter>
     <clipPath id="fclip"><ellipse cx="326.75" cy="453.5" rx="284.75" ry="314.5"/></clipPath>
     <radialGradient id="flood" cx="50%" cy="45%" r="60%"><stop offset="0" stop-color="#fffbe0" stop-opacity=".18"/><stop offset="1" stop-color="#000" stop-opacity=".25"/></radialGradient>
    </defs>
@@ -198,9 +199,9 @@ function drawPlayers(b,L){
 function drawLights(b){
  const g=el("g",{class:"night lights"},b),cy=PT.y+PT.h/2;
  el("ellipse",{class:"dim",cx:F.cx,cy:F.cy,rx:F.rx,ry:F.ry,fill:"#000"},g);
- const pools=el("g",{"clip-path":"url(#fclip)"},g);
+ const pools=el("g",{filter:"url(#feather)"},el("g",{"clip-path":"url(#fclip)"},g));
  for(let i=0;i<6;i++){const a=(15+i*60)*Math.PI/180,tx=F.cx+(F.rx+14)*Math.sin(a),ty=F.cy-(F.ry+14)*Math.cos(a);
-  const ang=Math.atan2(AX-tx,cy-ty)*180/Math.PI,W=92,Lg=235,bp=30;
+  const ang=Math.atan2(AX-tx,cy-ty)*180/Math.PI,W=118,Lg=270,bp=34;
   el("path",{class:"pool",transform:`translate(${tx} ${ty}) rotate(${-ang})`,fill:"url(#beam)",
    d:`M0 0L${-W} ${Lg}Q${-W*2/3} ${Lg+bp} ${-W/3} ${Lg}Q0 ${Lg+bp} ${W/3} ${Lg}Q${W*2/3} ${Lg+bp} ${W} ${Lg}Z`},pools);
   const t=el("g",{transform:`translate(${tx} ${ty}) rotate(${-ang})`},g);
