@@ -185,11 +185,13 @@ function drawPlayers(b,L){
   el("path",{d:"M-3 -4h5.5a1.5 1.5 0 0 1 1.5 1.5v6.5a2 2 0 0 1-2 2h-4.5a2 2 0 0 1-2-2v-2.5l-2-2.2a1.2 1.2 0 0 1 1.7-1.7l1.3 1.2z",fill:"#f2c14e",stroke:"#152764","stroke-width":1},g)}
  tag(b,kx+flip*14,366,"KEEPER",L?"end":"start");
  /* Batter at the striker's end, bat held on the diagonal */
- const bx=mx(AX-12);person(b,bx,401);
- const bt=el("g",{transform:`translate(${mx(AX-3)} 417) rotate(${flip*-38})`},b);
+ /* Right-hander: batter on the right of the stumps, bat on the left angled the other way; left-hander mirrors it */
+ const bm=x=>L?x:2*AX-x,bf=L?1:-1;
+ const bx=bm(AX-12);person(b,bx,401);
+ const bt=el("g",{transform:`translate(${bm(AX-3)} 417) rotate(${bf*-38})`},b);
  el("rect",{x:-1.2,y:-14,width:2.4,height:7,rx:1,fill:"#6b3f1d"},bt);
  el("rect",{x:-3.2,y:-7.5,width:6.4,height:17,rx:2.2,fill:"#f3e2b3",stroke:"#7a5a2a","stroke-width":1},bt);
- tag(b,bx-flip*13,404,"BATTER",L?"start":"end");
+ tag(b,bx-bf*13,404,"BATTER",L?"end":"start");
  /* Bowler at the other end, with the ball beneath */
  const by=PT.y+PT.h+8;person(b,AX,by);
  el("circle",{cx:AX,cy:by+25,r:4.2,fill:"#b3121b",stroke:"#fff","stroke-width":1},b);
