@@ -181,8 +181,13 @@ function drawPlayers(b,L){
  const mx=x=>L?2*AX-x:x,flip=L?-1:1;
  /* Wicket keeper, standing back, with gloves just beneath */
  const kx=mx(323.2);person(b,kx,359);
- for(const d of [-5.5,5.5]){const g=el("g",{transform:`translate(${kx+d} 381) scale(${d<0?-1:1} 1)`},b);
-  el("path",{d:"M-3 -4h5.5a1.5 1.5 0 0 1 1.5 1.5v6.5a2 2 0 0 1-2 2h-4.5a2 2 0 0 1-2-2v-2.5l-2-2.2a1.2 1.2 0 0 1 1.7-1.7l1.3 1.2z",fill:"#f2c14e",stroke:"#152764","stroke-width":1},g)}
+ /* Keeping gloves: padded gauntlets held together, fingers down towards the stumps, thumbs out, webbing, palm pads */
+ for(const d of [-1,1]){const g=el("g",{transform:`translate(${kx+d*5.6} 374.5) scale(${d*.92} .92)`},b);
+  el("path",{d:"M4.4 5Q9.6 5.2 9 10.2Q8.6 12.6 6 11.6L4.6 10.4Z",fill:"#f7f4ea",stroke:"#152764","stroke-width":.9},g);   // thumb + web
+  el("path",{d:"M-4.6 3.2H4.6L5 10.6Q5 15.2 0 15.2Q-5 15.2 -5 10.6Z",fill:"#f7f4ea",stroke:"#152764","stroke-width":.9},g); // mitt
+  el("rect",{x:-3.2,y:5,width:6.4,height:5.4,rx:1.6,fill:"#87325B"},g);                                                    // palm pad
+  for(const fx of [-1.7,0,1.7])el("line",{x1:fx,y1:11,x2:fx,y2:14.6,stroke:"#9aa0ad","stroke-width":.6},g);                // finger seams
+  el("rect",{x:-4.8,y:0,width:9.6,height:3.6,rx:1,fill:"#152764"},g)}                                                       // cuff
  tag(b,kx+flip*14,366,"KEEPER",L?"end":"start");
  /* Batter at the striker's end, bat held on the diagonal */
  /* Right-hander: batter on the right of the stumps, bat on the left angled the other way; left-hander mirrors it */
