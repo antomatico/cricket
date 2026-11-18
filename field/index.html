@@ -139,7 +139,7 @@ const R=PT.h/6;                 // scoring circle: diameter = 1/3 of pitch lengt
 const TIERS=[[0.15,5,"Bullseye!"],[0.5,3,"Great spot"],[0.75,2,"Close"],[1,1,"Just in"]];
 const MAXPTS=POS.length*5;
 /* Shared leaderboard (optional): fill in to use a Supabase table instead of this device's storage. */
-const REMOTE={url:"",key:""};
+const REMOTE={url:"https://zbwriyexthhtnfptefqc.supabase.co",key:"sb_publishable_XgXgqvHcPP52vkqRuX7C_Q_rCCudnr4"};
 
 const $=id=>document.getElementById(id),NS="http://www.w3.org/2000/svg",svg=$("field");
 const el=(t,a={},p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e};
@@ -152,25 +152,25 @@ const score=d=>{const r=d/R;for(const t of TIERS)if(r<=t[0])return t;return [9,0
 const raw=()=>Object.values(S.placed).reduce((a,b)=>a+b.pts,0);
 const total=()=>Math.max(0,raw()-(S.ddp||0));
 
-/* ---------- Storage: this device, or a shared Supabase table when REMOTE is set ---------- */
-const KEY="setTheField.v1";
+/* ---------- Storage: shared team leaderboard (Supabase). Every finished game is saved online.
+   If the phone is offline, the game is held on the device and sent automatically next time. ---------- */
+const KEY="setTheField.v1",QKEY=KEY+".pending";
+const H={apikey:REMOTE.key,"Content-Type":"application/json"};
 const Store={
- load(){try{return JSON.parse(localStorage.getItem(KEY))||{players:{},attempts:[]}}catch(e){return {players:{},attempts:[]}}},
- async list(){
-  if(REMOTE.url){try{const r=await fetch(REMOTE.url+"/rest/v1/leaderboard?select=*&order=best.desc,best_date.asc",{headers:{apikey:REMOTE.key,Authorization:"Bearer "+REMOTE.key}});
-   if(r.ok)return (await r.json()).map(x=>({name:x.name,best:x.best,bestDate:x.best_date,bestDdp:x.best_ddp,plays:x.plays}))}catch(e){}}
-  return Object.values(this.load().players).sort((a,b)=>b.best-a.best||String(a.bestDate).localeCompare(b.bestDate));
- },
- async record(a){
-  const before=(await this.list()).find(p=>p.name.toLowerCase()===a.name.toLowerCase());
-  const pb=!before||a.score>before.best;
-  if(REMOTE.url){try{await fetch(REMOTE.url+"/rest/v1/attempts",{method:"POST",headers:{apikey:REMOTE.key,Authorization:"Bearer "+REMOTE.key,"Content-Type":"application/json",Prefer:"return=minimal"},body:JSON.stringify({name:a.name,score:a.score,raw:a.raw,ddp:a.ddp,hand:a.hand,played_at:a.date,points:a.points})});}catch(e){}}
-  const d=this.load(),k=a.name.trim().toLowerCase(),p=d.players[k]||{name:a.name,best:-1,plays:0};
-  p.plays++;p.last=a.date;if(a.score>p.best){p.best=a.score;p.bestDate=a.date;p.bestHand=a.hand;p.bestDdp=a.ddp}
-  d.players[k]=p;d.attempts.push(a);d.attempts=d.attempts.slice(-500);
-  try{localStorage.setItem(KEY,JSON.stringify(d))}catch(e){}
-  return pb;
- }
+ queue(){try{return JSON.parse(localStorage.getItem(QKEY))||[]}catch(e){return []}},
+ saveQueue(q){try{q.length?localStorage.setItem(QKEY,JSON.stringify(q)):localStorage.removeItem(QKEY)}catch(e){}},
+ async send(a){const r=await fetch(REMOTE.url+"/rest/v1/field_attempts",{method:"POST",headers:{...H,Prefer:"return=minimal"},
+   body:JSON.stringify({name:a.name.trim().slice(0,24),score:a.score,raw:a.raw,ddp:a.ddp,hand:a.hand,points:a.points})});
+  if(!r.ok)throw new Error("save "+r.status)},
+ async flush(){const q=this.queue();if(!q.length)return;const left=[];
+  for(const a of q){try{await this.send(a)}catch(e){left.push(a)}}this.saveQueue(left)},
+ async list(){try{await this.flush();
+   const r=await fetch(REMOTE.url+"/rest/v1/field_leaderboard?select=*&order=best.desc,best_date.asc&limit=200",{headers:H});
+   if(!r.ok)throw new Error("list "+r.status);
+   return (await r.json()).map(x=>({name:x.name,best:x.best,bestDate:x.best_date,bestDdp:x.best_ddp,plays:x.plays}))}catch(e){return null}},
+ async record(a){const before=((await this.list())||[]).find(p=>p.name.toLowerCase()===a.name.trim().toLowerCase());
+  try{await this.send(a);a.saved=true}catch(e){const q=this.queue();q.push(a);this.saveQueue(q.slice(-20));a.saved=false}
+  return !before||a.score>before.best}
 };
 
 /* ---------- Field drawing ---------- */
@@ -328,7 +328,7 @@ let tt;function toast(m){const t=$("toast");t.textContent=m;t.style.opacity=1;cl
 
 /* ---------- Screens ---------- */
 const ov=$("ov"),card=$("card");
-function lbTable(list){if(!list.length)return `<p class="note">No scores yet. Be the first on the board.</p>`;
+function lbTable(list){if(!list)return `<p class="note">Can&rsquo;t reach the team leaderboard right now. Check the internet connection and try again.</p>`;if(!list.length)return `<p class="note">No scores yet. Be the first on the board.</p>`;
  return `<table><thead><tr><th>#</th><th>Player</th><th class="n">Best</th><th class="n" title="Distraction deduction points in that game">DDP</th><th>When</th><th class="n">Plays</th></tr></thead><tbody>${list.slice(0,30).map((p,i)=>
  `<tr class="${p.name.toLowerCase()===S.name.toLowerCase()?"me":""}"><td>${i+1}</td><td>${esc(p.name)}</td><td class="n">${p.best}/${MAXPTS}</td><td class="n">${p.bestDdp==null?"–":p.bestDdp?"−"+p.bestDdp:"0"}</td><td>${fmtDate(p.bestDate)}</td><td class="n">${p.plays}</td></tr>`).join("")}</tbody></table>`}
 async function startScreen(){
@@ -337,7 +337,7 @@ async function startScreen(){
  <label class="f" for="nm">Your name</label><input type="text" id="nm" maxlength="24" autocomplete="off" value="${esc(S.name)}" placeholder="First name">
  <label class="f">Set the field for a</label><div class="seg"><button data-h="R" aria-pressed="${S.hand==="R"}">Right-hander</button><button data-h="L" aria-pressed="${S.hand==="L"}">Left-hander</button></div>
  <button class="go" id="go">Start</button><div class="lb"><h3>Leaderboard</h3><div id="lbt"><p class="note">Loading…</p></div></div>
- <p class="note">${REMOTE.url?"Scores are shared with the whole team.":"Scores are saved on this device."} Best score per player is kept.</p>`;
+ <p class="note">Scores are saved to the team leaderboard online, so everyone sees everyone&rsquo;s best. Use the same name each time.</p>`;
  ov.hidden=false;
  card.querySelectorAll(".seg button").forEach(b=>b.onclick=()=>{S.hand=b.dataset.h;card.querySelectorAll(".seg button").forEach(x=>x.setAttribute("aria-pressed",x===b))});
  $("go").onclick=()=>{const v=$("nm").value.trim();if(!v){$("nm").focus();$("nm").placeholder="Type your name first";return}
@@ -349,12 +349,12 @@ function newGame(){S.placed={};S.pending=null;S.playing=true;ov.hidden=true;
  if(S.ddp)toast(`Clock face or night mode is on: ${S.ddp} DDP`)}
 async function finish(){S.playing=false;const sc2=total(),rw=raw(),dd=S.ddp||0,date=new Date().toISOString();
  const points={};for(const [n,a] of Object.entries(S.placed))points[n]=a.pts;
- const pb=await Store.record({name:S.name,score:sc2,raw:rw,ddp:dd,hand:S.hand,date,points});const list=await Store.list();
- const rank=list.findIndex(p=>p.name.toLowerCase()===S.name.toLowerCase())+1;
+ const att={name:S.name,score:sc2,raw:rw,ddp:dd,hand:S.hand,date,points};const pb=await Store.record(att);const list=await Store.list();
+ const rank=(list||[]).findIndex(p=>p.name.toLowerCase()===S.name.toLowerCase())+1;
  const worst=Object.entries(points).sort((a,b)=>a[1]-b[1]).filter(x=>x[1]<3).slice(0,5);
  card.innerHTML=`<p style="margin:0">${esc(S.name)}, you scored</p><div class="big">${sc2}<span style="font-size:.45em;color:var(--muted)"> / ${MAXPTS}</span></div>
  <p>${rw} placement points${dd?` − ${dd} distraction deduction${dd>1?"s":""} (DDP)`:" and no distractions. Real match conditions!"}</p>
- <p>${pb?"That's a new personal best!":"Your best stays on the board."} You're #${rank} on the leaderboard.</p>
+ <p>${att.saved?`${pb?"That's a new personal best!":"Your best stays on the board."}${rank?` You're #${rank} on the team leaderboard.`:""}`:"No internet just now, so this score is saved on this phone and will go on the team leaderboard next time you play online."}</p>
  ${worst.length?`<p><b style="color:var(--ink)">Practise these:</b> ${worst.map(w=>`${esc(w[0])} (${w[1]})`).join(", ")}</p>`:"<p>Every position scored 3 or more. Superb fielding knowledge.</p>"}
  <button class="go" id="again">Play again</button><button class="go alt" id="who">Change player</button><button class="go alt" id="look">Look at my field</button>
  <div class="lb"><h3>Leaderboard</h3>${lbTable(list)}</div>`;ov.hidden=false;
