@@ -204,11 +204,12 @@ function drawBase(){
  drawPlayers(b,L);
 }
 const FONT="Oswald,Arial Narrow,Roboto Condensed,sans-serif";
-function tag(b,x,y,txt,anchor){const t=el("text",{x,y,"text-anchor":anchor||"middle","font-size":11,"font-family":FONT,"font-weight":600,fill:"#fff","paint-order":"stroke",stroke:"#0006","stroke-width":2.5},b);t.textContent=txt}
+let TAGS=[];
+function tag(b,x,y,txt,anchor){const t=el("text",{x,y,"text-anchor":anchor||"middle","font-size":11,"font-family":FONT,"font-weight":600,fill:"#fff","paint-order":"stroke",stroke:"#0006","stroke-width":2.5},b);t.textContent=txt;try{const r=t.getBBox();TAGS.push({x:r.x-2,y:r.y-2,w:r.width+4,h:r.height+4})}catch(e){}}
 function person(b,x,y){const g=el("g",{transform:`translate(${x} ${y})`},b);
  el("path",{d:"M-8 14Q-8 6.5 0 6.5Q8 6.5 8 14Z",fill:"#fff",stroke:"#152764","stroke-width":1.4},g);
  el("circle",{r:4.8,fill:"#fff",stroke:"#152764","stroke-width":1.4},g);return g}
-function drawPlayers(b,L){
+function drawPlayers(b,L){TAGS=[];
  const mx=x=>L?2*AX-x:x,flip=L?-1:1;
  /* Wicket keeper, standing back, with gloves just beneath */
  const kx=mx(323.2);person(b,kx,359);
@@ -268,7 +269,7 @@ function render(){
   el("circle",{cx:t.x,cy:t.y,r:R,fill:c,"fill-opacity":.28,stroke:c,"stroke-width":2.2},m);
   el("path",{d:`M${t.x-4} ${t.y-4}L${t.x+4} ${t.y+4}M${t.x+4} ${t.y-4}L${t.x-4} ${t.y+4}`,stroke:"#13301c","stroke-width":2.2},m);
   el("circle",{cx:a.x,cy:a.y,r:3.4*Math.min(s,1.6),fill:c,stroke:"#fff","stroke-width":1.4},m);
-  items.push({x:t.x,y:t.y,t:k()<.7?n:`${n}  +${a.pts}`,gap:R+2})}
+  items.push({x:t.x,y:t.y,t:n,pts:a.pts,gap:R+2})}
  if(S.pending){const p=S.pending;pl.appendChild(pin(p.x,p.y,"pend"));items.push({x:p.x,y:p.y-30*s,t:p.name,gap:4,pend:1,fixed:"top"})}
  placeLabels(items,s,lb);updateHud();
 }
@@ -276,22 +277,28 @@ function placeLabels(items,s,layer){
  const kk=k(),fs=(kk<.7?11.5:13)/kk,h=fs*1.45,boxes=[],ov=(a,b)=>Math.max(0,Math.min(a.x+a.w,b.x+b.w)-Math.max(a.x,b.x))*Math.max(0,Math.min(a.y+a.h,b.y+b.h)-Math.max(a.y,b.y));
  const obst=items.map(i=>({x:i.x-4,y:i.y-4,w:8,h:8}));
  const order=items.map((it,i)=>({it,i,c:items.filter(o=>Math.hypot(o.x-it.x,o.y-it.y)<120).length})).sort((a,b)=>(b.it.pend?99:b.c)-(a.it.pend?99:a.c));
- for(const {it} of order){const w=tw(it.t,fs)+fs*.9,g=it.gap*1,c=[[g,-h/2],[-g-w,-h/2],[-w/2,-g-h],[-w/2,g],[g*.75,-g*.75-h],[-g*.75-w,-g*.75-h],[g*.75,g*.75],[-g*.75-w,g*.75],[g+12,-h/2-h],[-g-12-w,-h/2+h]];
+ for(const {it} of order){const hasP=it.pts!=null,pfs=fs*1.6,ptxt=hasP?(it.pts>0?"+"+it.pts:"0"):"",
+   bw=hasP?tw(ptxt,pfs)+pfs*.7:0,h=hasP?fs*1.45+pfs*1.2:fs*1.45,w=Math.max(tw(it.t,fs)+fs*.9,bw+fs*.6),g=it.gap*1,c=[[g,-h/2],[-g-w,-h/2],[-w/2,-g-h],[-w/2,g],[g*.75,-g*.75-h],[-g*.75-w,-g*.75-h],[g*.75,g*.75],[-g*.75-w,g*.75],[g+12,-h/2-h],[-g-12-w,-h/2+h]];
   const cands=it.fixed?[[-w/2,-g-h]]:c;let best=null,bc=1e9;
   cands.forEach(([dx,dy],i)=>{const b={x:it.x+dx,y:it.y+dy,w,h};let cost=i*.5;
-   for(const o of boxes)cost+=ov(b,o)*4;for(const o of obst)cost+=ov(b,o)*2;
+   for(const o of boxes)cost+=ov(b,o)*4;for(const o of obst)cost+=ov(b,o)*2;for(const o of TAGS)cost+=ov(b,o)*6;
    if(b.x<2||b.x+w>653||b.y<102||b.y+h>810)cost+=1e7;if(cost<bc){bc=cost;best=b}});
   boxes.push(best);
   const g2=el("g",{class:"lbl"+(it.pend?" pend":"")},layer);
   if(!it.pend){const lx=Math.max(best.x,Math.min(it.x,best.x+w)),ly=Math.max(best.y,Math.min(it.y,best.y+h));
    if(Math.hypot(lx-it.x,ly-it.y)>it.gap+3)el("line",{x1:it.x,y1:it.y,x2:lx,y2:ly,stroke:"#fff","stroke-width":1.2/kk},g2)}
   el("rect",{x:best.x,y:best.y,width:w,height:h,rx:h/2.4,"stroke-width":1},g2);
-  const t=el("text",{x:best.x+w/2,y:best.y+h*.72,"text-anchor":"middle","font-size":fs},g2);t.textContent=it.t;
+  if(hasP){const c=TCOL(it.pts),dark=it.pts>=5||it.pts===2||it.pts===1,bh=pfs*1.05,bx=best.x+(w-bw)/2,by=best.y+fs*.3;
+   el("rect",{x:bx,y:by,width:bw,height:bh,rx:bh/2.6,style:`fill:${c};stroke:none`},g2);
+   const pt=el("text",{x:best.x+w/2,y:by+bh*.8,"text-anchor":"middle","font-size":pfs,style:`fill:${dark?"#1b1a1f":"#fff"};font-weight:700`},g2);pt.textContent=ptxt;
+   const t=el("text",{x:best.x+w/2,y:best.y+h-fs*.42,"text-anchor":"middle","font-size":fs},g2);t.textContent=it.t}
+  else{const t=el("text",{x:best.x+w/2,y:best.y+h*.72,"text-anchor":"middle","font-size":fs},g2);t.textContent=it.t}
   g2.addEventListener("pointerenter",()=>layer.appendChild(g2))}
 }
 function updateHud(){const n=Object.keys(S.placed).length;$("score").textContent=`${total()} pts · ${n}/${POS.length}`+(S.ddp?` · DDP ${S.ddp}`:"");
- $("chips").innerHTML=POS.map(([n,,,aka])=>{const a=S.placed[n],p=S.pending&&S.pending.name===n;
-  return `<button class="chip${a?" done":""}${p?" pending":""}" data-n="${esc(n)}"${aka?` title="${aka}"`:""} ${a?'aria-disabled="true"':""}><span>${esc(n)}</span>${a?`<span class="pts">+${a.pts}</span>`:""}</button>`}).join("")}
+ const left=POS.filter(([n])=>!S.placed[n]);
+ $("chips").innerHTML=left.length?left.map(([n,,,aka])=>{const p=S.pending&&S.pending.name===n;
+  return `<button class="chip${p?" pending":""}" data-n="${esc(n)}"${aka?` title="${aka}"`:""}><span>${esc(n)}</span></button>`}).join(""):`<p class="note" style="margin:0">All ${POS.length} positions placed.</p>`}
 
 /* ---------- Dragging ---------- */
 let drag=null;const ghost=$("ghost"),hint=$("hint");
