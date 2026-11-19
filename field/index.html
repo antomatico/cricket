@@ -39,7 +39,7 @@ main{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:18px;padding:16p
 .tray{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px;align-self:start}
 .tray h2{margin:0 0 2px;font:600 22px var(--cond)}.tray p{margin:0 0 10px;color:var(--muted);font-size:14px}
 .chips{display:flex;flex-wrap:wrap;gap:4px}
-.chip{display:inline-flex;align-items:baseline;gap:4px;flex:0 0 auto;margin:0;padding:3px 7px;border-radius:7px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font:500 17px/1.15 var(--cond);white-space:nowrap;touch-action:none;text-align:left}
+.chip{display:inline-flex;align-items:center;gap:4px;flex:0 0 auto;margin:0;height:40px;padding:0 9px;border-radius:7px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font:500 17px/1.15 var(--cond);white-space:nowrap;touch-action:none;text-align:left}
 .chip:hover{border-color:var(--g1)}
 .chip.pending{border-color:var(--red);border-style:dashed}
 .chip.done{opacity:.55;cursor:default;border-style:solid}.chip .pts{font-weight:700;color:var(--ink)}
@@ -89,7 +89,7 @@ tr.me td{background:light-dark(#fdf1d6,#3a3214);font-weight:700}
  #field{width:100%;height:100%;max-height:none}
  .tray{height:100%;overflow-y:auto;padding:8px;border-radius:12px;align-self:stretch;overscroll-behavior:contain}
  .tray h2{font-size:17px;margin:0 0 2px}.tray p{display:none}
- .chip{font-size:15.5px;padding:3px 6px}
+ .chip{font-size:15.5px;padding:0 7px}
  .zoom{right:8px;bottom:8px;gap:5px}.zoom button{width:36px;height:36px;font-size:19px}
  .toast{font-size:15px;top:8px}.pop{width:210px;padding:9px}.pop button{min-height:40px}
 }
