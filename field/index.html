@@ -204,7 +204,7 @@ function drawPlayers(b,L){
  /* Wicket keeper, standing back, with gloves just beneath */
  const kx=mx(323.2);person(b,kx,359);
  /* Keeping gloves: padded gauntlets held together, fingers down towards the stumps, thumbs out, webbing, palm pads */
- for(const d of [-1,1]){const g=el("g",{transform:`translate(${kx+d*5.6} 374.5) scale(${d*.92} .92)`},b);
+ for(const d of [-1,1]){const g=el("g",{transform:`translate(${kx+d*5.6} 370) scale(${d*.92} .92)`},b);
   el("path",{d:"M4.4 5Q9.6 5.2 9 10.2Q8.6 12.6 6 11.6L4.6 10.4Z",fill:"#f7f4ea",stroke:"#152764","stroke-width":.9},g);   // thumb + web
   el("path",{d:"M-4.6 3.2H4.6L5 10.6Q5 15.2 0 15.2Q-5 15.2 -5 10.6Z",fill:"#f7f4ea",stroke:"#152764","stroke-width":.9},g); // mitt
   el("rect",{x:-3.2,y:5,width:6.4,height:5.4,rx:1.6,fill:"#87325B"},g);                                                    // palm pad
@@ -221,9 +221,10 @@ function drawPlayers(b,L){
  tag(b,bx-bf*13,404,"BATTER",L?"end":"start");
  /* Bowler at the other end, with the ball beneath */
  const by=PT.y+PT.h+8;person(b,AX,by);
- el("circle",{cx:AX,cy:by+25,r:4.2,fill:"#b3121b",stroke:"#fff","stroke-width":1},b);
- el("path",{d:`M${AX-2.6} ${by+22}Q${AX+1.2} ${by+25} ${AX-2.6} ${by+28}`,fill:"none",stroke:"#fff","stroke-width":.8},b);
- tag(b,AX+14,by+14,"BOWLER","start");
+ /* ball held at the bowler's top right, overlapping the figure */
+ el("circle",{cx:AX+8,cy:by+4,r:4.2,fill:"#b3121b",stroke:"#fff","stroke-width":1},b);
+ el("path",{d:`M${AX+5.4} ${by+1}Q${AX+9.2} ${by+4} ${AX+5.4} ${by+7}`,fill:"none",stroke:"#fff","stroke-width":.8},b);
+ tag(b,AX+16,by+15,"BOWLER","start");
 }
 function drawLights(b){
  const g=el("g",{class:"night lights"},b),cy=PT.y+PT.h/2;
