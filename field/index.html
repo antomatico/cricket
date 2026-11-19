@@ -187,8 +187,18 @@ function drawBase(){
   el("line",{x1:F.cx,y1:F.cy,x2:F.cx+F.rx*s,y2:F.cy-F.ry*c,stroke:"#fff","stroke-opacity":h%3?0.12:0.35,"stroke-width":1.2,"stroke-dasharray":"5 6"},ck);
   const t=el("text",{x:F.cx+(F.rx+22)*s,y:F.cy-(F.ry+22)*c+8,"text-anchor":"middle","font-size":24,"font-family":"Oswald,Arial Narrow,Roboto Condensed,sans-serif","font-weight":600,style:"fill:var(--ink)"},ck);t.textContent=h}
  el("rect",{x:PT.x,y:PT.y,width:PT.w,height:PT.h,rx:3,style:"fill:var(--pitch)"},b);
- for(const y of [PT.y+10,PT.y+PT.h-10]){el("line",{x1:PT.x-4,x2:PT.x+PT.w+4,y1:y,y2:y,stroke:"#fff","stroke-width":1.5},b);
-  for(const dx of [-4,0,4])el("circle",{cx:AX+dx,cy:y-3,r:1.6,fill:"#5a3b1a"},b)}
+ /* Crease markings (Law 7), schematic. Widths use the pitch's own scale (pitch 3.05 m wide);
+    lengths along the pitch are stretched so the markings stay readable.
+    Bowling crease: through the stumps, 2.64 m long. Popping crease: 1.22 m in front of it, at least 1.83 m
+    each side of middle stump. Return creases: 1.32 m each side of middle stump, from the popping crease
+    back to 2.44 m behind it. */
+ const u=PT.w/3.05,BC=1.32*u,PC=1.83*u+3,POP=8,RET=16;
+ const ln=(x1,y1,x2,y2)=>el("line",{x1,y1,x2,y2,stroke:"#fff","stroke-width":1.3,"stroke-linecap":"square"},b);
+ for(const [y,dir] of [[PT.y+10,1],[PT.y+PT.h-10,-1]]){const py=y+dir*POP,ry=py-dir*RET;
+  ln(AX-BC,y,AX+BC,y);                      // bowling crease
+  ln(AX-PC,py,AX+PC,py);                    // popping crease
+  for(const sx of [-1,1])ln(AX+sx*BC,py,AX+sx*BC,ry); // return creases
+  for(const dx of [-3.2,0,3.2])el("circle",{cx:AX+dx,cy:y,r:1.5,fill:"#5a3b1a",stroke:"#fff","stroke-width":.5},b)}
  const L=S.hand==="L",side=(txt,x)=>{const t=el("text",{x,y:F.cy+18,"text-anchor":"middle","font-size":34,"font-family":"Oswald,Arial Narrow,Roboto Condensed,sans-serif","font-weight":600,fill:"#fff","fill-opacity":.3},b);t.textContent=txt};
  side(L?"LEG SIDE":"OFF SIDE",140);side(L?"OFF SIDE":"LEG SIDE",518);
  const tb=el("text",{x:AX,y:PT.y+PT.h/2+4,"text-anchor":"middle","font-size":11,"font-family":"Oswald,Arial Narrow,Roboto Condensed,sans-serif","font-weight":600,fill:"#13301c"},b);tb.textContent=L?"BAT (LH)":"BAT (RH)";
