@@ -306,11 +306,12 @@ function toField(cx,cy){const p=new DOMPoint(cx,cy).matrixTransform(svg.getScree
 function start(n,e){if(!S.playing){startScreen();return}if(S.pending&&S.pending.name!==n){toast("Lock in or move "+S.pending.name+" first");return}
  e.preventDefault();hidePop();drag={n,touch:e.pointerType!=="mouse",id:e.pointerId};ghost.textContent=n;move(e)}
 function move(e){if(!drag||e.pointerId!==drag.id)return;const off=drag.touch?48:0,p=toField(e.clientX,e.clientY-off);
- drag.p=p;const inside=inField(p.x,p.y);ghost.hidden=inside;ghost.style.left=e.clientX+"px";ghost.style.top=e.clientY+"px";
+ drag.p=p;drag.last={pointerId:e.pointerId,clientX:e.clientX,clientY:e.clientY};const inside=inField(p.x,p.y);ghost.hidden=inside;ghost.style.left=e.clientX+"px";ghost.style.top=e.clientY+"px";
  S.pending=inside?{name:drag.n,x:p.x,y:p.y}:(S.pending&&S.pending.name===drag.n?null:S.pending);render();
  const t=tgt(drag.n),d=Math.hypot(p.x-t.x,p.y-t.y);
- if(inside&&d<=2*R){hint.setAttribute("cx",t.x);hint.setAttribute("cy",t.y);hint.setAttribute("r",R);hint.setAttribute("opacity",(.15+.5*(1-d/(2*R))).toFixed(2))}else hint.setAttribute("opacity",0)}
-function end(e){if(!drag||e.pointerId!==drag.id)return;move(e);ghost.hidden=true;hint.setAttribute("opacity",0);drag=null;render();if(S.pending)showPop()}
+ if(inside&&d<=2*R){hint.setAttribute("cx",t.x);hint.setAttribute("cy",t.y);hint.setAttribute("r",R);hint.setAttribute("opacity",(.15+.5*(1-d/(2*R))).toFixed(2))}else hint.setAttribute("opacity",0);
+ autoZoom(inside,p)}
+function end(e){if(!drag||e.pointerId!==drag.id)return;move(e);ghost.hidden=true;hint.setAttribute("opacity",0);drag=null;render();if(S.pending)showPop();else azOut()}
 $("chips").addEventListener("pointerdown",e=>{const c=e.target.closest(".chip");if(c&&!S.placed[c.dataset.n])start(c.dataset.n,e)});
 $("pinLayer").addEventListener("pointerdown",e=>{if(S.pending)start(S.pending.name,e)});
 addEventListener("pointermove",move);addEventListener("pointerup",end);addEventListener("pointercancel",end);
@@ -338,7 +339,7 @@ function showPop(){const p=S.pending,w=$("wrap").getBoundingClientRect(),q=new D
  pop.style.left=Math.max(6,Math.min(w.width-pw-6,sx-pw/2))+"px";pop.style.top=top+"px";$("pYes").focus({preventScroll:true})}
 function hidePop(){pop.hidden=true}
 $("pMove").onclick=()=>{hidePop();const g=$("pinLayer").firstChild;if(g){g.firstChild.classList.add("pulse")}toast("Drag the pin to move it")};
-$("pYes").onclick=()=>{const p=S.pending,t=tgt(p.name),d=Math.hypot(p.x-t.x,p.y-t.y),[,pts,msg]=score(d);
+$("pYes").onclick=()=>{azOut();const p=S.pending,t=tgt(p.name),d=Math.hypot(p.x-t.x,p.y-t.y),[,pts,msg]=score(d);
  S.placed[p.name]={x:p.x,y:p.y,pts};S.pending=null;hidePop();render();toast(`${msg}  +${pts}`);
  if(Object.keys(S.placed).length===POS.length)setTimeout(finish,900)};
 let tt;function toast(m){const t=$("toast");t.textContent=m;t.style.opacity=1;clearTimeout(tt);tt=setTimeout(()=>t.style.opacity=0,1700)}
@@ -396,16 +397,31 @@ function setView(){V.w=Math.min(B.w,Math.max(B.w/MAXZ,V.w));V.h=V.w*B.h/B.w;
  render();if(S.pending&&!pop.hidden)showPop()}
 function zoomAt(f,c){const nw=V.w/f,r=nw/V.w;V.x=c.x-(c.x-V.x)*r;V.y=c.y-(c.y-V.y)*r;V.w=nw;setView()}
 const mid=()=>({x:V.x+V.w/2,y:V.y+V.h/2});
-$("zIn").onclick=()=>zoomAt(1.5,mid());$("zOut").onclick=()=>zoomAt(1/1.5,mid());
-$("zReset").onclick=()=>{Object.assign(V,B);setView()};
-svg.addEventListener("wheel",e=>{e.preventDefault();zoomAt(Math.exp(-e.deltaY*.0018),toField(e.clientX,e.clientY))},{passive:false});
+/* ---------- Auto-zoom: drag into the right quarter of the field and the view eases in around the pin ---------- */
+const AZ_ZOOM=2.4,PCY=PT.y+PT.h/2,az={target:null,base:1,auto:false,ok:false,timer:0,raf:0};
+const curZ=()=>B.w/V.w,quad=(x,y)=>(x<AX?0:1)+(y<PCY?0:2);
+function autoZoom(inside,p){const t=tgt(drag.n);az.ok=inside&&quad(p.x,p.y)===quad(t.x,t.y);
+ if(az.ok&&!az.auto&&!az.timer)az.timer=setTimeout(()=>{az.timer=0;if(drag&&az.ok&&!az.auto){az.auto=true;az.base=curZ();if(curZ()<AZ_ZOOM)azGo(AZ_ZOOM)}},250);
+ if(!az.ok){clearTimeout(az.timer);az.timer=0;if(az.auto){az.auto=false;azGo(az.base)}}}
+function azGo(t){az.target=t;if(!az.raf)az.raf=requestAnimationFrame(azTick)}
+function azTick(){az.raf=0;if(az.target==null)return;const z=curZ(),t=az.target;
+ if(Math.abs(z-t)<.01){az.target=null;return}
+ const nz=Math.abs(t-z)<.03?t:z+(t-z)*.09;
+ zoomAt(nz/z,drag&&drag.p?drag.p:mid());
+ if(drag&&drag.last)move(drag.last);        // keep the pin under the finger
+ az.raf=requestAnimationFrame(azTick)}
+function azOut(){clearTimeout(az.timer);az.timer=0;if(az.auto){az.auto=false;azGo(az.base)}}
+function azCancel(){clearTimeout(az.timer);az.timer=0;az.auto=false;az.target=null}
+$("zIn").onclick=()=>{azCancel();zoomAt(1.5,mid())};$("zOut").onclick=()=>{azCancel();zoomAt(1/1.5,mid())};
+$("zReset").onclick=()=>{azCancel();Object.assign(V,B);setView()};
+svg.addEventListener("wheel",e=>{e.preventDefault();azCancel();zoomAt(Math.exp(-e.deltaY*.0018),toField(e.clientX,e.clientY))},{passive:false});
 const touches=new Map();let gest=null;
 svg.addEventListener("pointerdown",e=>{if(drag||e.target.closest("#pinLayer"))return;
  touches.set(e.pointerId,{x:e.clientX,y:e.clientY});try{svg.setPointerCapture(e.pointerId)}catch(x){}
  const p=[...touches.values()];gest=p.length>=2?{d:Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y),m:{x:(p[0].x+p[1].x)/2,y:(p[0].y+p[1].y)/2}}:{m:p[0]}});
 svg.addEventListener("pointermove",e=>{if(!touches.has(e.pointerId)||drag)return;touches.set(e.pointerId,{x:e.clientX,y:e.clientY});
  const p=[...touches.values()],kk=k();
- if(p.length>=2&&gest&&gest.d){const d=Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y),m={x:(p[0].x+p[1].x)/2,y:(p[0].y+p[1].y)/2};
+ if(p.length>=2&&gest&&gest.d){azCancel();const d=Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y),m={x:(p[0].x+p[1].x)/2,y:(p[0].y+p[1].y)/2};
   V.x-=(m.x-gest.m.x)/kk;V.y-=(m.y-gest.m.y)/kk;zoomAt(d/gest.d,toField(m.x,m.y));gest={d,m}}
  else if(p.length===1&&gest&&V.w<B.w){V.x-=(p[0].x-gest.m.x)/kk;V.y-=(p[0].y-gest.m.y)/kk;gest={m:p[0]};setView()}});
 for(const ev of ["pointerup","pointercancel"])svg.addEventListener(ev,e=>{touches.delete(e.pointerId);const p=[...touches.values()];gest=p.length?{m:p[0]}:null});
