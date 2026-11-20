@@ -65,7 +65,8 @@ table{width:100%;border-collapse:collapse;font-size:15px;margin-top:6px}
 th,td{padding:7px 6px;border-bottom:1px solid var(--line);text-align:left}th{font-size:13px;color:var(--muted);font-weight:600}
 td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 tr.me td{background:light-dark(#fdf1d6,#3a3214);font-weight:700}
-.lb h3{margin:18px 0 0;font:600 20px var(--cond)}.note{font-size:13px;color:var(--muted);margin-top:8px}
+.lb h3{margin:18px 0 0;font:600 20px var(--cond)}.nick{font:italic 600 1em var(--cond);color:var(--gold);white-space:nowrap}
+.note{font-size:13px;color:var(--muted);margin-top:8px}
 .big{font:600 clamp(48px,10vw,72px)/1 var(--cond);color:var(--red)}
 .lbl rect{fill:var(--lab);stroke:var(--line)}.lbl text{fill:var(--labink);font-family:var(--cond);font-weight:600}
 .lbl.pend rect{fill:var(--red);stroke:none}.lbl.pend text{fill:#fff}
@@ -143,6 +144,8 @@ const REMOTE={url:"https://zbwriyexthhtnfptefqc.supabase.co",key:"sb_publishable
 const $=id=>document.getElementById(id),NS="http://www.w3.org/2000/svg",svg=$("field");
 const el=(t,a={},p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+/* Display name: "burger" (any capitals, exact name only) earns the nickname Legend */
+const dn=n=>esc(n)+(String(n).trim().toLowerCase()==="burger"?' <span class="nick">“Legend”</span>':"");
 const fmtDate=iso=>iso?new Date(iso).toLocaleDateString("en-NZ",{day:"numeric",month:"short",year:"numeric"}):"";
 let S={name:"",hand:"R",placed:{},pending:null};
 const tgt=n=>{const p=POS.find(q=>q[0]===n);return {x:S.hand==="L"?2*AX-p[1]:p[1],y:p[2]}};
@@ -348,7 +351,7 @@ let tt;function toast(m){const t=$("toast");t.textContent=m;t.style.opacity=1;cl
 const ov=$("ov"),card=$("card");
 function lbTable(list){if(!list)return `<p class="note">Can&rsquo;t reach the team leaderboard right now. Check the internet connection and try again.</p>`;if(!list.length)return `<p class="note">No scores yet. Be the first on the board.</p>`;
  return `<table><thead><tr><th>#</th><th>Player</th><th class="n">Best</th><th class="n" title="Distraction deduction points in that game">DDP</th><th>When</th><th class="n">Plays</th></tr></thead><tbody>${list.slice(0,30).map((p,i)=>
- `<tr class="${p.name.toLowerCase()===S.name.toLowerCase()?"me":""}"><td>${i+1}</td><td>${esc(p.name)}</td><td class="n">${p.best}/${MAXPTS}</td><td class="n">${p.bestDdp==null?"–":p.bestDdp?"−"+p.bestDdp:"0"}</td><td>${fmtDate(p.bestDate)}</td><td class="n">${p.plays}</td></tr>`).join("")}</tbody></table>`}
+ `<tr class="${p.name.toLowerCase()===S.name.toLowerCase()?"me":""}"><td>${i+1}</td><td>${dn(p.name)}</td><td class="n">${p.best}/${MAXPTS}</td><td class="n">${p.bestDdp==null?"–":p.bestDdp?"−"+p.bestDdp:"0"}</td><td>${fmtDate(p.bestDate)}</td><td class="n">${p.plays}</td></tr>`).join("")}</tbody></table>`}
 async function startScreen(){
  let last="";try{last=localStorage.getItem(KEY+".name")||""}catch(e){}S.name=S.name||last;
  card.innerHTML=`<h2>Can you set the field?</h2><p>Drag all ${POS.length} positions onto the oval. Land the pin inside the hidden circle to score, up to 5 points each.</p><p><b style="color:var(--ink)">Play it like a real match:</b> each hint press, and switching on the clock face or night mode, is a distraction deduction point (DDP) and costs you 1 point.</p>
@@ -370,7 +373,7 @@ async function finish(){S.playing=false;const sc2=total(),rw=raw(),dd=S.ddp||0,d
  const att={name:S.name,score:sc2,raw:rw,ddp:dd,hand:S.hand,date,points};const pb=await Store.record(att);const list=await Store.list();
  const rank=(list||[]).findIndex(p=>p.name.toLowerCase()===S.name.toLowerCase())+1;
  const worst=Object.entries(points).sort((a,b)=>a[1]-b[1]).filter(x=>x[1]<3).slice(0,5);
- card.innerHTML=`<p style="margin:0">${esc(S.name)}, you scored</p><div class="big">${sc2}<span style="font-size:.45em;color:var(--muted)"> / ${MAXPTS}</span></div>
+ card.innerHTML=`<p style="margin:0">${dn(S.name)}, you scored</p><div class="big">${sc2}<span style="font-size:.45em;color:var(--muted)"> / ${MAXPTS}</span></div>
  <p>${rw} placement points${dd?` − ${dd} distraction deduction${dd>1?"s":""} (DDP)`:" and no distractions. Real match conditions!"}</p>
  <p>${att.saved?`${pb?"That's a new personal best!":"Your best stays on the board."}${rank?` You're #${rank} on the team leaderboard.`:""}`:"No internet just now, so this score is saved on this phone and will go on the team leaderboard next time you play online."}</p>
  ${worst.length?`<p><b style="color:var(--ink)">Practise these:</b> ${worst.map(w=>`${esc(w[0])} (${w[1]})`).join(", ")}</p>`:"<p>Every position scored 3 or more. Superb fielding knowledge.</p>"}
