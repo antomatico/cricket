@@ -513,9 +513,10 @@ function quarterView(t){const L=t.x<AX,T=t.y<PCY,pad=16,
  return {x:bx+(bw-w)/2,y:by+(bh-h)/2,w}}
 function azAim(){const t=tgt(drag.n),Q=quarterView(t),p=drag.p,d=Math.hypot(p.x-t.x,p.y-t.y),
  c=Math.max(0,Math.min(1,1-(d-R)/(5*R))),f=1+.7*c*c;          // up to 1.7x more as you get close
- azTo({x:p.x-(p.x-Q.x)/f,y:p.y-(p.y-Q.y)/f,w:Q.w/f})}
+ if(c<=0)return azTo(Q);                                 // far: frame the whole quarter
+ const w=Q.w/f,r=w/V.w;azTo({x:p.x-(p.x-V.x)*r,y:p.y-(p.y-V.y)*r,w})}   // close: zoom about the tip, so the spot under the finger stays put
 function autoZoom(inside,p){const t=tgt(drag.n);az.ok=inside&&quad(p.x,p.y)===quad(t.x,t.y);
- if(az.ok&&!az.auto&&!az.timer)az.timer=setTimeout(()=>{az.timer=0;if(drag&&az.ok&&!az.auto){az.auto=true;az.base={x:V.x,y:V.y,w:V.w};azAim()}},250);
+ if(az.ok&&!az.auto&&!az.timer)az.timer=setTimeout(()=>{az.timer=0;if(drag&&az.ok&&!az.auto){az.auto=true;az.base=az.view?{...az.view}:{x:V.x,y:V.y,w:V.w};azAim()}},250);
  if(az.ok&&az.auto)azAim();
  if(!az.ok){clearTimeout(az.timer);az.timer=0;if(az.auto){az.auto=false;azTo(az.base||B)}}}
 function azTo(v){const c=clampV(v);if(az.view&&Math.abs(az.view.x-c.x)+Math.abs(az.view.y-c.y)+Math.abs(az.view.w-c.w)<.3)return;
