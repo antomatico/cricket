@@ -501,21 +501,32 @@ function setView(){V.w=Math.min(B.w,Math.max(B.w/MAXZ,V.w));V.h=V.w*B.h/B.w;
  render();if(S.pending&&!pop.hidden)showPop()}
 function zoomAt(f,c){const nw=V.w/f,r=nw/V.w;V.x=c.x-(c.x-V.x)*r;V.y=c.y-(c.y-V.y)*r;V.w=nw;setView()}
 const mid=()=>({x:V.x+V.w/2,y:V.y+V.h/2});
-/* ---------- Auto-zoom: drag into the right quarter of the field and the view eases in around the pin ---------- */
-const AZ_ZOOM=2.4,PCY=PT.y+PT.h/2,az={target:null,base:1,auto:false,ok:false,timer:0,raf:0};
+/* ---------- Auto-zoom: in the right quarter, ease out to frame the WHOLE quarter (nothing cropped);
+   then, as the pin closes in on the right spot, ease in a little more around the pin ---------- */
+const PCY=PT.y+PT.h/2,az={view:null,base:null,auto:false,ok:false,timer:0,raf:0};
 const curZ=()=>B.w/V.w,quad=(x,y)=>(x<AX?0:1)+(y<PCY?0:2);
+function clampV(v){const w=Math.min(B.w,Math.max(B.w/MAXZ,v.w)),h=w*B.h/B.w;
+ return {w,x:Math.min(B.x+B.w-w,Math.max(B.x,v.x)),y:Math.min(B.y+B.h-h,Math.max(B.y,v.y))}}
+function quarterView(t){const L=t.x<AX,T=t.y<PCY,pad=16,
+ x0=L?F.cx-F.rx:AX,x1=L?AX:F.cx+F.rx,y0=T?F.cy-F.ry:PCY,y1=T?PCY:F.cy+F.ry,
+ bx=x0-pad,by=y0-pad,bw=x1-x0+2*pad,bh=y1-y0+2*pad,w=Math.max(bw,bh*B.w/B.h),h=w*B.h/B.w;
+ return {x:bx+(bw-w)/2,y:by+(bh-h)/2,w}}
+function azAim(){const t=tgt(drag.n),Q=quarterView(t),p=drag.p,d=Math.hypot(p.x-t.x,p.y-t.y),
+ c=Math.max(0,Math.min(1,1-(d-R)/(5*R))),f=1+.7*c*c;          // up to 1.7x more as you get close
+ azTo({x:p.x-(p.x-Q.x)/f,y:p.y-(p.y-Q.y)/f,w:Q.w/f})}
 function autoZoom(inside,p){const t=tgt(drag.n);az.ok=inside&&quad(p.x,p.y)===quad(t.x,t.y);
- if(az.ok&&!az.auto&&!az.timer)az.timer=setTimeout(()=>{az.timer=0;if(drag&&az.ok&&!az.auto){az.auto=true;az.base=curZ();if(curZ()<AZ_ZOOM)azGo(AZ_ZOOM)}},250);
- if(!az.ok){clearTimeout(az.timer);az.timer=0;if(az.auto){az.auto=false;azGo(az.base)}}}
-function azGo(t){az.target=t;if(!az.raf)az.raf=requestAnimationFrame(azTick)}
-function azTick(){az.raf=0;if(az.target==null)return;const z=curZ(),t=az.target;
- if(Math.abs(z-t)<.01){az.target=null;return}
- const nz=Math.abs(t-z)<.03?t:z+(t-z)*.09;
- zoomAt(nz/z,drag&&drag.p?drag.p:mid());
- if(drag&&drag.last)move(drag.last);        // keep the pin under the finger
- az.raf=requestAnimationFrame(azTick)}
-function azOut(){clearTimeout(az.timer);az.timer=0;if(az.auto){az.auto=false;azGo(az.base)}}
-function azCancel(){clearTimeout(az.timer);az.timer=0;az.auto=false;az.target=null}
+ if(az.ok&&!az.auto&&!az.timer)az.timer=setTimeout(()=>{az.timer=0;if(drag&&az.ok&&!az.auto){az.auto=true;az.base={x:V.x,y:V.y,w:V.w};azAim()}},250);
+ if(az.ok&&az.auto)azAim();
+ if(!az.ok){clearTimeout(az.timer);az.timer=0;if(az.auto){az.auto=false;azTo(az.base||B)}}}
+function azTo(v){const c=clampV(v);if(az.view&&Math.abs(az.view.x-c.x)+Math.abs(az.view.y-c.y)+Math.abs(az.view.w-c.w)<.3)return;
+ az.view=c;if(!az.raf)az.raf=requestAnimationFrame(azTick)}
+function azTick(){az.raf=0;const v=az.view;if(!v)return;
+ const dx=v.x-V.x,dy=v.y-V.y,dw=v.w-V.w,done=Math.abs(dx)+Math.abs(dy)+Math.abs(dw)<.6,e=done?1:.11;
+ V.x+=dx*e;V.y+=dy*e;V.w+=dw*e;if(done)az.view=null;setView();
+ if(drag&&drag.last)move(drag.last);        // keep the carried pin's readout in step
+ if(az.view&&!az.raf)az.raf=requestAnimationFrame(azTick)}
+function azOut(){clearTimeout(az.timer);az.timer=0;if(az.auto){az.auto=false;azTo(az.base||B)}}
+function azCancel(){clearTimeout(az.timer);az.timer=0;az.auto=false;az.view=null}
 $("zIn").onclick=()=>{azCancel();zoomAt(1.5,mid())};$("zOut").onclick=()=>{azCancel();zoomAt(1/1.5,mid())};
 $("zReset").onclick=()=>{azCancel();Object.assign(V,B);setView()};
 svg.addEventListener("wheel",e=>{e.preventDefault();azCancel();zoomAt(Math.exp(-e.deltaY*.0018),toField(e.clientX,e.clientY))},{passive:false});
