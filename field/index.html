@@ -309,9 +309,11 @@ function pin(x,y,cls){const s=sc(),g=el("g",{transform:`translate(${x} ${y}) sca
 function render(){
  const m=$("marks"),lb=$("labels"),pl=$("pinLayer");m.innerHTML=lb.innerHTML=pl.innerHTML="";
  const s=sc(),items=[];
+ const busy=!!S.carry,kk0=k();
  for(const [n,a] of Object.entries(S.placed)){const t=tgt(n),c=TCOL(a.pts);
-  el("line",{x1:a.x,y1:a.y,x2:t.x,y2:t.y,stroke:"#fff","stroke-width":1.4,"stroke-dasharray":"3 3"},m);
-  el("circle",{cx:t.x,cy:t.y,r:R,fill:c,"fill-opacity":.28,stroke:c,"stroke-width":2.2},m);
+  if(busy){el("circle",{cx:t.x,cy:t.y,r:4.5/kk0,fill:c,stroke:"#fff","stroke-width":1.3/kk0,opacity:.85},m);continue}  // carrying: just a small score dot, keeps the area clear
+  el("line",{x1:a.x,y1:a.y,x2:t.x,y2:t.y,stroke:"#fff","stroke-width":1.2,"stroke-dasharray":"3 3","stroke-opacity":.8},m);
+  el("circle",{cx:t.x,cy:t.y,r:R,fill:c,"fill-opacity":.16,stroke:c,"stroke-width":1.6},m);
   el("path",{d:`M${t.x-4} ${t.y-4}L${t.x+4} ${t.y+4}M${t.x+4} ${t.y-4}L${t.x-4} ${t.y+4}`,stroke:"#13301c","stroke-width":2.2},m);
   el("circle",{cx:a.x,cy:a.y,r:3.4*Math.min(s,1.6),fill:c,stroke:"#fff","stroke-width":1.4},m);
   items.push({x:t.x,y:t.y,t:n,pts:a.pts,gap:R+2})}
@@ -331,11 +333,11 @@ function render(){
  placeLabels(items,s,lb);updateHud();
 }
 function placeLabels(items,s,layer){
- const kk=k(),fs=(kk<.7?11.5:13)/kk,h=fs*1.45,boxes=[],ov=(a,b)=>Math.max(0,Math.min(a.x+a.w,b.x+b.w)-Math.max(a.x,b.x))*Math.max(0,Math.min(a.y+a.h,b.y+b.h)-Math.max(a.y,b.y));
+ const kk=k(),fs=(kk<.7?10.5:11.5)/kk,h=fs*1.45,boxes=[],ov=(a,b)=>Math.max(0,Math.min(a.x+a.w,b.x+b.w)-Math.max(a.x,b.x))*Math.max(0,Math.min(a.y+a.h,b.y+b.h)-Math.max(a.y,b.y));
  const obst=items.map(i=>({x:i.x-4,y:i.y-4,w:8,h:8}));
  const order=items.map((it,i)=>({it,i,c:items.filter(o=>Math.hypot(o.x-it.x,o.y-it.y)<120).length})).sort((a,b)=>(b.it.pend?99:b.c)-(a.it.pend?99:a.c));
- for(const {it} of order){const hasP=it.pts!=null,pfs=fs*1.6,ptxt=hasP?(it.pts>0?"+"+it.pts:"0"):"",
-   bw=hasP?tw(ptxt,pfs)+pfs*.7:0,h=hasP?fs*1.45+pfs*1.2:fs*1.45,w=Math.max(tw(it.t,fs)+fs*.9,bw+fs*.6),g=it.gap*1,c=[[g,-h/2],[-g-w,-h/2],[-w/2,-g-h],[-w/2,g],[g*.75,-g*.75-h],[-g*.75-w,-g*.75-h],[g*.75,g*.75],[-g*.75-w,g*.75],[g+12,-h/2-h],[-g-12-w,-h/2+h]];
+ for(const {it} of order){const hasP=it.pts!=null,ptxt=hasP?(it.pts>0?"+"+it.pts:"0"):"",
+   bw=hasP?tw(ptxt,fs)+fs*.75:0,h=fs*1.45,w=tw(it.t,fs)+fs*.9+(hasP?bw+fs*.25:0),g=it.gap*1,c=[[g,-h/2],[-g-w,-h/2],[-w/2,-g-h],[-w/2,g],[g*.75,-g*.75-h],[-g*.75-w,-g*.75-h],[g*.75,g*.75],[-g*.75-w,g*.75],[g+12,-h/2-h],[-g-12-w,-h/2+h]];
   const cands=it.fixed?[[-w/2,-g-h]]:c;let best=null,bc=1e9;
   cands.forEach(([dx,dy],i)=>{const b={x:it.x+dx,y:it.y+dy,w,h};let cost=i*.5;
    for(const o of boxes)cost+=ov(b,o)*4;for(const o of obst)cost+=ov(b,o)*2;for(const o of TAGS)cost+=ov(b,o)*6;if(PINOBST)cost+=ov(b,PINOBST)*8;
@@ -345,10 +347,10 @@ function placeLabels(items,s,layer){
   if(!it.pend){const lx=Math.max(best.x,Math.min(it.x,best.x+w)),ly=Math.max(best.y,Math.min(it.y,best.y+h));
    if(Math.hypot(lx-it.x,ly-it.y)>it.gap+3)el("line",{x1:it.x,y1:it.y,x2:lx,y2:ly,stroke:"#fff","stroke-width":1.2/kk},g2)}
   el("rect",{x:best.x,y:best.y,width:w,height:h,rx:h/2.4,"stroke-width":1},g2);
-  if(hasP){const c=TCOL(it.pts),dark=it.pts>=5||it.pts===2||it.pts===1,bh=pfs*1.05,bx=best.x+(w-bw)/2,by=best.y+fs*.3;
-   el("rect",{x:bx,y:by,width:bw,height:bh,rx:bh/2.6,style:`fill:${c};stroke:none`},g2);
-   const pt=el("text",{x:best.x+w/2,y:by+bh*.8,"text-anchor":"middle","font-size":pfs,style:`fill:${dark?"#1b1a1f":"#fff"};font-weight:700`},g2);pt.textContent=ptxt;
-   const t=el("text",{x:best.x+w/2,y:best.y+h-fs*.42,"text-anchor":"middle","font-size":fs},g2);t.textContent=it.t}
+  if(hasP){const c=TCOL(it.pts),dark=it.pts>=5||it.pts===2||it.pts===1,bh=h-fs*.36,bx=best.x+fs*.18,by=best.y+fs*.18;   // compact: [+5] Name on one line
+   el("rect",{x:bx,y:by,width:bw,height:bh,rx:bh/2.2,style:`fill:${c};stroke:none`},g2);
+   const pt=el("text",{x:bx+bw/2,y:best.y+h*.72,"text-anchor":"middle","font-size":fs,style:`fill:${dark?"#1b1a1f":"#fff"};font-weight:700`},g2);pt.textContent=ptxt;
+   const t=el("text",{x:bx+bw+fs*.3,y:best.y+h*.72,"font-size":fs},g2);t.textContent=it.t}
   else{const t=el("text",{x:best.x+w/2,y:best.y+h*.72,"text-anchor":"middle","font-size":fs},g2);t.textContent=it.t}
   g2.addEventListener("pointerenter",()=>layer.appendChild(g2))}
 }
@@ -367,7 +369,8 @@ let drag=null,press=null;const hint=$("hint"),cp=$("carry"),hold=$("holding");
 if(RM)cp.querySelectorAll("animate,animateTransform").forEach(a=>a.remove());
 const TOUCH_LIFT=74;
 function toField(cx,cy){const p=new DOMPoint(cx,cy).matrixTransform(svg.getScreenCTM().inverse());return {x:p.x,y:p.y}}
-function setCarry(n){S.carry=n||null;document.body.classList.toggle("carrying",!!n);hold.hidden=!n||!!drag;if(n)$("holdName").textContent=n}
+function setCarry(n){if(n&&!S.carry)az.home=az.view&&!az.auto?{...az.view}:{x:V.x,y:V.y,w:V.w};if(!n)az.home=null;   // remember the view from before the pick-up
+ S.carry=n||null;document.body.classList.toggle("carrying",!!n);hold.hidden=!n||!!drag;if(n)$("holdName").textContent=n}
 function pressStart(n,src,e){if(!S.playing){startScreen();return}if(e.pointerType==="mouse"||src!=="chip")e.preventDefault();
  const touch=e.pointerType!=="mouse",el0=src==="chip"?e.target.closest(".chip"):null;
  press={n,src,id:e.pointerId,x:e.clientX,y:e.clientY,touch,el:el0,armed:!touch||src!=="chip"};
@@ -386,6 +389,9 @@ function move(e){
  const x=e.clientX,y=e.clientY-(drag.touch?TOUCH_LIFT:0);cp.style.transform=`translate(${x}px,${y}px)`;
  const r=svg.getBoundingClientRect(),over=x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom,p=toField(x,y),inside=over&&inField(p.x,p.y);
  drag.p=p;drag.inside=inside;drag.last={pointerId:e.pointerId,clientX:e.clientX,clientY:e.clientY};
+ {const M=56,ed=(v,lo,hi)=>v<lo+M?-Math.min(1,(lo+M-v)/M):v>hi-M?Math.min(1,(v-(hi-M))/M):0,
+   ex=ed(x,r.left,r.right),ey=y<r.top+M?ed(y,r.top,r.bottom):ed(e.clientY,r.top,r.bottom);   // bottom edge goes by the finger
+  drag.edge=(ex||ey)&&V.w<B.w-.5&&!(az.view&&!az.auto)?{ex,ey}:null;if(drag.edge&&!edgeRaf)edgeRaf=requestAnimationFrame(edgeTick)}
  const t=tgt(drag.n),d=Math.hypot(p.x-t.x,p.y-t.y),near=inside&&d<=2*R;
  if(near){hint.setAttribute("cx",t.x);hint.setAttribute("cy",t.y);hint.setAttribute("r",R);hint.setAttribute("opacity",(.15+.5*(1-d/(2*R))).toFixed(2))}else hint.setAttribute("opacity",0);
  autoZoom(inside,p);
@@ -399,6 +405,9 @@ function end(e){
  if(!drag||e.pointerId!==drag.id)return;move(e);
  const {n,p,inside}=drag;drag=null;cp.hidden=true;document.body.classList.remove("dragging");hint.setAttribute("opacity",0);
  if(inside&&p)plant(n,p.x,p.y);else{S.pending=null;setCarry(n);render();azOut();toast("Drop it on the grass, or tap the field")}}
+let edgeRaf=0;   // pin held near the edge of the zoomed field: pan that way
+function edgeTick(){edgeRaf=0;if(!drag||!drag.edge)return;const sp=10/k();V.x+=drag.edge.ex*sp;V.y+=drag.edge.ey*sp;az.view=null;setView();move(drag.last);
+ if(drag&&drag.edge&&!edgeRaf)edgeRaf=requestAnimationFrame(edgeTick)}
 function plant(n,x,y){S.pending={name:n,x,y};S.justPlanted=true;S.moving=false;setCarry(n);render();showPop()}
 function cancelCarry(){hidePop();S.pending=null;S.moving=false;setCarry(null);azOut();render()}
 $("chips").addEventListener("pointerdown",e=>{const c=e.target.closest(".chip");if(c&&!S.placed[c.dataset.n])pressStart(c.dataset.n,"chip",e)});
@@ -503,7 +512,7 @@ function zoomAt(f,c){const nw=V.w/f,r=nw/V.w;V.x=c.x-(c.x-V.x)*r;V.y=c.y-(c.y-V.
 const mid=()=>({x:V.x+V.w/2,y:V.y+V.h/2});
 /* ---------- Auto-zoom: in the right quarter, ease out to frame the WHOLE quarter (nothing cropped);
    then, as the pin closes in on the right spot, ease in a little more around the pin ---------- */
-const PCY=PT.y+PT.h/2,az={view:null,base:null,auto:false,ok:false,timer:0,raf:0};
+const PCY=PT.y+PT.h/2,az={view:null,base:null,home:null,auto:false,ok:false,timer:0,raf:0};
 const curZ=()=>B.w/V.w,quad=(x,y)=>(x<AX?0:1)+(y<PCY?0:2);
 function clampV(v){const w=Math.min(B.w,Math.max(B.w/MAXZ,v.w)),h=w*B.h/B.w;
  return {w,x:Math.min(B.x+B.w-w,Math.max(B.x,v.x)),y:Math.min(B.y+B.h-h,Math.max(B.y,v.y))}}
@@ -511,12 +520,12 @@ function quarterView(t){const L=t.x<AX,T=t.y<PCY,pad=16,
  x0=L?F.cx-F.rx:AX,x1=L?AX:F.cx+F.rx,y0=T?F.cy-F.ry:PCY,y1=T?PCY:F.cy+F.ry,
  bx=x0-pad,by=y0-pad,bw=x1-x0+2*pad,bh=y1-y0+2*pad,w=Math.max(bw,bh*B.w/B.h),h=w*B.h/B.w;
  return {x:bx+(bw-w)/2,y:by+(bh-h)/2,w}}
-function azAim(){const t=tgt(drag.n),Q=quarterView(t),p=drag.p,d=Math.hypot(p.x-t.x,p.y-t.y),
+function azAim(){if(drag.edge)return;const t=tgt(drag.n),Q=quarterView(t),p=drag.p,d=Math.hypot(p.x-t.x,p.y-t.y),
  c=Math.max(0,Math.min(1,1-(d-R)/(5*R))),f=1+.7*c*c;          // up to 1.7x more as you get close
  if(c<=0)return azTo(Q);                                 // far: frame the whole quarter
  const w=Q.w/f,r=w/V.w;azTo({x:p.x-(p.x-V.x)*r,y:p.y-(p.y-V.y)*r,w})}   // close: zoom about the tip, so the spot under the finger stays put
 function autoZoom(inside,p){const t=tgt(drag.n);az.ok=inside&&quad(p.x,p.y)===quad(t.x,t.y);
- if(az.ok&&!az.auto&&!az.timer)az.timer=setTimeout(()=>{az.timer=0;if(drag&&az.ok&&!az.auto){az.auto=true;az.base=az.view?{...az.view}:{x:V.x,y:V.y,w:V.w};azAim()}},250);
+ if(az.ok&&!az.auto&&!az.timer)az.timer=setTimeout(()=>{az.timer=0;if(drag&&az.ok&&!az.auto){az.auto=true;az.base=az.home||{x:V.x,y:V.y,w:V.w};azAim()}},250);
  if(az.ok&&az.auto)azAim();
  if(!az.ok){clearTimeout(az.timer);az.timer=0;if(az.auto){az.auto=false;azTo(az.base||B)}}}
 function azTo(v){const c=clampV(v);if(az.view&&Math.abs(az.view.x-c.x)+Math.abs(az.view.y-c.y)+Math.abs(az.view.w-c.w)<.3)return;
@@ -526,7 +535,7 @@ function azTick(){az.raf=0;const v=az.view;if(!v)return;
  V.x+=dx*e;V.y+=dy*e;V.w+=dw*e;if(done)az.view=null;setView();
  if(drag&&drag.last)move(drag.last);        // keep the carried pin's readout in step
  if(az.view&&!az.raf)az.raf=requestAnimationFrame(azTick)}
-function azOut(){clearTimeout(az.timer);az.timer=0;if(az.auto){az.auto=false;azTo(az.base||B)}}
+function azOut(){clearTimeout(az.timer);az.timer=0;const h=az.home||(az.auto?az.base:null);az.auto=false;if(h)azTo(h)}
 function azCancel(){clearTimeout(az.timer);az.timer=0;az.auto=false;az.view=null}
 $("zIn").onclick=()=>{azCancel();zoomAt(1.5,mid())};$("zOut").onclick=()=>{azCancel();zoomAt(1/1.5,mid())};
 $("zReset").onclick=()=>{azCancel();Object.assign(V,B);setView()};
